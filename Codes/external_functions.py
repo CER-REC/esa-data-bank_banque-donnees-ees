@@ -14,244 +14,52 @@ from fuzzywuzzy import fuzz
 import json
 import numpy as np
 
-from external_external_functions import table_checker, figure_checker
 import constants
 
 load_dotenv(override=True)
 engine_string = f"mysql+mysqldb://esa_user_rw:{os.getenv('DB_PASS')}@os25.neb-one.gc.ca./esa?charset=utf8"
 engine = create_engine(engine_string)
 
-# function that takes ID of project, and finds locations of all the tables from that projects' TOC
-# saves result to save_dir folder
-def get_titles_tables(project):
-    print(f"Starting {project}")
-    start_time = time.time()
-    df_tables = pd.read_csv(constants.save_dir + 'all_tables.csv', encoding='utf-8-sig')
-    df_tables = df_tables[df_tables['Project'] == project]  # filter out just current project
-    df_tables['location_DataID'] = None
-    df_tables['location_Page'] = None
-    df_tables['count'] = 0
-    df_project = pd.read_csv(constants.save_dir + 'project_' + project + '.csv', encoding='utf-8-sig', index_col='DataID')
-    df_project['Text_rotated'].fillna('', inplace=True)
+def figure_checker(args):
+    doc_id, toc_id, toc_page, word1_rex, word2_rex, s2_rex = args
+    # get the text and rotated text
+    with open(constants.pickles_path + str(doc_id) + '.pkl', 'rb') as f:  # unrotated pickle
+        data = pickle.load(f)
+    with open(constants.pickles_rotated_path + str(doc_id) + '.pkl', 'rb') as f:  # rotated pickle
+        data_rotated = pickle.load(f)
+    doc_text = data['content']
+    doc_text_rotated = data_rotated['content']  # save the rotated text
 
-    prev_id = 0
-    for index, row in df_tables.iterrows():
-        title = row['Name']
-        # print(title)
-        c = title.count(' ')
-        if c >= 2:
-            word1, word2, s2 = title.split(' ', 2)
-        else:
-            word1, word2 = title.split(' ', 1)
-            s2 = ''
-        word1_rex = re.compile(r'(?i)\b' + word1 + r'\s')
-        word2_rex = re.compile(r'(?i)\b' + word2)
-        s1_rex = re.compile(r'(?i)\b' + word1 + r'\s' + word2)
+    buf = StringIO()
+    p_list = []
+    with redirect_stdout(buf), redirect_stderr(buf):
+        try:
+            print("Start.")
+            # check unrotated
+            if '<body>' in doc_text:
+                soup = BeautifulSoup(doc_text, 'lxml')
+                pages = soup.find_all('div', attrs={'class': 'page'})
+                for page_num, page in enumerate(pages):
+                    text_clean = re.sub(constants.whitespace, ' ', page.text)
+                    # text_clean = re.sub(punctuation, ' ', text_clean)
+                    if re.search(word2_rex, text_clean) and re.search(s2_rex, text_clean):
+                        if (page_num not in p_list) and ((doc_id != toc_id) or (page_num != toc_page)):
+                            p_list.append(page_num)
 
-        s2 = re.sub(constants.punctuation, ' ', s2)
-        s2 = re.sub(constants.whitespace, ' ', s2)  # remove whitespace
-        s2_rex = r'(?i)\b'
-        for s in s2.split(' '):
-            s2_rex = s2_rex + r'[^\w]*' + s
-        s2_rex = s2_rex + r'\b'
-        s2_rex = re.compile(s2_rex)
-        toc_id = row['DataID']
-        project = row['Project']
-        toc_page = row['TOC_Page']
-
-        id_list = []
-        page_list = []
-        count = 0
-
-        # first try previous id if exists
-        if prev_id > 0:
-            doc_id = prev_id
-            doc_text = df_project.loc[doc_id, 'Text']
-            doc_text_rotated = df_project.loc[doc_id, 'Text_rotated']
-            arg = (doc_text, doc_text_rotated, doc_id, toc_id, toc_page, s1_rex, s2_rex)
-            success, output, page_list, doc_id = table_checker(arg)
-            if not success:
-                print(output)
-            if len(page_list) > 0:
-                id_list = [doc_id]
-                count = len(page_list)
-
-        # if didn't find try TOC document
-        if count == 0:
-            doc_id = toc_id
-            doc_text = df_project.loc[doc_id, 'Text']
-            doc_text_rotated = df_project.loc[doc_id, 'Text_rotated']
-            arg = (doc_text, doc_text_rotated, doc_id, toc_id, toc_page, s1_rex, s2_rex)
-            success, output, page_list, doc_id = table_checker(arg)
-            if not success:
-                print(output)
-            if len(page_list) > 0:
-                id_list = [doc_id]
-                count = len(page_list)
-                prev_id = doc_id
-            else:
-                id_list = []
-                count = 0
-
-        # if fig still not found, go through all docs in this project and try to find the doc there
-        if count == 0:
-            print("Starting multiprocessing. You will see the errors (if any) only when everything is finished...")
-            # Phase 1. Arguments preparation for processing
-            args = []
-            for doc_id, doc in df_project.iterrows():
-                if (doc_id != toc_id) and (doc_id != prev_id):
-                    doc_text = df_project.loc[doc_id, 'Text']
-                    doc_text_rotated = df_project.loc[doc_id, 'Text_rotated']
-                    args.append((doc_text, doc_text_rotated, doc_id, toc_id, toc_page, s1_rex, s2_rex))
-
-            # Phase 2. Processing of arguments
-            # Sequential Mode (if using, comment out the multiprocessing mode code)
-            # results = []
-            # for arg in args:
-            #     results.append(table_checker(arg))
-            # Multiprocessing Mode (if using, comment out the sequential processing code)
-            with Pool() as pool:
-                results = pool.map(table_checker, args)
-
-            # Phase 3. Processing of results
-            for result in results:
-                success, output, p_list, doc_id = result
-                if not success:
-                    print(output)
-                if len(p_list) > 0:
-                    id_list.append(doc_id)
-                    page_list.extend(p_list)
-                    count += len(p_list)
-
-            if len(id_list) == 1:
-                prev_id = id_list[0]
-
-        df_tables.loc[index, 'location_DataID'] = str(id_list).replace('[', '').replace(']', '').strip()
-        df_tables.loc[index, 'location_Page'] = str(page_list).replace('[', '').replace(']', '').strip()
-        df_tables.loc[index, 'count'] = count
-    df_tables.to_csv(constants.save_dir + project + '-final_tables.csv', index=False, encoding='utf-8-sig')
-
-    duration = round(time.time() - start_time)
-    print(f"Done {project} in {duration} seconds ({round(duration / 60, 2)} min or {round(duration / 3600, 2)} hours)")
-    return
-
-# function that takes ID of project, and finds locations of all the figures from that projects' TOC
-# saves result to save_dir folder
-def get_titles_figures(project):
-    print(f"Starting {project}")
-    start_time = time.time()
-
-    df_figs = pd.read_csv(constants.save_dir + 'all_figs.csv', encoding='utf-8-sig')
-    df_figs = df_figs[df_figs['Project'] == project]  # filter out just current project
-    df_figs['location_DataID'] = None
-    df_figs['location_Page'] = None
-    df_figs['count'] = 0
-    df_figs = df_figs[:5][:] # just to cut off how many figs we do, delete later
-    df_project = pd.read_csv(constants.save_dir + 'project_' + project + '.csv', encoding='utf-8-sig', index_col='DataID')
-    df_project['Text_rotated'].fillna('', inplace=True)
-
-    prev_id = 0
-    for index, row in df_figs.iterrows():
-        title = row['Name']
-        print(title)
-        c = title.count(' ')
-        if c >= 2:
-            word1, word2, s2 = title.split(' ', 2)
-        else:
-            word1, word2 = title.split(' ', 1)
-            s2 = ''
-        word2 = re.sub('[^a-zA-Z0-9]', '[^a-zA-Z0-9]', word2)
-        word1_rex = re.compile(r'(?i)\b' + word1 + r'\s')
-        word2_rex = re.compile(r'(?i)\b' + word2)
-
-        # s2 = re.sub(punctuation, ' ', s2)
-        s2 = re.sub(constants.whitespace, ' ', s2)  # remove whitespace
-        s2 = re.sub(constants.punctuation, '.*', s2)
-
-        s2_rex = r'(?i)\b'
-        for s in s2.split(' '):
-            s2_rex = s2_rex + r'[^\w]*' + s
-        s2_rex = s2_rex + r'\b'
-        s2_rex = re.compile(s2_rex)
-        toc_id = row['DataID']
-        toc_page = row['TOC_Page']
-
-        id_list = []
-        page_list = []
-        count = 0
-
-        # first try previos id if exists
-        if prev_id > 0:
-            doc_id = prev_id
-            doc_text = df_project.loc[doc_id, 'Text']
-            doc_text_rotated = df_project.loc[doc_id, 'Text_rotated']
-
-            arg = (doc_text, doc_text_rotated, doc_id, toc_id, toc_page, word1_rex, word2_rex, s2_rex)
-            success, output, page_list, doc_id = figure_checker(arg)
-            if not success:
-                print(output)
-            if len(page_list) > 0:
-                id_list = [doc_id]
-                count = len(page_list)
-
-        # if didn't find try TOC document
-        if count == 0:
-            doc_id = toc_id
-            doc_text = df_project.loc[doc_id, 'Text']
-            doc_text_rotated = df_project.loc[doc_id, 'Text_rotated']
-            arg = (doc_text, doc_text_rotated, doc_id, toc_id, toc_page, word1_rex, word2_rex, s2_rex)
-            success, output, page_list, doc_id = figure_checker(arg)
-            if not success:
-                print(output)
-            if len(page_list) > 0:
-                id_list = [doc_id]
-                count = len(page_list)
-                prev_id = doc_id
-            else:
-                id_list = []
-                count = 0
-
-        # if fig still not found, go through all docs in this project and try to find the doc there
-        if count == 0:
-            print("Starting multiprocessing. You will see the errors (if any) only when everything is finished...")
-            # Phase 1. Arguments preparation for processing
-            args = []
-            for doc_id, doc in df_project.iterrows():
-                if (doc_id != toc_id) and (doc_id != prev_id):
-                    doc_text = df_project.loc[doc_id, 'Text']
-                    doc_text_rotated = df_project.loc[doc_id, 'Text_rotated']
-                    args.append((doc_text, doc_text_rotated, doc_id, toc_id, toc_page, word1_rex, word2_rex, s2_rex))
-
-            # Phase 2. Processing of arguments
-            # Sequential Mode (if using, comment out the multiprocessing mode code)
-            # results = []
-            # for arg in args:
-            #     results.append(table_checker(arg))
-            # Multiprocessing Mode (if using, comment out the sequential processing code)
-            with Pool() as pool:
-                results = pool.map(figure_checker, args)
-
-            # Phase 3. Processing of results
-            for result in results:
-                success, output, p_list, doc_id = result
-                if not success:
-                    print(output)
-                if len(p_list) > 0:
-                    id_list.append(doc_id)
-                    page_list.extend(p_list)
-                    count += len(p_list)
-
-            if len(id_list) == 1:
-                prev_id = id_list[0]
-
-        df_figs.loc[index, 'location_DataID'] = str(id_list).replace('[', '').replace(']', '').strip()
-        df_figs.loc[index, 'location_Page'] = str(page_list).replace('[', '').replace(']', '').strip()
-        df_figs.loc[index, 'count'] = count
-    df_figs.to_csv(constants.save_dir + project + '-final_figs.csv', index=False, encoding='utf-8-sig')
-    duration = round(time.time() - start_time)
-    print(f"Done {project} in {duration} seconds ({round(duration / 60, 2)} min or {round(duration / 3600, 2)} hours)")
-    print(f"Finished {project}")
-    return
+                # check rotated
+                soup = BeautifulSoup(doc_text_rotated, 'lxml')
+                pages = soup.find_all('div', attrs={'class': 'page'})
+                for page_num, page in enumerate(pages):
+                    text_clean = re.sub(constants.whitespace, ' ', page.text)
+                    # text_clean = re.sub(punctuation, ' ', text_clean)
+                    if re.search(word2_rex, text_clean) and re.search(s2_rex, text_clean):
+                        if (page_num not in p_list) and ((doc_id != toc_id) or (page_num != toc_page)):
+                            p_list.append(page_num)
+            print(f"Success. Found data on {len(p_list)} pages.")
+            return True, buf.getvalue(), p_list, doc_id
+        except Exception as e:
+            traceback.print_tb(e.__traceback__)
+            return False, buf.getvalue(), p_list, doc_id
 
 def get_category(title):
     category = False

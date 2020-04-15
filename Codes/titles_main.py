@@ -9,54 +9,28 @@ from sqlalchemy import text, create_engine
 from dotenv import load_dotenv
 import time
 
-from external_functions import get_titles_figures, get_titles_tables, find_tag_title, find_toc_title, find_final_title
-from external_external_functions import figure_checker
+from external_functions import figure_checker, find_tag_title, find_toc_title, find_final_title
 import constants
 
 load_dotenv(override=True)
 engine_string = f"mysql+mysqldb://esa_user_rw:{os.getenv('DB_PASS')}@os25.neb-one.gc.ca./esa?charset=utf8"
 engine = create_engine(engine_string)
 
-load_pickles = 0  # need to load text from pickles and save to each project's csv
 get_toc = 0  # need to go through all docs to create lists of tables and figures in csvs
 get_figure_titles = 1  # find all figs page #
-get_table_titles = 0  # find all table page #
+# get_table_titles = 0  # find all table page #
 do_tag_title = 0  # assign table titles to each table using text search method
 do_toc_title = 0  # assign table titles to each table using TOC method
 do_final_title = 0  # replace continued tables and create final table title
 
 if __name__ == "__main__":
-    # get list of all documents and projects (Index2)
-    if True:
-        # put it all together
-        with engine.connect() as conn:
-            stmt = text("SELECT pdfId, hearingOrder, short_name FROM esa.pdfs;")
-            all_projects = pd.read_sql_query(stmt, conn)
-            projects = all_projects['short_name'].unique()
-    else:
-        all_projects = pd.read_excel(constants.projects_path)
-        projects = all_projects['Hearing order'].unique()
+    # get list of all documents
+    with engine.connect() as conn:
+        stmt = text("SELECT pdfId, hearingOrder, short_name FROM esa.pdfs;")
+        all_projects = pd.read_sql_query(stmt, conn)
+        projects = all_projects['short_name'].unique()
     # print(len(projects))
     # print(projects)
-
-    # get text for each document in all projects
-    if load_pickles:
-        print('Creating project csvs with text')
-        for project in projects:
-            print(project)
-            df_project = all_projects[all_projects['Hearing order'] == project].copy()
-            df_project.set_index('DataID', inplace=True)
-            df_project['Text'] = None
-            df_project['Text_rotated'] = None
-
-            for index, row in df_project.iterrows():
-                with open(constants.pickles_path + str(index) + '.pkl', 'rb') as f:  # unrotated pickle
-                    data = pickle.load(f)
-                with open(constants.pickles_rotated_path + str(index) + '.pkl', 'rb') as f:  # rotated pickle
-                    data_rotated = pickle.load(f)
-                df_project.loc[index, 'Text'] = data['content']  # save the unrotated text
-                df_project.loc[index, 'Text_rotated'] = data_rotated['content']  # save the rotated text
-            df_project.to_csv(constants.save_dir + 'project_' + project + '.csv', index=True, encoding='utf-8-sig')
 
     # now get TOC from each document and create a list of all figs and tables (that were found in TOC's)
     if get_toc:
@@ -159,7 +133,6 @@ if __name__ == "__main__":
             page_list = []
             count = 0
 
-
             if toc_id != 2967773:
                 # do this for the list of docs to check, list of all docs in this project
                 # first check previous and toc id's
@@ -178,6 +151,7 @@ if __name__ == "__main__":
                             count += len(p_list)
                             break
 
+                # use this for multi proccessing
                 # if not found check all docs
                 # if len(id_list) == 0:
                 #     docs_check = project_ids
@@ -220,55 +194,6 @@ if __name__ == "__main__":
         df_pivoted = pd.DataFrame(data)
         df_pivoted.to_csv(constants.save_dir + 'final_figs_pivoted.csv', index=False, encoding='utf-8-sig')
 
-
-    # get page numbers for all the figures found in TOC
-    if False:
-        # reset projects to what we need
-        projects = ['OH-002-2016']
-
-        for project in projects:
-            get_titles_figures(project)
-
-        # put everything together
-        data = []
-        projects = all_projects['hearingOrder'].unique()
-        for project in projects:
-            df = pd.read_csv(constants.save_dir + project + '-final_figs.csv', encoding='utf-8-sig')
-            data.append(df)
-        df_all = pd.concat(data, axis=0, ignore_index=True)
-        df_all.to_csv(constants.save_dir + 'final_figs.csv', index=False, encoding='utf-8-sig')
-
-        # unpivot the page numbers
-        data = []
-        for index, row in df_all.iterrows():
-            if row['count'] <= 1:
-                data.append(row)
-            else:
-                for page in row['location_Page'].split(', '):
-                    new_row = row.copy()
-                    new_row['location_Page'] = page
-                    data.append(new_row)
-
-        df_pivoted = pd.DataFrame(data)
-        df_pivoted.to_csv(constants.save_dir + 'final_figs_pivoted.csv', index=False, encoding='utf-8-sig')
-
-    # get page numbers for all the figures found in TOC
-    if get_table_titles:
-        # reset projects to what we need
-        projects = ['OH-002-2016']
-
-        # put them all together
-        for project in projects:
-            get_titles_tables(project)
-        data = []
-        projects = all_projects['Hearing order'].unique()
-        for project in projects:
-            df = pd.read_csv(constants.save_dir + project + '-final_tables.csv', encoding='utf-8-sig')
-            data.append(df)
-        df_all = pd.concat(data, axis=0, ignore_index=True)
-        df_all.to_csv(constants.save_dir + 'final_tables.csv', index=False, encoding='utf-8-sig')
-
-    # put it all together
     with engine.connect() as conn:
         stmt = text("SELECT csvFullPath, pdfId, page, tableNumber FROM esa.csvs "
                     "WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78);")
