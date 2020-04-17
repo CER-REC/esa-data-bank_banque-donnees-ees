@@ -7,8 +7,9 @@ Created on Tue Mar 17 09:51:46 2020
 
 import requests
 import os
+import pandas as pd
 
-def file_scraper(path, Index2, max_files):
+def file_scraper(path, Index1, max_files):
     """
     This method attempts to download all the PDF files from the list of PDF 
     URLs that are sent to the function.
@@ -47,27 +48,35 @@ def file_scraper(path, Index2, max_files):
     
     References 
     ----------
-    Ref ->
-    Ref -> 
-        
+    Ref -> https://requests.readthedocs.io/en/master/user/quickstart/
         
     """
     count = 0
-    for index, row in Index2.iterrows():
+    error_urls = []
+    error_dataIDs = []
+    for index, row in Index1.iterrows():
         #print(index)
         #print(row)
         
         try:
-            dataID = row['DataID']
+            dataID = row['Data ID']
             download_url = 'http://docs2.cer-rec.gc.ca/ll-eng/llisapi.dll?func=ll&objId=' + str(dataID) + '&objaction=download&viewType=1'
             r = requests.get(download_url)
-            full_name = os.path.join(path, (str(dataID) +'.pdf')) 
+            full_name = os.path.join(path + '\\Data Files\\PDFs\\', (str(dataID) +'.pdf')) 
             with open(full_name, 'wb') as file:
                 file.write(r.content) 
             count = count + 1
         except:
+            error_urls.append(download_url)
+            error_dataIDs.append(dataIDs)
             print("error with file {}".format(row['file_name']))
             
+            
+    df_scraping_errorlog = pd.DataFrame({'error_dataIDs' : error_dataIDs,
+                                         'error_urls' : error_urls
+                                      })
+    
+    df_scraping_errorlog.to_csv(path + '\\Error Logs\\ScrapingErrorLogs.csv', index = False, encoding='utf-8-sig')
     return(count)    
                 
         
