@@ -9,7 +9,7 @@ import requests
 import os
 import pandas as pd
 
-def file_scraper(path, Index1, max_files):
+def file_scraper(path, Index0):
     """
     This method attempts to download all the PDF files from the list of PDF 
     URLs that are sent to the function.
@@ -24,16 +24,12 @@ def file_scraper(path, Index1, max_files):
     path: path of the root folder in string format
         This path will be used to find the folder location where the scraped 
         pdf files are going to be saved
-    Index2: Dataframe with the DataIDs of the PDF and their downloadable links    
+    Index0: Dataframe with the DataIDs of the PDF and their downloadable links    
         Data_ID: It is the unique ID of the PDF file which will be used as the 
         name of the PDF downloaded
         esa_download_link: URL addresses stored as a list of string
         a list of the pdf URLs so that the respepctive files could be 
         downloaded
-    max_files: maximum number of URL files to be downloaded
-        This parameter allows us to limit the number of files that would 
-        downloaded. This parameter is handy while running the code in the test
-        phase or when we want to limit the number of files.  
         
     Returns
     ----------
@@ -54,7 +50,7 @@ def file_scraper(path, Index1, max_files):
     count = 0
     error_urls = []
     error_dataIDs = []
-    for index, row in Index1.iterrows():
+    for index, row in Index0.iterrows():
         #print(index)
         #print(row)
         
