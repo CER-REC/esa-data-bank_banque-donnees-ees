@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 import pickle
 from bs4 import BeautifulSoup
 import re
@@ -9,26 +8,31 @@ from sqlalchemy import text, create_engine
 from dotenv import load_dotenv
 import time
 
-from external_functions import figure_checker, find_tag_title, find_toc_title, find_final_title
-import constants
+from Codes.external_functions import figure_checker
+from Codes.external_functions import find_tag_title_table, find_toc_title_table, find_final_title_table
+from Codes.external_functions import find_tag_title_fig, find_toc_title_fig, find_final_title_fig
+import Codes.constants as constants
 
 load_dotenv(override=True)
 engine_string = f"mysql+mysqldb://esa_user_rw:{os.getenv('DB_PASS')}@os25.neb-one.gc.ca./esa?charset=utf8"
 engine = create_engine(engine_string)
 
 get_toc = 0  # need to go through all docs to create lists of tables and figures in csvs
-get_figure_titles = 1  # find all figs page #
-# get_table_titles = 0  # find all table page #
-do_tag_title = 0  # assign table titles to each table using text search method
-do_toc_title = 0  # assign table titles to each table using TOC method
-do_final_title = 0  # replace continued tables and create final table title
+get_figure_titles = 0  # find all figs page #
+do_tag_title_table = 0  # assign table titles to each table using text search method
+do_toc_title_table = 0  # assign table titles to each table using TOC method
+do_final_title_table = 0  # replace continued tables and create final table title
+do_tag_title_fig = 1  # assign table titles to each table using text search method
+do_toc_title_fig = 0  # assign table titles to each table using TOC method
+do_final_title_fig = 0  # replace continued tables and create final table title
 
 if __name__ == "__main__":
     # get list of all documents
     with engine.connect() as conn:
         stmt = text("SELECT pdfId, hearingOrder, short_name FROM esa.pdfs;")
         all_projects = pd.read_sql_query(stmt, conn)
-        projects = all_projects['short_name'].unique()
+    projects = all_projects['short_name'].unique()
+    list_ids = all_projects['pdfId'].tolist()
     # print(len(projects))
     # print(projects)
 
@@ -194,18 +198,18 @@ if __name__ == "__main__":
         df_pivoted = pd.DataFrame(data)
         df_pivoted.to_csv(constants.save_dir + 'final_figs_pivoted.csv', index=False, encoding='utf-8-sig')
 
-    with engine.connect() as conn:
-        stmt = text("SELECT csvFullPath, pdfId, page, tableNumber FROM esa.csvs "
-                    "WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78);")
-        df = pd.read_sql_query(stmt, conn)
-    list_ids = df['pdfId'].unique()
-    df.to_csv(constants.save_dir + 'all_tables_list.csv', index=False, encoding='utf-8-sig')
+    # with engine.connect() as conn:
+    #     stmt = text("SELECT csvFullPath, pdfId, page, tableNumber FROM esa.csvs "
+    #                 "WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78);")
+    #     df = pd.read_sql_query(stmt, conn)
+    # list_ids = df['pdfId'].unique()
+    # df.to_csv(constants.save_dir + 'all_tables_list.csv', index=False, encoding='utf-8-sig')
 
     # update tag method titles
-    if do_tag_title:
+    if do_tag_title_table:
         #print(len(list_ids))
         with Pool() as pool:
-            results = pool.map(find_tag_title, list_ids)
+            results = pool.map(find_tag_title_table, list_ids)
         with open('tag_errors.txt', 'w', encoding='utf-8') as f:
             f.write('Errors found:\n')
         with open('tag_errors.txt', 'a', encoding='utf-8') as f:
@@ -214,10 +218,10 @@ if __name__ == "__main__":
                     f.write(str(result[1]))
 
     # update TOC method titles
-    if do_toc_title:
+    if do_toc_title_table:
         #print(len(list_ids))
         with Pool() as pool:
-            results = pool.map(find_toc_title, list_ids)
+            results = pool.map(find_toc_title_table, list_ids)
         with open('toc_errors.txt', 'w', encoding='utf-8') as f:
             f.write('Errors found:\n')
         with open("toc_errors.txt", "a", encoding='utf-8') as f:
@@ -226,10 +230,10 @@ if __name__ == "__main__":
                     f.write(result[1])
 
     # update final titles
-    if do_final_title:
+    if do_final_title_table:
         #print(len(list_ids))
         with Pool() as pool:
-            results = pool.map(find_final_title, list_ids)
+            results = pool.map(find_final_title_table, list_ids)
         with open('final_errors.txt', 'w', encoding='utf-8') as f:
             f.write('Errors found:\n')
         with open("final_errors.txt", "a", encoding='utf-8') as f:
@@ -242,3 +246,55 @@ if __name__ == "__main__":
                     "WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78);")
         df = pd.read_sql_query(stmt, conn)
     df.to_csv(constants.save_dir + 'all_tables-final.csv', index=False, encoding='utf-8-sig')
+
+    # do similar process for figures
+
+    # update tag method titles
+    if do_tag_title_fig:
+        # print(len(list_ids))
+
+        # sequential
+        # for doc_id in list_ids:
+        #     print(doc_id)
+        #     find_tag_title_fig(doc_id)
+
+        # milti process
+        with Pool() as pool:
+            results = pool.map(find_tag_title_table, list_ids)
+        with open('tag_errors.txt', 'w', encoding='utf-8') as f:
+            f.write('Errors found:\n')
+        with open('tag_errors.txt', 'a', encoding='utf-8') as f:
+            for result in results:
+                if result[1] != "":
+                    f.write(str(result[1]))
+
+    # update TOC method titles
+    if do_toc_title_fig:
+        #print(len(list_ids))
+        with Pool() as pool:
+            results = pool.map(find_toc_title_fig, list_ids)
+        with open('toc_errors.txt', 'w', encoding='utf-8') as f:
+            f.write('Errors found:\n')
+        with open("toc_errors.txt", "a", encoding='utf-8') as f:
+            for result in results:
+                if result[1]:
+                    f.write(result[1])
+
+    # update final titles
+    if do_final_title_fig:
+        #print(len(list_ids))
+        with Pool() as pool:
+            results = pool.map(find_final_title_fig, list_ids)
+        with open('final_errors.txt', 'w', encoding='utf-8') as f:
+            f.write('Errors found:\n')
+        with open("final_errors.txt", "a", encoding='utf-8') as f:
+            for result in results:
+                if result[1]:
+                    f.write(result[1])
+
+    with engine.connect() as conn:
+        stmt = text("SELECT csvFullPath, pdfId, page, tableNumber, topRowJson, titleTag, titleTOC, titleFinal FROM esa.csvs "
+                    "WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78);")
+        df = pd.read_sql_query(stmt, conn)
+    df.to_csv(constants.save_dir + 'all_figures-final.csv', index=False, encoding='utf-8-sig')
+
