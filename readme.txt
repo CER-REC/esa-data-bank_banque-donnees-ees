@@ -17,6 +17,7 @@ TECHNOLOGIES
 ### Mention of the languages that we used, the libraries and its versions.
 
 - Python 3.7.3
+- Tika 1.23.0
 - 
 
 
