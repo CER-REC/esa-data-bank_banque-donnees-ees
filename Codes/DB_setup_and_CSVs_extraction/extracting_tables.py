@@ -11,8 +11,7 @@ from external import extract_csv
 
 
 pdf_files_folder = Path("//luxor/data/branch/Environmental Baseline Data\Version 4 - Final/PDF")
-# csv_tables_folder = Path("//luxor/data/branch/Environmental Baseline Data\Version 4 - Final/all_csvs")
-csv_tables_folder = Path(r"C:\Users\T1Ivan\Desktop\1")
+csv_tables_folder = Path("//luxor/data/branch/Environmental Baseline Data\Version 4 - Final/all_csvs")
 
 if not pdf_files_folder.exists():
     print(pdf_files_folder, "does not exist!")
