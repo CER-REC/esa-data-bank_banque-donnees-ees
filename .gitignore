@@ -31,3 +31,5 @@ yarn-error.log*
 /__pycache__
 **/access.log
 **/log.txt
+/Support files
+/Data Files/**/*.*
