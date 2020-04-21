@@ -128,7 +128,7 @@ def insert_pdfs(args):
     start_time = time.time()
 
     # Sequential mode - if using, please comment out the multiprocessing mode code
-    # for arg in args[-2:-1]:
+    # for arg in args[-10:]:
     #     result = insert_pdf(arg)
     #     print(result, end='', flush=True)
 
