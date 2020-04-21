@@ -33,3 +33,6 @@ yarn-error.log*
 **/log.txt
 /Support files
 /Data Files/**/*.*
+/Data_Files/**/*.*
+/Error_Logs/**/*.*
+/Error Logs/**/*.*
