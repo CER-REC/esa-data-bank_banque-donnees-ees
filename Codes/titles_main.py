@@ -18,11 +18,12 @@ engine_string = f"mysql+mysqldb://esa_user_rw:{os.getenv('DB_PASS')}@os25.neb-on
 engine = create_engine(engine_string)
 
 get_toc = 0  # need to go through all docs to create lists of tables and figures in csvs
-get_figure_titles = 0  # find all figs page #
+get_figure_titles = 1  # find all figs page #
+get_table_titles = 0
 do_tag_title_table = 0  # assign table titles to each table using text search method
 do_toc_title_table = 0  # assign table titles to each table using TOC method
 do_final_title_table = 0  # replace continued tables and create final table title
-do_tag_title_fig = 1  # assign table titles to each table using text search method
+do_tag_title_fig = 0  # assign table titles to each table using text search method
 do_toc_title_fig = 0  # assign table titles to each table using TOC method
 do_final_title_fig = 0  # replace continued tables and create final table title
 
@@ -39,13 +40,9 @@ if __name__ == "__main__":
     # now get TOC from each document and create a list of all figs and tables (that were found in TOC's)
     if get_toc:
         print('Searching for TOC tables and figures')
-        list_figs = []
-        list_tables = []
+        conn = engine.connect()
         for index, row in all_projects.iterrows():
-            project = row['short_name']
-            hearing = row['hearingOrder']
             doc_id = row['pdfId']
-            # print(doc_id)
             with open(constants.pickles_path + str(doc_id) + '.pkl', 'rb') as f:  # unrotated pickle
                 data = pickle.load(f)
             # with open(constants.pickles_rotated_path + str(doc_id) + '.pkl', 'rb') as f:  # rotated pickle
@@ -57,60 +54,66 @@ if __name__ == "__main__":
             soup = BeautifulSoup(content, 'lxml')
             pages = soup.find_all('div', attrs={'class': 'page'})
             for page_num, page in enumerate(pages):
-                text = re.sub(constants.empty_line, '', page.text)  # get rid of empty lines
+                # delete any existing TOC from this page
+                stmt = text("DELETE FROM esa.toc WHERE toc_pdfId = :pdfId and toc_page_num = :page_num;")
+                params = {"pdfId": doc_id, "page_num": page_num+1}
+                result = conn.execute(stmt, params)
 
-                # extrat TOC for figures
-                figures = re.findall(constants.figure, text)
-                if len(figures) > 0:
-                    df_figs = pd.DataFrame(figures, columns=['Name', 'Page'])
-                    df_figs['Name'] = df_figs['Name'].str.replace(constants.whitespace, ' ', regex=True).str.strip()
-                    df_figs['Page'] = df_figs['Page'].str.strip()
-                    df_figs['TOC_Page'] = page_num
-                    df_figs['DataID'] = doc_id
-                    df_figs['Project'] = project
-                    df_figs['Hearing_Order'] = hearing
-                    list_figs.append(df_figs)
+                # extract TOC
+                clean_text = re.sub(constants.empty_line, '', page.text)  # get rid of empty lines
+                tocs = re.findall(constants.toc, clean_text)
+                for i, toc in enumerate(tocs):
+                    title = re.sub(constants.whitespace, ' ', toc[0]).strip()
+                    page_name = toc[1].strip()
+                    type = title.split(' ', 1)[0].capitalize()
+                    if type in constants.accepted_toc: # if accepted type
+                        stmt = text("INSERT INTO esa.toc (assigned_count, title_type, titleTOC, page_name, "
+                                    "toc_page_num, toc_pdfId, toc_title_order) "
+                                    "VALUE (null, :type, :title, :page_name, :page_num, :pdfId, :order);")
+                        params = {"type": type, "title":title, "page_name":page_name,
+                                  "page_num":page_num+1, "pdfId":doc_id, "order":i+1}
+                        result = conn.execute(stmt, params)
+                        if result.rowcount != 1:
+                            print('Did not go to database:',doc_id, page_num+1, toc)
+        conn.close()
 
-                # extract TOC for Tables
-                tables = re.findall(constants.table, text)
-                if len(tables) > 0:
-                    df_tables = pd.DataFrame(tables, columns=['Name', 'Page'])
-                    df_tables['Name'] = df_tables['Name'].str.replace(constants.whitespace, ' ', regex=True).str.strip()
-                    df_tables['Page'] = df_tables['Page'].str.strip()
-                    df_tables['TOC_Page'] = page_num
-                    df_tables['DataID'] = doc_id
-                    df_tables['Project'] = project
-                    df_tables['Hearing_Order'] = hearing
-                    list_tables.append(df_tables)
-
-        if len(list_figs) > 0:
-            df_figs = pd.concat(list_figs, axis=0, ignore_index=True)
-            df_figs.to_csv(constants.save_dir + 'all_figs.csv', index=False, encoding='utf-8-sig')
-        else:
-            print('No figures found!')
-        if len(list_tables) > 0:
-            df_tables = pd.concat(list_tables, axis=0, ignore_index=True)
-            df_tables.to_csv(constants.save_dir + 'all_tables.csv', index=False, encoding='utf-8-sig')
-        else:
-            print('No tables found!')
+    if get_table_titles:
+        # put them all together
+        for project in projects:
+            # need to fix this
+            # get_titles_tables(project)
+            y = 0
+        data = []
+        projects = all_projects['Hearing order'].unique()
+        for project in projects:
+            df = pd.read_csv(constants.save_dir + project + '-final_tables.csv', encoding='utf-8-sig')
+            data.append(df)
+        df_all = pd.concat(data, axis=0, ignore_index=True)
+        df_all.to_csv(constants.save_dir + 'final_tables.csv', index=False, encoding='utf-8-sig')
 
     # get page numbers for all the figures found in TOC
     if get_figure_titles:
-        # get all fig titles
-        df_figs = pd.read_csv(constants.save_dir + 'all_figs.csv', encoding='utf-8-sig')
-        df_figs['location_DataID'] = None
-        df_figs['location_Page'] = None
-        df_figs['count'] = 0
+        # get all fig titles from db
+        # df_figs = pd.read_csv(constants.save_dir + 'all_figs.csv', encoding='utf-8-sig')
+        with engine.connect() as conn:
+            stmt = text("SELECT toc.titleTOC, toc.page_name, toc.toc_page_num, toc.toc_pdfId, toc.toc_title_order, pdfs.short_name "
+                        "FROM esa.toc LEFT JOIN esa.pdfs ON toc.toc_pdfId = pdfs.pdfId WHERE title_type='Figure' "
+                        "ORDER BY pdfs.short_name, toc.toc_pdfId, toc.toc_page_num, toc.toc_title_order;")
+            df_figs = pd.read_sql_query(stmt, conn)
 
-        prev_id = 0
+        # prev_id = 0
+        prev_pr = ''
         for index, row in df_figs.iterrows():
-            # for i in range(1665, 1700):
+            # for i in range(1600, df_figs.shape[0]):
             t1 = time.time()
             # index = i
             # row = df_figs.iloc[index, :]
-            project = row['Project']
-            project_ids = all_projects[all_projects['short_name'] == project]['pdfId'].tolist()
-            title = row['Name']
+            project = row['short_name']
+            if prev_pr != project:
+                project_ids = all_projects[all_projects['short_name'] == project]['pdfId'].tolist()
+                prev_id = 0
+                prev_pr = project
+            title = row['titleTOC']
             c = title.count(' ')
             if c >= 2:
                 word1, word2, s2 = title.split(' ', 2)
@@ -121,93 +124,54 @@ if __name__ == "__main__":
             word1_rex = re.compile(r'(?i)\b' + word1 + r'\s')
             word2_rex = re.compile(r'(?i)\b' + word2)
             s2 = re.sub(constants.whitespace, ' ', s2)  # remove whitespace
-            s2 = re.sub(constants.punctuation, '.*', s2) # allow anything in place of punctuation
+            s2_a = re.sub(constants.punctuation, '.*', s2) # allow anything in place of punctuation
             s2_rex = r'(?i)\b'
-            for s in s2.split(' '):
+
+            for s in s2_a.split(' '):
                 s2_rex = s2_rex + r'[^\w]*' + s
+                s2_len = len(s2_rex)
+                if s2_len > 200:
+                    break
             s2_rex = s2_rex + r'\b'
             s2_rex = re.compile(s2_rex)
-            toc_id = row['DataID']
-            toc_page = row['TOC_Page']
+            toc_id = row['toc_pdfId']
+            toc_page = row['toc_page_num']
+            page_str = row['page_name']
+            title_order = row['toc_title_order']
+            page_rex = re.sub('[^a-zA-Z0-9]', '[^a-zA-Z0-9]', word2)
+            page_rex = re.compile(r'(?i)\b' + page_rex + '\b')
 
-            #print(toc_id, ':', title)
-            #print(word1_rex, word2_rex)
-            #print(s2_rex)
             id_list = []
             page_list = []
             count = 0
 
-            if toc_id != 2967773:
-                # do this for the list of docs to check, list of all docs in this project
-                # first check previous and toc id's
-                docs_check = [prev_id, toc_id]
-                docs_check.extend(project_ids)
-                for doc_id in docs_check:
-                    if (doc_id > 0) and (doc_id != 2967773):
-                        # print(doc_id)
-                        arg = (doc_id, toc_id, toc_page, word1_rex, word2_rex, s2_rex)
-                        success, output, p_list, doc_id = figure_checker(arg)
-                        if not success:
-                            print(output)
-                        if len(p_list) > 0:
-                            id_list.append(doc_id)
-                            page_list.extend(p_list)
-                            count += len(p_list)
-                            break
+            # if toc_id != 2967773:
+            # do this for the list of docs to check, list of all docs in this project
+            # first check previous and toc id's
 
-                # use this for multi proccessing
-                # if not found check all docs
-                # if len(id_list) == 0:
-                #     docs_check = project_ids
-                #     args = []
-                #     for doc_id in docs_check:
-                #         if (doc_id != toc_id) and (doc_id != prev_id):
-                #             args.append((doc_id, toc_id, toc_page, word1_rex, word2_rex, s2_rex))
-                #     with Pool() as pool:
-                #         results = pool.map(figure_checker, args)
-                #
-                #     # Phase 3. Processing of results
-                #     for result in results:
-                #         success, output, p_list, doc_id = result
-                #         if not success:
-                #             print(output)
-                #         if len(p_list) > 0:
-                #             id_list.append(doc_id)
-                #             page_list.extend(p_list)
-                #             count += len(p_list)
-
-            if len(id_list) == 1:
-                prev_id = id_list[0]
-
-            df_figs.loc[index, 'location_DataID'] = str(id_list).replace('[', '').replace(']', '').strip()
-            df_figs.loc[index, 'location_Page'] = str(page_list).replace('[', '').replace(']', '').strip()
-            df_figs.loc[index, 'count'] = count
+            docs_check = [prev_id, toc_id]
+            docs_check.extend(project_ids)
+            count = 0
+            for doc_id in docs_check:
+                if (doc_id > 0):
+                    arg = (doc_id, toc_id, toc_page, word1_rex, word2_rex, s2, s2_rex, page_rex, title)
+                    count = figure_checker(arg)
+                    # update db with count
+                if count > 0:
+                    prev_id = doc_id
+                    break
+            with engine.connect() as conn:
+                stmt = text("UPDATE esa.toc SET assigned_count = :count "
+                            "WHERE (toc_pdfId = :pdf_id) and (toc_page_num = :page_num) and (toc_title_order = :title_order);")
+                params = {"count": count, "pdf_id": toc_id, "page_num": toc_page, "title_order": title_order}
+                result = conn.execute(stmt, params)
+                if result.rowcount != 1:
+                    print('could not assign TOC count to: ', toc_id, toc_page, title_order)
             print(index, time.time() - t1)
-        df_figs.to_csv(constants.save_dir + 'final_figs.csv', index=False, encoding='utf-8-sig')
-
-        # unpivot the page numbers
-        data = []
-        for index, row in df_figs.iterrows():
-            if row['count'] <= 1:
-                data.append(row)
-            else:
-                for page in row['location_Page'].split(', '):
-                    new_row = row.copy()
-                    new_row['location_Page'] = page
-                    data.append(new_row)
-        df_pivoted = pd.DataFrame(data)
-        df_pivoted.to_csv(constants.save_dir + 'final_figs_pivoted.csv', index=False, encoding='utf-8-sig')
-
-    # with engine.connect() as conn:
-    #     stmt = text("SELECT csvFullPath, pdfId, page, tableNumber FROM esa.csvs "
-    #                 "WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78);")
-    #     df = pd.read_sql_query(stmt, conn)
-    # list_ids = df['pdfId'].unique()
-    # df.to_csv(constants.save_dir + 'all_tables_list.csv', index=False, encoding='utf-8-sig')
 
     # update tag method titles
     if do_tag_title_table:
-        #print(len(list_ids))
+        # print(len(list_ids))
         with Pool() as pool:
             results = pool.map(find_tag_title_table, list_ids)
         with open('tag_errors.txt', 'w', encoding='utf-8') as f:
@@ -250,6 +214,7 @@ if __name__ == "__main__":
     # do similar process for figures
 
     # update tag method titles
+
     if do_tag_title_fig:
         # print(len(list_ids))
 
@@ -260,7 +225,7 @@ if __name__ == "__main__":
 
         # milti process
         with Pool() as pool:
-            results = pool.map(find_tag_title_table, list_ids)
+            results = pool.map(find_tag_title_fig, list_ids)
         with open('tag_errors.txt', 'w', encoding='utf-8') as f:
             f.write('Errors found:\n')
         with open('tag_errors.txt', 'a', encoding='utf-8') as f:
@@ -268,17 +233,6 @@ if __name__ == "__main__":
                 if result[1] != "":
                     f.write(str(result[1]))
 
-    # update TOC method titles
-    if do_toc_title_fig:
-        #print(len(list_ids))
-        with Pool() as pool:
-            results = pool.map(find_toc_title_fig, list_ids)
-        with open('toc_errors.txt', 'w', encoding='utf-8') as f:
-            f.write('Errors found:\n')
-        with open("toc_errors.txt", "a", encoding='utf-8') as f:
-            for result in results:
-                if result[1]:
-                    f.write(result[1])
 
     # update final titles
     if do_final_title_fig:
@@ -293,8 +247,17 @@ if __name__ == "__main__":
                     f.write(result[1])
 
     with engine.connect() as conn:
-        stmt = text("SELECT csvFullPath, pdfId, page, tableNumber, topRowJson, titleTag, titleTOC, titleFinal FROM esa.csvs "
-                    "WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78);")
+        stmt = text("SELECT pdfs.hearingOrder, pdfs.short_name, blocks.pdfId, blocks.page_num, blocks.block_order, "
+                    "blocks.titleTag, blocks.titleTOC, blocks.titleFinal "
+                    "FROM esa.blocks LEFT JOIN esa.pdfs ON pdfs.pdfId = blocks.pdfId "
+                    "WHERE titleTOC is not null;")
         df = pd.read_sql_query(stmt, conn)
-    df.to_csv(constants.save_dir + 'all_figures-final.csv', index=False, encoding='utf-8-sig')
+        df.to_csv(constants.save_dir + 'final_figs_pivoted.csv', index=False, encoding='utf-8-sig')
+
+        stmt = text("SELECT pdfs.hearingOrder, pdfs.short_name, T.* FROM  "
+                    "(SELECT min(pdfId) as pdfId, concat(page_num + ',') as page_list, titleTOC "
+                    "FROM esa.blocks WHERE titleTOC is not null "
+                    "GROUP BY titleTOC) T LEFT JOIN esa.pdfs ON pdfs.pdfId = T.pdfId;")
+        df = pd.read_sql_query(stmt, conn)
+        df.to_csv(constants.save_dir + 'final_figs.csv', index=False, encoding='utf-8-sig')
 

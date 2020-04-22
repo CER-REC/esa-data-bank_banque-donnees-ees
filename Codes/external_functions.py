@@ -20,7 +20,7 @@ load_dotenv(override=True)
 engine_string = f"mysql+mysqldb://esa_user_rw:{os.getenv('DB_PASS')}@os25.neb-one.gc.ca./esa?charset=utf8"
 engine = create_engine(engine_string)
 
-def figure_checker(args):
+def figure_checker_old(args):
     doc_id, toc_id, toc_page, word1_rex, word2_rex, s2_rex = args
     # get the text and rotated text
     with open(constants.pickles_path + str(doc_id) + '.pkl', 'rb') as f:  # unrotated pickle
@@ -61,6 +61,78 @@ def figure_checker(args):
             traceback.print_tb(e.__traceback__)
             return False, buf.getvalue(), p_list, doc_id
 
+def figure_checker(args):
+    conn = engine.connect()
+    try:
+        doc_id, toc_id, toc_page, word1_rex, word2_rex, s2, s2_rex, page_rex, title = args
+
+        # get pages where we have images for this document (from db)
+        stmt = text("SELECT page_num, block_order, type, bbox_area_image, bbox_area FROM esa.blocks "
+                    "WHERE (pdfId = :pdf_id);")
+        params = {"pdf_id": doc_id}
+        df = pd.read_sql_query(stmt, conn, params=params)
+        df_pages = df[['page_num', 'bbox_area_image', 'bbox_area']].groupby('page_num', as_index=False).sum()
+        df_pages['imageProportion'] = df_pages['bbox_area_image'] / df_pages['bbox_area']
+        min_proportion = df_pages['imageProportion'].mean() if df_pages['imageProportion'].mean() < 0.1 else 0.1
+        df_pages = df_pages[df_pages['imageProportion'] > min_proportion]
+        image_pages = df_pages['page_num'].unique()
+        # df['Real Order'] = df.groupby(['page'])['tableNumber'].rank()
+
+        # get the text and rotated text for this document
+        with open(constants.pickles_path + str(doc_id) + '.pkl', 'rb') as f:  # unrotated pickle
+            data = pickle.load(f)
+        with open(constants.pickles_rotated_path + str(doc_id) + '.pkl', 'rb') as f:  # rotated pickle
+            data_rotated = pickle.load(f)
+        doc_text = data['content']
+        doc_text_rotated = data_rotated['content']  # save the rotated text
+
+        p_list = []
+        # check unrotated
+        if '<body>' in doc_text:
+            soup = BeautifulSoup(doc_text, 'lxml')
+            pages = soup.find_all('div', attrs={'class': 'page'})
+            for page_num, page in enumerate(pages):
+                if page_num + 1 in image_pages:
+                    # print('1 checking page:', page_num + 1)
+                    text_clean = re.sub(constants.whitespace, ' ', page.text)
+                    # text_clean = re.sub(punctuation, ' ', text_clean)
+                    if (page_num not in p_list) and ((doc_id != toc_id) or (page_num != toc_page-1)): # if not toc page
+                        # print('2 checking page:', page_num+1)
+                        if re.search(word2_rex, text_clean): # if fig # matches
+                            # match s2 fuzzy
+                            # if fuzz.partial_ratio(s2, text_clean) > 0.7:
+                            if re.search(s2_rex, text_clean):
+                                p_list.append(page_num)
+
+            # check rotated
+            soup = BeautifulSoup(doc_text_rotated, 'lxml')
+            pages = soup.find_all('div', attrs={'class': 'page'})
+            for page_num, page in enumerate(pages):
+                if page_num + 1 in image_pages:
+                    text_clean = re.sub(constants.whitespace, ' ', page.text)
+                    # text_clean = re.sub(punctuation, ' ', text_clean)
+                    if (page_num not in p_list) and ((doc_id != toc_id) or (page_num != toc_page-1)):
+                        if re.search(word2_rex, text_clean): # if figure number matches
+                            # fuzzy match s2
+                            # if fuzz.partial_ratio(s2, text_clean) > 0.7:
+                            if re.search(s2_rex, text_clean):
+                                p_list.append(page_num)
+
+        for p in p_list:
+            # update the db
+            stmt = text("UPDATE esa.blocks SET titleTOC = :title_toc WHERE (pdfId = :pdf_id) and "
+                        "(page_num = :page_num) and (block_order = :block_num);")
+            params = {"pdf_id": doc_id, "page_num": p+1, "block_num": 1, "title_toc": title}
+            result = conn.execute(stmt, params)
+            if result.rowcount != 1:
+                print('Did not go to database:', doc_id, '_', p+1, ':', title, ': error:', result)
+        conn.close()
+        return len(p_list)
+    except Exception as e:
+        conn.close()
+        print(traceback.print_tb(e.__traceback__))
+        return 0
+
 def get_category(title):
     category = False
     # title_clean = re.sub(extra_chars, '', title) # get rid of some extra characters
@@ -84,9 +156,9 @@ def get_category(title):
 
 def find_tag_title_table(data_id):
     buf = StringIO()
+    conn = engine.connect()
     with redirect_stdout(buf), redirect_stderr(buf):
         try:
-            conn = engine.connect()
             # get tables for this document
             stmt = text("SELECT page, tableNumber FROM esa.csvs "
                         "WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78) "
@@ -139,18 +211,18 @@ def find_tag_title_table(data_id):
                                   ': error:', result)
                     else:
                         print('No table for:', data_id, '_', page_num, '_', i + 1, ':', title)
+            conn.close()
             return True, buf.getvalue()
         except Exception as e:
+            conn.close()
             traceback.print_tb(e.__traceback__)
             return False, buf.getvalue()
-        finally:
-            conn.close()
 
 def find_tag_title_fig(data_id):
     buf = StringIO()
+    conn = engine.connect()
     with redirect_stdout(buf), redirect_stderr(buf):
         try:
-            conn = engine.connect()
             # get tables for this document
             stmt = text("SELECT page_num, block_order, type, bbox_area_image, bbox_area FROM esa.blocks "
                         "WHERE (pdfId = :pdf_id);")
@@ -218,13 +290,11 @@ def find_tag_title_fig(data_id):
             traceback.print_tb(e.__traceback__)
             return False, buf.getvalue()
 
-
-
 def find_toc_title_table(data_id):
     buf = StringIO()
+    conn = engine.connect()
     with redirect_stdout(buf), redirect_stderr(buf):
         try:
-            conn = engine.connect()
             # get tables for this document
             stmt = text("SELECT page, tableNumber FROM esa.csvs "
                         "WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78) "
@@ -265,28 +335,30 @@ def find_toc_title_table(data_id):
 
             for i, row in df_temp.iterrows():
                 print('Could not find table for:', data_id, '_', row['location_Page'], ':', row['Name'])
+            conn.close()
             return True, buf.getvalue()
         except Exception as e:
+            conn.close()
             traceback.print_tb(e.__traceback__)
             return False, buf.getvalue()
-        finally:
-            conn.close()
 
 def find_toc_title_fig(data_id):
     buf = StringIO()
+    conn = engine.connect()
     with redirect_stdout(buf), redirect_stderr(buf):
         try:
-            conn = engine.connect()
             # get tables for this document
-            stmt = text("SELECT page, tableNumber FROM esa.csvs "
-                        "WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78) "
-                        "and (pdfId = :pdf_id);")
+            stmt = text("SELECT page_num, block_order, type, bbox_area_image, bbox_area FROM esa.blocks "
+                        "WHERE (pdfId = :pdf_id);")
             params = {"pdf_id": data_id}
             df = pd.read_sql_query(stmt, conn, params=params)
-            df['Real Order'] = df.groupby(['page'])['tableNumber'].rank()
+            df_pages = df[['page_num', 'bbox_area_image', 'bbox_area']].groupby('page_num', as_index=False).sum()
+            df_pages['imageProportion'] = df_pages['bbox_area_image'] / df_pages['bbox_area']
+            df_pages = df_pages[df_pages['imageProportion'] > 0.1]
+            # df['Real Order'] = df.groupby(['page'])['tableNumber'].rank()
             # print(data_id, df.shape)
 
-            df_all_titles = pd.read_csv(constants.main_path + 'Saved/final_tables.csv', header=0)
+            df_all_titles = pd.read_csv(constants.main_path + 'Saved/final_figs.csv', header=0)
             df_all_titles['location_DataID'] = df_all_titles['location_DataID'].fillna(0)
             df_all_titles['location_Page'] = df_all_titles['location_Page'].fillna('')
             df_all_titles['location_DataID'] = np.where(df_all_titles['location_DataID'].str.contains(','), 0,
@@ -317,19 +389,19 @@ def find_toc_title_fig(data_id):
 
             for i, row in df_temp.iterrows():
                 print('Could not find table for:', data_id, '_', row['location_Page'], ':', row['Name'])
+            conn.close()
             return True, buf.getvalue()
         except Exception as e:
+            conn.close()
             traceback.print_tb(e.__traceback__)
             return False, buf.getvalue()
-        finally:
-            conn.close()
 
 def find_final_title_table(data_id):
     # print(data_id)
     buf = StringIO()
+    conn = engine.connect()
     with redirect_stdout(buf), redirect_stderr(buf):
         try:
-            conn = engine.connect()
             # get tables for this document
             stmt = text("SELECT page, tableNumber, titleTag, titleTOC, topRowJson FROM esa.csvs "
                         "WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78) "
@@ -368,20 +440,20 @@ def find_final_title_table(data_id):
                     print('Could not find:', data_id, '_', page_num, '_', table_num, ':', title, ': error:', result)
                 prev_title = title
                 prev_cols_list = cols_list
+            conn.close()
             return True, buf.getvalue()
         except Exception as e:
             print('errors on title:', title)
+            conn.close()
             traceback.print_tb(e.__traceback__)
             return False, buf.getvalue()
-        finally:
-            conn.close()
 
 def find_final_title_fig(data_id):
     # print(data_id)
     buf = StringIO()
+    conn = engine.connect()
     with redirect_stdout(buf), redirect_stderr(buf):
         try:
-            conn = engine.connect()
             # get tables for this document
             stmt = text("SELECT page, tableNumber, titleTag, titleTOC, topRowJson FROM esa.csvs "
                         "WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78) "
@@ -420,11 +492,13 @@ def find_final_title_fig(data_id):
                     print('Could not find:', data_id, '_', page_num, '_', table_num, ':', title, ': error:', result)
                 prev_title = title
                 prev_cols_list = cols_list
+            conn.close()
             return True, buf.getvalue()
         except Exception as e:
+            conn.close()
             print('errors on title:', title)
             traceback.print_tb(e.__traceback__)
             return False, buf.getvalue()
-        finally:
-            conn.close()
+
+
 
