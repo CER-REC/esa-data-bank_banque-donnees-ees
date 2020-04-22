@@ -36,3 +36,8 @@ yarn-error.log*
 /Data_Files/**/*.*
 /Error_Logs/**/*.*
 /Error Logs/**/*.*
+tag_errors.txt
+toc_errors.txt
+final_errors.txt
+
+
