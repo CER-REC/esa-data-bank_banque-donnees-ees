@@ -64,7 +64,7 @@ def figure_checker_old(args):
 def figure_checker(args):
     conn = engine.connect()
     try:
-        doc_id, toc_id, toc_page, word1_rex, word2_rex, s2, s2_rex, page_rex, title = args
+        doc_id, toc_id, toc_page, toc_order, word1_rex, word2_rex, s2_rex, page_rex, title = args
 
         # get pages where we have images for this document (from db)
         stmt = text("SELECT page_num, block_order, type, bbox_area_image, bbox_area FROM esa.blocks "
@@ -117,7 +117,7 @@ def figure_checker(args):
                             # if fuzz.partial_ratio(s2, text_clean) > 0.7:
                             if re.search(s2_rex, text_clean):
                                 p_list.append(page_num)
-
+        count = len(p_list)
         for p in p_list:
             # update the db
             stmt = text("UPDATE esa.blocks SET titleTOC = :title_toc WHERE (pdfId = :pdf_id) and "
@@ -126,8 +126,16 @@ def figure_checker(args):
             result = conn.execute(stmt, params)
             if result.rowcount != 1:
                 print('Did not go to database:', doc_id, '_', p+1, ':', title, ': error:', result)
+
+        stmt = text("UPDATE esa.toc SET assigned_count = :count "
+                    "WHERE (toc_pdfId = :pdf_id) and (toc_page_num = :page_num) and (toc_title_order = :title_order);")
+        params = {"count": count, "pdf_id": toc_id, "page_num": toc_page, "title_order": toc_order}
+        result = conn.execute(stmt, params)
+        if result.rowcount != 1:
+            print('could not assign TOC count to: ', toc_id, toc_page, toc_order)
+
         conn.close()
-        return len(p_list)
+        return count
     except Exception as e:
         conn.close()
         print(traceback.print_tb(e.__traceback__))

@@ -28,7 +28,7 @@ do_toc_title_fig = 0  # assign table titles to each table using TOC method
 do_final_title_fig = 0  # replace continued tables and create final table title
 
 if __name__ == "__main__":
-    # get list of all documents
+    # get list of all documents, read from esa.pdfs
     with engine.connect() as conn:
         stmt = text("SELECT pdfId, hearingOrder, short_name FROM esa.pdfs;")
         all_projects = pd.read_sql_query(stmt, conn)
@@ -104,7 +104,7 @@ if __name__ == "__main__":
         # prev_id = 0
         prev_pr = ''
         for index, row in df_figs.iterrows():
-            # for i in range(1600, df_figs.shape[0]):
+            # for i in range(1263, df_figs.shape[0]):
             t1 = time.time()
             # index = i
             # row = df_figs.iloc[index, :]
@@ -123,16 +123,21 @@ if __name__ == "__main__":
             word2 = re.sub('[^a-zA-Z0-9]', '[^a-zA-Z0-9]', word2)
             word1_rex = re.compile(r'(?i)\b' + word1 + r'\s')
             word2_rex = re.compile(r'(?i)\b' + word2)
-            s2 = re.sub(constants.whitespace, ' ', s2)  # remove whitespace
-            s2_a = re.sub(constants.punctuation, '.*', s2) # allow anything in place of punctuation
-            s2_rex = r'(?i)\b'
 
-            for s in s2_a.split(' '):
-                s2_rex = s2_rex + r'[^\w]*' + s
+            s2_a = re.sub(constants.punctuation, ' ', s2) # remove punctuation
+            s2 = re.sub(constants.whitespace, ' ', s2)  # remove whitespace
+            # s2 = re.sub(constants.punctuation, '.*', s2) # allow anything in place of punctuation
+            # s2_rex = r'(?i)\b'
+            s2_rex = '(?i)'
+
+            for s in s2.split(' '):
+                s2_rex = s2_rex + r'.*\b' + s + r'\b'
+                # s2_rex = s2_rex + r'[^\w]*' + s
                 s2_len = len(s2_rex)
                 if s2_len > 200:
                     break
-            s2_rex = s2_rex + r'\b'
+            # s2_rex = s2_rex + r'\b'
+            print(s2_rex)
             s2_rex = re.compile(s2_rex)
             toc_id = row['toc_pdfId']
             toc_page = row['toc_page_num']
@@ -154,20 +159,14 @@ if __name__ == "__main__":
             count = 0
             for doc_id in docs_check:
                 if (doc_id > 0):
-                    arg = (doc_id, toc_id, toc_page, word1_rex, word2_rex, s2, s2_rex, page_rex, title)
+                    arg = (doc_id, toc_id, toc_page, title_order, word1_rex, word2_rex, s2_rex, page_rex, title)
                     count = figure_checker(arg)
                     # update db with count
                 if count > 0:
                     prev_id = doc_id
                     break
-            with engine.connect() as conn:
-                stmt = text("UPDATE esa.toc SET assigned_count = :count "
-                            "WHERE (toc_pdfId = :pdf_id) and (toc_page_num = :page_num) and (toc_title_order = :title_order);")
-                params = {"count": count, "pdf_id": toc_id, "page_num": toc_page, "title_order": title_order}
-                result = conn.execute(stmt, params)
-                if result.rowcount != 1:
-                    print('could not assign TOC count to: ', toc_id, toc_page, title_order)
-            print(index, time.time() - t1)
+
+            print(index, time.time() - t1, count)
 
     # update tag method titles
     if do_tag_title_table:
@@ -205,6 +204,7 @@ if __name__ == "__main__":
                 if result[1]:
                     f.write(result[1])
 
+    # write to all_tables-final.csv from esa.csvs
     with engine.connect() as conn:
         stmt = text("SELECT csvFullPath, pdfId, page, tableNumber, topRowJson, titleTag, titleTOC, titleFinal FROM esa.csvs "
                     "WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78);")
@@ -246,18 +246,24 @@ if __name__ == "__main__":
                 if result[1]:
                     f.write(result[1])
 
+    # write to final_figs_pivoted.csv from blocks + toc joined to pdfs
     with engine.connect() as conn:
         stmt = text("SELECT pdfs.hearingOrder, pdfs.short_name, blocks.pdfId, blocks.page_num, blocks.block_order, "
-                    "blocks.titleTag, blocks.titleTOC, blocks.titleFinal "
+                    "blocks.titleTag, blocks.titleTOC, blocks.titleFinal, 1 as assigned_count "
                     "FROM esa.blocks LEFT JOIN esa.pdfs ON pdfs.pdfId = blocks.pdfId "
-                    "WHERE titleTOC is not null;")
+                    "WHERE titleTOC is not null UNION ALL "
+                    "SELECT pdfs.hearingOrder, pdfs.short_name, toc.toc_pdfId, toc.toc_page_num, 0, '', toc.titleTOC, '', toc.assigned_count "
+                    "FROM esa.toc LEFT JOIN esa.pdfs ON pdfs.pdfId = toc.toc_pdfId "
+                    "WHERE (title_type = 'Figure') and ((assigned_count = 0) or (assigned_count is null));")
         df = pd.read_sql_query(stmt, conn)
         df.to_csv(constants.save_dir + 'final_figs_pivoted.csv', index=False, encoding='utf-8-sig')
 
-        stmt = text("SELECT pdfs.hearingOrder, pdfs.short_name, T.* FROM  "
-                    "(SELECT min(pdfId) as pdfId, concat(page_num + ',') as page_list, titleTOC "
-                    "FROM esa.blocks WHERE titleTOC is not null "
-                    "GROUP BY titleTOC) T LEFT JOIN esa.pdfs ON pdfs.pdfId = T.pdfId;")
+        # write to final_figs.csv from toc joined to pdfs
+        stmt = text("SELECT toc.titleTOC, toc.page_name, toc.toc_page_num, toc.toc_pdfId, toc.toc_title_order, "
+                    "pdfs.short_name, toc.assigned_count  "
+                    "FROM esa.toc LEFT JOIN esa.pdfs ON toc.toc_pdfId = pdfs.pdfId WHERE title_type='Figure' "
+                    "ORDER BY pdfs.short_name, toc.toc_pdfId, toc.toc_page_num, toc.toc_title_order;")
         df = pd.read_sql_query(stmt, conn)
         df.to_csv(constants.save_dir + 'final_figs.csv', index=False, encoding='utf-8-sig')
+
 
