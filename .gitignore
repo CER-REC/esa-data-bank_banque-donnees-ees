@@ -1,7 +1,41 @@
 **/.ipynb_checkpoints
 **/__pycache__
-.idea
+**/.env
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+**/node_modules
+/.pnp
+.pnp.js
+
+# testing
+**/coverage
+
+# production
+**/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.vscode
 .env
+.idea
+/__pycache__
+**/access.log
+**/log.txt
+/Support files
+/Data Files/**/*.*
+/Data_Files/**/*.*
+/Error_Logs/**/*.*
+/Error Logs/**/*.*
 tag_errors.txt
 toc_errors.txt
 final_errors.txt

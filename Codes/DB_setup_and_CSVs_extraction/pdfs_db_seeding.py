@@ -12,7 +12,7 @@ import PyPDF2
 pdf_files_folder = Path("//luxor/data/branch/Environmental Baseline Data\Version 4 - Final/PDF")
 csv_tables_folder = Path("//luxor/data/branch/Environmental Baseline Data\Version 4 - Final/all_csvs")
 index2 = Path().parent.parent.parent.absolute().joinpath(
-    "Input Files").joinpath("Index of PDFs for Major Projects with ESAs.csv")
+    "Input_Files").joinpath("Index_of_PDFs_for_Major_Projects_with_ESAs.csv")
 
 if not pdf_files_folder.exists():
     print(pdf_files_folder, "does not exist!")
@@ -37,9 +37,9 @@ engine = create_engine(engine_string)
 
 def insert_pdfs():
     df = pd.read_csv(index2)
-    df = df[["Data ID", "Application Name", "Application Short Name", "Commodity", "Hearing order"]] # FIXME:
-    df = df.rename(columns={"Data ID": "pdfId", "Commodity": "commodity", "Application Short Name": "short_name",
-                            "Hearing order": "hearingOrder", "Application Name": "application_name"})
+    df = df[["Data ID", "Application Name", "application_name", "Application Short Name", "Commodity", "Hearing order"]]
+    df = df.rename(columns={"Data ID": "pdfId", "Commodity": "commodity", "Hearing order": "hearingOrder",
+                            "Application Short Name": "short_name", "Application Name": "application_title_short"})
 
     with engine.connect() as conn:
         for row in df.itertuples():
@@ -50,14 +50,14 @@ def insert_pdfs():
                     if reader.isEncrypted:
                         reader.decrypt("")
                     total_pages = reader.getNumPages()
-                
+
                 stmt = text(
                     "INSERT INTO pdfs (pdfId, totalPages, hearingOrder, application_name, application_title_short," +
                     "short_name, commodity) VALUES (:pdfId, :totalPages, :hearingOrder, :application_name," +
                     ":application_title_short, :short_name, :commodity);")
                 params = {
                     "pdfId": row.pdfId, "totalPages": total_pages, "hearingOrder": row.hearingOrder,
-                    "application_name": row.application_name, "application_title_short": "PLACEHOLDER", # FIXME:
+                    "application_name": row.application_name, "application_title_short": row.application_title_short,
                     "short_name": row.short_name, "commodity": row.commodity}
                 result = conn.execute(stmt, params)
                 if result.rowcount != 1:
@@ -66,3 +66,6 @@ def insert_pdfs():
                 print(f"Error for {row.pdfId}: {e}")
     print("All done")
 
+
+if __name__ == "__main__":
+    insert_pdfs()

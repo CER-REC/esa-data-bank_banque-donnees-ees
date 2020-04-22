@@ -127,16 +127,16 @@ def insert_pdfs(args):
     print(f"Items to process: {len(args)}")
     start_time = time.time()
 
-    # Sequential mode
-    # for arg in args[-2:-1]:
+    # Sequential mode - if using, please comment out the multiprocessing mode code
+    # for arg in args[-10:]:
     #     result = insert_pdf(arg)
-    #     print(result[:-1])
+    #     print(result, end='', flush=True)
 
-    # Multiprocessing mode
+    # Multiprocessing mode - if using, please comment out the sequential mode code
     with Pool() as pool:
         results = pool.map(insert_pdf, args, chunksize=1)
     for result in results:
-        print(result[:-1])
+        print(result, end='', flush=True)
 
     duration = round(time.time() - start_time)
     print(f"Done {len(args)} in {duration} seconds ({round(duration/60, 2)} min or {round(duration/3600, 2)} hours)")
