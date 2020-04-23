@@ -1,18 +1,14 @@
-import re
 from pathlib import Path
 from dotenv import load_dotenv
 from multiprocessing import Pool
 import time
 from sqlalchemy import text, create_engine
-import sqlalchemy
 import os
 import pandas as pd
-import json
 import fitz
 from contextlib import redirect_stdout, redirect_stderr
 from io import StringIO
 import traceback
-
 
 load_dotenv(override=True)
 host = os.getenv("DB_HOST")
@@ -22,7 +18,7 @@ password = os.getenv("DB_PASS")
 engine_string = f"mysql+mysqldb://{user}:{password}@{host}/{database}?charset=utf8mb4"
 engine = create_engine(engine_string)
 
-pdf_files_folder = Path("//luxor/data/branch/Environmental Baseline Data\Version 4 - Final/PDF")
+pdf_files_folder = Path("//luxor/data/branch/Environmental Baseline Data/Version 4 - Final/PDF")
 
 
 def get_all_pdfs():
@@ -32,7 +28,8 @@ def get_all_pdfs():
         return df.to_dict("records")
 
 
-def clear_figures_DB():
+# noinspection SqlWithoutWhere
+def clear_figures_db():
     with engine.connect() as conn:
         result2 = conn.execute("DELETE FROM blocks;")
         print(f"Deleted {result2.rowcount} blocks.")
@@ -45,6 +42,7 @@ def insert_pdf(pdf):
     with redirect_stdout(buf), redirect_stderr(buf):
         try:
             pdf_file_path = pdf_files_folder.joinpath(f"{pdf['pdfId']}.pdf")
+            # noinspection PyUnresolvedReferences
             doc = fitz.open(pdf_file_path)
             for page in doc:
                 figures = page.searchFor('Figure')
@@ -52,9 +50,9 @@ def insert_pdf(pdf):
                 rotation = page.rotation
                 try:
                     image_list = page.getImageList()  # get list of used images
-                except:
+                except Exception as e:
                     image_list = []
-                    print('Error getting image list for:', pdf['pdfId'], page_num)
+                    print('Error getting image list for:', pdf['pdfId'], page_num, e)
                 num_images = len(image_list)
                 page_text = page.getText('dict')  # list, extract the page’s text
                 width = page_text['width']
@@ -69,19 +67,20 @@ def insert_pdf(pdf):
 
                 with engine.connect() as conn:
                     stmt = "INSERT INTO pages (pdfId,page_num,width,height,rotation," \
-                        "figures,num_images,media_x0,media_y0,media_x1,media_y1," \
-                        "media_width,media_height,page_area) " \
-                        "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
+                           "figures,num_images,media_x0,media_y0,media_x1,media_y1," \
+                           "media_width,media_height,page_area) " \
+                           "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
                     params = (pdf['pdfId'], page_num, width, height, rotation,
                               len(figures), num_images, media_x0, media_y0, media_x1, media_y1,
                               media_width, media_height, page_area,)
-                    result = conn.execute(stmt, params)
+                    conn.execute(stmt, params)
 
                 for index, block in enumerate(page_text['blocks']):
                     t = block['type']
                     bbox = block['bbox']
                     if t == 1:
-                        ext, color, xres, yres, bpc, image = block['ext'], block['colorspace'], block['xres'], block['yres'], block['bpc'], block['image']
+                        ext, color, xres, yres, bpc, image = block['ext'], block['colorspace'], block['xres'], block[
+                            'yres'], block['bpc'], block['image']
                         block_width, block_height = block['width'], block['height']
                         block_area = block_width * block_height
                     else:
@@ -114,7 +113,7 @@ def insert_pdf(pdf):
                                   'color': color, 'xres': xres, 'yres': yres, 'bpc': bpc, "bbox_width": bbox_width,
                                   "bbox_height": bbox_height, "bbox_area": bbox_area,
                                   "bbox_area_image": bbox_area_image, "block_order": index + 1}
-                        result = conn.execute(stmt, params)
+                        conn.execute(stmt, params)
             print(f"{pdf['pdfId']} is done.")
         except Exception as e:
             print(f"{pdf['pdfId']}: ERROR! {e}")
@@ -139,10 +138,11 @@ def insert_pdfs(args):
         print(result, end='', flush=True)
 
     duration = round(time.time() - start_time)
-    print(f"Done {len(args)} in {duration} seconds ({round(duration/60, 2)} min or {round(duration/3600, 2)} hours)")
+    print(
+        f"Done {len(args)} in {duration} seconds ({round(duration / 60, 2)} min or {round(duration / 3600, 2)} hours)")
 
 
 if __name__ == "__main__":
-    clear_figures_DB()  # Careful! Deletes all pages and blocks data from the DB!
+    clear_figures_db()  # Careful! Deletes all pages and blocks data from the DB!
     data = get_all_pdfs()
     insert_pdfs(data)
