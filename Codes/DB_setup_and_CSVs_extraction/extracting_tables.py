@@ -12,7 +12,7 @@ import camelot
 import traceback
 
 pdf_files_folder = Path("//luxor/data/branch/Environmental Baseline Data/Version 4 - Final/PDF")
-csv_tables_folder = Path(r"C:\Users\T1Ivan\Desktop\3")
+csv_tables_folder = Path().resolve().parent.parent.joinpath("Data_Files").joinpath("CSVs")
 
 if not pdf_files_folder.exists():
     print(pdf_files_folder, "does not exist!")
