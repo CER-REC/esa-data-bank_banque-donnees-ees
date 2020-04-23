@@ -1,15 +1,12 @@
 from pathlib import Path
 from dotenv import load_dotenv
-from multiprocessing import Pool
-import time
 from sqlalchemy import text, create_engine
 import os
 import pandas as pd
-import json
 import PyPDF2
 
 
-pdf_files_folder = Path("//luxor/data/branch/Environmental Baseline Data\Version 4 - Final/PDF")
+pdf_files_folder = Path("//luxor/data/branch/Environmental Baseline Data/Version 4 - Final/PDF")
 index2 = Path().parent.parent.parent.absolute().joinpath(
     "Input_Files").joinpath("Index_of_PDFs_for_Major_Projects_with_ESAs.csv")
 
