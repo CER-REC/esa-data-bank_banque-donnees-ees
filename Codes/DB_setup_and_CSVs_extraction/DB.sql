@@ -48,7 +48,7 @@ CREATE TABLE `blocks` (
   `titleTag` text,
   `titleFinal` text,
   PRIMARY KEY (`pdfId`,`page_num`,`block_order`),
-  CONSTRAINT `pdfId_and_page` FOREIGN KEY (`pdfId`, `page_num`) REFERENCES `pages` (`pdfId`, `page_num`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `pdfId_and_page` FOREIGN KEY (`pdfId`, `page_num`) REFERENCES `pages` (`pdfId`, `page_num`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -81,7 +81,7 @@ CREATE TABLE `csvs` (
   PRIMARY KEY (`csvId`),
   UNIQUE KEY `csvId_UNIQUE` (`csvId`),
   KEY `pdfs_idx` (`pdfId`),
-  CONSTRAINT `pdfs` FOREIGN KEY (`pdfId`) REFERENCES `pdfs` (`pdfId`)
+  CONSTRAINT `pdfs` FOREIGN KEY (`pdfId`) REFERENCES `pdfs` (`pdfId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -108,7 +108,7 @@ CREATE TABLE `pages` (
   `media_height` int NOT NULL,
   `page_area` int NOT NULL,
   PRIMARY KEY (`pdfId`,`page_num`),
-  CONSTRAINT `pdf` FOREIGN KEY (`pdfId`) REFERENCES `pdfs` (`pdfId`)
+  CONSTRAINT `pdf` FOREIGN KEY (`pdfId`) REFERENCES `pdfs` (`pdfId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -151,7 +151,7 @@ CREATE TABLE `toc` (
   `toc_title_order` int NOT NULL,
   PRIMARY KEY (`toc_page_num`,`toc_pdfId`,`toc_title_order`),
   KEY `pdf2` (`toc_pdfId`) /*!80000 INVISIBLE */,
-  CONSTRAINT `pdf2` FOREIGN KEY (`toc_pdfId`) REFERENCES `pdfs` (`pdfId`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `pdf2` FOREIGN KEY (`toc_pdfId`) REFERENCES `pdfs` (`pdfId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -164,4 +164,4 @@ CREATE TABLE `toc` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-04-23 14:46:16
+-- Dump completed on 2020-04-23 17:03:05
