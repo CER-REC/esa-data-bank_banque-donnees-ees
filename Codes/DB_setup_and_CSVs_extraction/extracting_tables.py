@@ -10,6 +10,7 @@ from io import StringIO
 from contextlib import redirect_stdout, redirect_stderr
 import camelot
 import traceback
+import re
 
 pdf_files_folder = Path("//luxor/data/branch/Environmental Baseline Data/Version 4 - Final/PDF")
 csv_tables_folder = Path().resolve().parent.parent.joinpath("Data_Files").joinpath("CSVs")
@@ -30,6 +31,16 @@ user = os.getenv("DB_USER")
 password = os.getenv("DB_PASS")
 engine_string = f"mysql+mysqldb://{user}:{password}@{host}/{database}?charset=utf8mb4"
 engine = create_engine(engine_string)
+
+regex = re.compile("[0-9a-zA-Z]")
+
+
+def is_empty(lines):
+    for line in lines:
+        for cell in line:
+            if regex.search(cell):
+                return False
+    return True
 
 
 def extract_csv(args):
@@ -53,20 +64,21 @@ def extract_csv(args):
                 top_row_json = json.dumps(table.df.iloc[0].tolist())
                 csv_text = table.df.to_json(None, orient='values')
                 table.to_csv(csv_full_path, index=False, header=False, encoding="utf-8-sig")
+                has_content = 0 if is_empty(json.dumps(csv_text)) else 1
 
                 with engine2.connect() as conn2:
                     statement2 = text(
                         "INSERT INTO csvs (csvId, csvFileName, csvFullPath, pdfId, page, tableNumber," +
-                        "topRowJson, csvRows, csvColumns, method, accuracy, whitespace, csvText) " +
+                        "topRowJson, csvRows, csvColumns, method, accuracy, whitespace, csvText, hasContent) " +
                         "VALUE (:csvId, :csvFileName, :csvFullPath, :pdfId, :page, :tableNumber, " +
-                        ":topRowJson, :csvRows, :csvColumns, :method, :accuracy, :whitespace, :csvText);")
+                        ":topRowJson, :csvRows, :csvColumns, :method, :accuracy, :whitespace, :csvText, :hasContent);")
                     conn2.execute(statement2, {"csvId": csv_id, "csvFileName": csv_file_name,
                                                "csvFullPath": csv_full_path, "pdfId": pdf_id,
                                                "page": csv_page, "tableNumber": table_number,
                                                "topRowJson": top_row_json, "csvRows": csv_rows,
                                                "csvColumns": csv_columns, "method": method,
                                                "accuracy": accuracy, "whitespace": whitespace,
-                                               "csvText": csv_text})
+                                               "csvText": csv_text, "hasContent": has_content})
 
         try:
             pdf_file_path = pdf_files_folder2.joinpath(f"{pdf_id}.pdf")
