@@ -56,7 +56,7 @@ def rotate_pdf(path, Index0):
         #print(row)
         
         try:
-            full_path = path + "//Data_Files//PDFs//" + str(row['Data ID']) + ".pdf"
+            full_path = path + "\\Data_Files\\PDFs\\" + str(row['Data ID']) + ".pdf"
             pdf_in = open(full_path, 'rb')
             pdf_reader = PyPDF2.PdfFileReader(pdf_in, strict=False)
             pdf_writer = PyPDF2.PdfFileWriter()
@@ -64,7 +64,7 @@ def rotate_pdf(path, Index0):
                 page = pdf_reader.getPage(pagenum)
                 page.rotateClockwise(90)
                 pdf_writer.addPage(page)
-            pdf_out = open(path + "//Data_Files//PDFs_Rotated//" + str(row['Data ID']) + "_Rotated.pdf", 'wb')
+            pdf_out = open(path + "\\Data_Files\\PDFs_Rotated\\" + str(row['Data ID']) + "_Rotated.pdf", 'wb')
             pdf_writer.write(pdf_out)
             pdf_out.close()
             pdf_in.close()

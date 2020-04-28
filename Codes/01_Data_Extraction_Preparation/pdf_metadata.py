@@ -127,11 +127,16 @@ def pdf_categorize(path, Index0):
         
     topics = []
     for index, row in Index0.iterrows():
+        # Extracting the PDF data and the PDF name
+        # PDF name might have useful data about the contents of the PDF
         line = str(row['ESA Section(s)']) + str(row['File Name'])
+        
+        # unnecessary white spacxes is removed and text converted to lower case 
         line = remove_string_special_characters(line).lower()
         line_topics = []
         topic_found = 0
-    
+        
+        # Categorising the PDFs into 10 ESA categories based on keywords present  
         if check_topic_present(land1, line) == 1:
             line_topics.append('Land')
             topic_found = 1
@@ -175,8 +180,10 @@ def pdf_categorize(path, Index0):
         if topic_found == 0:
             line_topics.append('Other')
         
+        # the detected topics for each PDF is appended in the array 
         topics.append(line_topics)
         
+    # New Index1 has all the couloumns as Index0 and an addition coloumn
     Index1 = Index0
     Index1['Topics'] = topics
     return(Index1)
@@ -209,6 +216,8 @@ def pdf_size(path, Index0):
         
     """
     sizes = []
+    
+    # iterate through each row of the Dataframe
     for index, row in Index0.iterrows():
         try:
             pdf_path = path + "\\Data_Files\\PDFs\\" + str(row['Data ID']) + '.pdf'
@@ -217,6 +226,8 @@ def pdf_size(path, Index0):
             sizes.append(size)
         except:
             sizes.append(0)
+    
+    # New Index1 has all the couloumns as Index0 and an addition coloumn
     Index1 = Index0
     Index1['PDF Size (bytes)'] = sizes
     return(Index1)
@@ -249,6 +260,8 @@ def pdf_pagenumbers(path, Index0):
         
     """
     page_numbers = []
+    
+    # iterate through each row of the Dataframe
     for index, row in Index0.iterrows():
         try:
             pdf_path = Path(path + "\\Data_Files\\PDFs\\" + str(row['Data ID']) + '.pdf')
@@ -260,7 +273,62 @@ def pdf_pagenumbers(path, Index0):
                 page_numbers.append(total_pages)
         except:
             page_numbers.append(0)
+    
+    # New Index1 has all the couloumns as Index0 and an addition coloumn
     Index1 = Index0
     Index1['Number of Pages'] = page_numbers
     return(Index1)
+    
+def get_outline_present(path, Index0):
+    """
+    This method attempts to identify if the outline (Table of contents) is 
+    present in a PDF or not. The files which might have an error in opening due 
+    to any other dependent step will be marked as no outline present.
+    
+    Parameters
+    ----------
+    path: path of the root folder in string format
+        This path will be used to find the folder location where the scraped 
+        pdf files are going to be saved
+    Index0: Dataframe with the DataIDs of the PDF and their downloadable links    
+        Data_ID: It is the unique ID of the PDF file which will be used as the 
+        name of the PDF downloaded
+        esa_download_link: URL addresses stored as a list of string
+        a list of the pdf URLs so that the respepctive files could be 
+        downloaded
+        
+    Returns
+    ----------
+    Index1:
+        This returns a dataframe similar to Index0 with an additional coloumn
+        'Outline Present'. This binary couloumn will indicate if the PDF file 
+        has an outline present or not. 
+        
+    """
+    outline_present = []
+    
+    # iterate through each row of the Dataframe
+    for index, row in Index0.iterrows():
+        try:
+            pdf_path = Path(path + "\\Data_Files\\PDFs\\" + str(row['Data ID']) + '.pdf')
+            with pdf_path.open("rb") as pdf:
+                reader = PyPDF2.PdfFileReader(pdf)
+                if reader.isEncrypted:
+                    reader.decrypt("")
+                s = reader.outlines
+                len_s = len(s)
+                
+                # If length of outline extracted is >0, then outline is present 
+                if len_s > 0: 
+                    outline_present.append(1)
+                else:
+                    outline_present.append(0)
+        except:
+            outline_present.append(0)
+    
+    # New Index1 has all the couloumns as Index0 and an addition coloumn
+    Index1 = Index0
+    Index1['Outline Present'] = outline_present
+    return(Index1)
+    
     
