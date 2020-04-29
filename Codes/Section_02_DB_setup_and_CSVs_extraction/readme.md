@@ -44,4 +44,4 @@ run on your machine and hold the actual data.
 
 1. Open the MySQL Workbench and connect to the local MySQL DB
 2. In the Navigator window, select 'Schemas' tab on the bottom
-3. Right click in the free space in the list of 
+3. Right click in the free space in the list of  
