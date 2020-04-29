@@ -1,5 +1,6 @@
 import pandas as pd
 import re
+import regex
 import time
 from multiprocessing import Pool
 import pickle
@@ -64,80 +65,148 @@ def figure_checker_old(args):
 def figure_checker(args):
     conn = engine.connect()
     try:
-        doc_id, toc_id, toc_page, toc_order, word1_rex, word2_rex, s2_rex, page_rex, title = args
+        doc_id, toc_id, toc_page, toc_order, word1_rex, word2_rex, s2, page_rex, title = args
 
         # get pages where we have images for this document (from db)
-        stmt = text("SELECT page_num, block_order, type, bbox_area_image, bbox_area FROM esa.blocks "
-                    "WHERE (pdfId = :pdf_id);")
+        stmt = text("SELECT page_num, block_order, type as 'images', bbox_area_image, bbox_area FROM esa.blocks "
+                    "WHERE (pdfId = :pdf_id) and (bbox_x0 >= 0) and (bbox_y0 >= 0) and (bbox_x1 >= 0) and (bbox_y1 >= 0);")
         params = {"pdf_id": doc_id}
         df = pd.read_sql_query(stmt, conn, params=params)
-        df_pages = df[['page_num', 'bbox_area_image', 'bbox_area']].groupby('page_num', as_index=False).sum()
+        df_pages = df[['page_num', 'bbox_area_image', 'bbox_area', 'images']].groupby('page_num', as_index=False).sum()
         df_pages['imageProportion'] = df_pages['bbox_area_image'] / df_pages['bbox_area']
         min_proportion = df_pages['imageProportion'].mean() if df_pages['imageProportion'].mean() < 0.1 else 0.1
-        df_pages = df_pages[df_pages['imageProportion'] > min_proportion]
-        image_pages = df_pages['page_num'].unique()
+        min_images = df_pages['images'].mean()
+        df_pages = df_pages[(df_pages['imageProportion'] > min_proportion) | (df_pages['images'] > min_images)]
+        image_pages = df_pages['page_num'].unique().tolist()
         # df['Real Order'] = df.groupby(['page'])['tableNumber'].rank()
 
-        # get the text and rotated text for this document
-        with open(constants.pickles_path + str(doc_id) + '.pkl', 'rb') as f:  # unrotated pickle
-            data = pickle.load(f)
-        with open(constants.pickles_rotated_path + str(doc_id) + '.pkl', 'rb') as f:  # rotated pickle
-            data_rotated = pickle.load(f)
-        doc_text = data['content']
-        doc_text_rotated = data_rotated['content']  # save the rotated text
+        stmt = text("SELECT page FROM esa.csvs WHERE (pdfId = :pdf_id) "
+                    "and (titleFinal = '' or titleFinal is null) GROUP BY page;")
+        params = {"pdf_id": doc_id}
+        extra_pages_df = pd.read_sql_query(stmt, conn, params=params)
+        extra_pages = [p for p in extra_pages_df['page'].tolist() if p not in image_pages] # list of extra pages to check
+
+        # get text
+        if (len(extra_pages) > 0) and (len(image_pages) > 0):
+            params = {"pdf_id": doc_id, "image_list": image_pages, "extra_list": extra_pages}
+            stmt = text("SELECT page_num, clean_content FROM esa.pages_normal_txt "
+                        "WHERE (pdfId = :pdf_id) and (page_num in :image_list or page_num in :extra_list);")
+            stmt_rotated = text("SELECT page_num, clean_content FROM esa.pages_rotated90_txt "
+                                "WHERE (pdfId = :pdf_id) and (page_num in :image_list or page_num in :extra_list);")
+            text_df = pd.read_sql_query(stmt, conn, params=params, index_col='page_num')
+            text_rotated_df = pd.read_sql_query(stmt_rotated, conn, params=params, index_col='page_num')
+
+        elif (len(image_pages) > 0):
+            params = {"pdf_id": doc_id, "image_list": image_pages}
+            stmt = text("SELECT page_num, clean_content FROM esa.pages_normal_txt "
+                        "WHERE (pdfId = :pdf_id) and (page_num in :image_list);")
+            stmt_rotated = text("SELECT page_num, clean_content FROM esa.pages_rotated90_txt "
+                                "WHERE (pdfId = :pdf_id) and (page_num in :image_list);")
+            text_df = pd.read_sql_query(stmt, conn, params=params, index_col='page_num')
+            text_rotated_df = pd.read_sql_query(stmt_rotated, conn, params=params, index_col='page_num')
+
+        elif (len(extra_pages) > 0):
+            params = {"pdf_id": doc_id, "extra_list": extra_pages}
+            stmt = text("SELECT page_num, clean_content FROM esa.pages_normal_txt "
+                        "WHERE (pdfId = :pdf_id) and (page_num in :extra_list);")
+            stmt_rotated = text("SELECT page_num, clean_content FROM esa.pages_rotated90_txt "
+                                "WHERE (pdfId = :pdf_id) and (page_num in :extra_list);")
+            text_df = pd.read_sql_query(stmt, conn, params=params, index_col='page_num')
+            text_rotated_df = pd.read_sql_query(stmt_rotated, conn, params=params, index_col='page_num')
+
+        else:
+            text_df = None
+            text_rotated_df = None
 
         p_list = []
-        # check unrotated
-        if '<body>' in doc_text:
-            soup = BeautifulSoup(doc_text, 'lxml')
-            pages = soup.find_all('div', attrs={'class': 'page'})
-            for page_num, page in enumerate(pages):
-                if page_num + 1 in image_pages:
-                    # print('1 checking page:', page_num + 1)
-                    text_clean = re.sub(constants.whitespace, ' ', page.text)
-                    # text_clean = re.sub(punctuation, ' ', text_clean)
-                    if (page_num not in p_list) and ((doc_id != toc_id) or (page_num != toc_page-1)): # if not toc page
-                        # print('2 checking page:', page_num+1)
-                        if re.search(word2_rex, text_clean): # if fig # matches
-                            # match s2 fuzzy
-                            # if fuzz.partial_ratio(s2, text_clean) > 0.7:
-                            if re.search(s2_rex, text_clean):
-                                p_list.append(page_num)
+        sim_list = []
+        ratio_list = []
+        word2_list = []
+        for check_list in [image_pages, extra_pages]:
+            for page_num in check_list:
+                # print(check_list)
+                if (doc_id != toc_id) or (page_num != toc_page):  # if not toc page
+                    text_ws = text_df.loc[page_num, 'clean_content']
+                    text_clean = re.sub(constants.punctuation, ' ', text_ws)
+                    text_clean = re.sub(constants.whitespace, ' ', text_clean)
+                    text_clean = text_clean.lower()
 
-            # check rotated
-            soup = BeautifulSoup(doc_text_rotated, 'lxml')
-            pages = soup.find_all('div', attrs={'class': 'page'})
-            for page_num, page in enumerate(pages):
-                if page_num + 1 in image_pages:
-                    text_clean = re.sub(constants.whitespace, ' ', page.text)
-                    # text_clean = re.sub(punctuation, ' ', text_clean)
-                    if (page_num not in p_list) and ((doc_id != toc_id) or (page_num != toc_page-1)):
-                        if re.search(word2_rex, text_clean): # if figure number matches
-                            # fuzzy match s2
-                            # if fuzz.partial_ratio(s2, text_clean) > 0.7:
-                            if re.search(s2_rex, text_clean):
-                                p_list.append(page_num)
-        count = len(p_list)
-        for p in p_list:
-            # update the db
-            stmt = text("UPDATE esa.blocks SET titleTOC = :title_toc WHERE (pdfId = :pdf_id) and "
-                        "(page_num = :page_num) and (block_order = :block_num);")
-            params = {"pdf_id": doc_id, "page_num": p+1, "block_num": 1, "title_toc": title}
+                    text_rotated_ws = text_rotated_df.loc[page_num, 'clean_content']
+                    text_rotated_clean = re.sub(constants.punctuation, ' ', text_rotated_ws)
+                    text_rotated_clean = re.sub(constants.whitespace, ' ', text_rotated_clean)
+                    text_rotated_clean = text_rotated_clean.lower()
+
+                    if re.search(word2_rex, text_ws) or re.search(word2_rex, text_rotated_ws):
+                        word2_match = 1
+                    else:
+                        word2_match = 0
+
+                    words = [word for word in s2.split() if (len(word) > 3) and (word != 'project')]
+                    match = [word for word in words if (regex.search(r'(?i)\b' + word + r'{e<=1}\b', text_clean))
+                             or (regex.search(r'(?i)\b' + word + r'{e<=1}\b', text_rotated_clean))]
+                    if len(words) > 0:
+                        sim = len(match) / len(words)
+                    else:
+                        sim = 0
+                    l = len(s2)
+                    ratio = 0
+                    for i in range(len(text_clean) - l + 1):
+                        r = fuzz.ratio(s2, text_clean[i:i + l])
+                        if r > ratio:
+                            ratio = r
+                    for i in range(len(text_rotated_clean) - l + 1):
+                        r = fuzz.ratio(s2, text_rotated_clean[i:i + l])
+                        if r > ratio:
+                            ratio = r
+                    # ratio = max(fuzz.partial_ratio(s2, text_clean),
+                    #             fuzz.partial_ratio(s2, text_rotated_clean))
+                    add = 0
+                    if word2_match:
+                        if (sim >= 0.7) and (ratio >= 60):
+                            add = 1
+                    # else:
+                    #     if (sim >= 0.9) and (ratio >= 90):
+                    #         add = 1
+
+                    if add:
+                        p_list.append(page_num)
+                        sim_list.append(sim)
+                        ratio_list.append(ratio)
+                        word2_list.append(word2_match)
+            if len(sim_list) > 0:
+                break
+
+        # only keep those with largest sim
+        if len(sim_list) > 0:
+            max_sim = max(sim_list)
+            p_list2 = []
+            ratio_list2 = []
+            word2_list2 = []
+            for i, sim in enumerate(sim_list):
+                if sim >= max_sim:
+                    p_list2.append(p_list[i])
+                    ratio_list2.append(ratio_list[i])
+                    word2_list2.append(word2_list[i])
+            max_ratio = max(ratio_list2)
+            # now only keep those with largest ratio
+            final_list = [{'page_num':int(p_list2[i]), 'word2': word2_list2[i], 'sim':max_sim, 'ratio':ratio} for i, ratio in enumerate(ratio_list2) if ratio >= max_ratio]
+        else:
+            final_list = []
+        count = len(final_list)
+
+        if (count > 0):
+            stmt = text("UPDATE esa.toc SET assigned_count = :count, loc_pdfId = :loc_id, loc_page_list = :loc_pages "
+                        "WHERE (toc_pdfId = :pdf_id) and (toc_page_num = :page_num) and (toc_title_order = :title_order);")
+            params = {"count": count, "loc_id": doc_id, "loc_pages": json.dumps(final_list), "pdf_id": toc_id, "page_num": toc_page, "title_order": toc_order}
             result = conn.execute(stmt, params)
             if result.rowcount != 1:
-                print('Did not go to database:', doc_id, '_', p+1, ':', title, ': error:', result)
-
-        stmt = text("UPDATE esa.toc SET assigned_count = :count "
-                    "WHERE (toc_pdfId = :pdf_id) and (toc_page_num = :page_num) and (toc_title_order = :title_order);")
-        params = {"count": count, "pdf_id": toc_id, "page_num": toc_page, "title_order": toc_order}
-        result = conn.execute(stmt, params)
-        if result.rowcount != 1:
-            print('could not assign TOC count to: ', toc_id, toc_page, toc_order)
+                print('could not assign TOC count to: ', toc_id, toc_page, toc_order)
 
         conn.close()
         return count
     except Exception as e:
         conn.close()
+        print('Error in', doc_id)
         print(traceback.print_tb(e.__traceback__))
         return 0
 
