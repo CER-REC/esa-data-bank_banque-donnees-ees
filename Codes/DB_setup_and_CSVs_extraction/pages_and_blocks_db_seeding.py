@@ -137,9 +137,8 @@ def insert_pdfs(args):
     for result in results:
         print(result, end='', flush=True)
 
-    duration = round(time.time() - start_time)
-    print(
-        f"Done {len(args)} in {duration} seconds ({round(duration / 60, 2)} min or {round(duration / 3600, 2)} hours)")
+    d = round(time.time() - start_time)
+    print(f"Done {len(args)} in {d} seconds ({round(d / 60, 2)} min or {round(d / 3600, 2)} hours)")
 
 
 if __name__ == "__main__":
