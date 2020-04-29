@@ -1,8 +1,6 @@
 import pandas as pd
 import re
 import regex
-import time
-from multiprocessing import Pool
 import pickle
 from bs4 import BeautifulSoup
 from io import StringIO

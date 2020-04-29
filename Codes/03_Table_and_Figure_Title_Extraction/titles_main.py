@@ -9,7 +9,7 @@ import json
 
 from Codes.external_functions import figure_checker
 from Codes.external_functions import find_tag_title_table, find_toc_title_table, find_final_title_table
-from Codes.external_functions import find_tag_title_fig, find_toc_title_fig, find_final_title_fig
+from Codes.external_functions import find_tag_title_fig, find_final_title_fig
 import Codes.constants as constants
 
 load_dotenv(override=True)
@@ -184,9 +184,9 @@ if __name__ == "__main__":
         # print(len(list_ids))
         with Pool() as pool:
             results = pool.map(find_tag_title_table, list_ids)
-        with open('tag_errors.txt', 'w', encoding='utf-8') as f:
+        with open('../tag_errors.txt', 'w', encoding='utf-8') as f:
             f.write('Errors found:\n')
-        with open('tag_errors.txt', 'a', encoding='utf-8') as f:
+        with open('../tag_errors.txt', 'a', encoding='utf-8') as f:
             for result in results:
                 if result[1] != "":
                     f.write(str(result[1]))
@@ -237,9 +237,9 @@ if __name__ == "__main__":
         # milti process
         with Pool() as pool:
             results = pool.map(find_tag_title_fig, list_ids)
-        with open('tag_errors.txt', 'w', encoding='utf-8') as f:
+        with open('../tag_errors.txt', 'w', encoding='utf-8') as f:
             f.write('Errors found:\n')
-        with open('tag_errors.txt', 'a', encoding='utf-8') as f:
+        with open('../tag_errors.txt', 'a', encoding='utf-8') as f:
             for result in results:
                 if result[1] != "":
                     f.write(str(result[1]))
