@@ -28,7 +28,7 @@ def project_figure_titles(project):
                 params = {"project": project}
                 stmt = text("SELECT toc.titleTOC, toc.page_name, toc.toc_page_num, toc.toc_pdfId, toc.toc_title_order "
                             "FROM esa.toc LEFT JOIN esa.pdfs ON toc.toc_pdfId = pdfs.pdfId "
-                            "WHERE title_type='Figure' and and short_name = :project "
+                            "WHERE title_type='Figure' and short_name = :project "
                             "ORDER BY pdfs.short_name, toc.toc_pdfId, toc.toc_page_num, toc.toc_title_order;")
                 df_figs = pd.read_sql_query(stmt, conn, params=params)
 

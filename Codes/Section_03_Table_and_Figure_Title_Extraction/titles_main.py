@@ -100,7 +100,7 @@ if __name__ == "__main__":
             # get_titles_tables(project)
             y = 0
         data = []
-        projects = all_projects['Hearing order'].unique()
+        # projects = all_projects['Hearing order'].unique()
         for project in projects:
             df = pd.read_csv(constants.save_dir + project + '-final_tables.csv', encoding='utf-8-sig')
             data.append(df)
