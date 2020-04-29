@@ -7,10 +7,10 @@ from dotenv import load_dotenv
 import time
 import json
 
-from Codes.external_functions import figure_checker
-from Codes.external_functions import find_tag_title_table, find_toc_title_table, find_final_title_table
-from Codes.external_functions import find_tag_title_fig, find_final_title_fig
-import Codes.constants as constants
+from Codes.Section_03_Table_and_Figure_Title_Extraction.external_functions import figure_checker
+from Codes.Section_03_Table_and_Figure_Title_Extraction.external_functions import find_tag_title_table, find_toc_title_table, find_final_title_table
+from Codes.Section_03_Table_and_Figure_Title_Extraction.external_functions import find_tag_title_fig, find_final_title_fig
+import Codes.Section_03_Table_and_Figure_Title_Extraction.constants as constants
 
 load_dotenv(override=True)
 engine_string = f"mysql+mysqldb://esa_user_rw:{os.getenv('DB_PASS')}@os25.neb-one.gc.ca./esa?charset=utf8"

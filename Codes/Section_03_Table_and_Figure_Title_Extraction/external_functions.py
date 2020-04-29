@@ -13,7 +13,7 @@ from fuzzywuzzy import fuzz
 import json
 import numpy as np
 
-import Codes.constants as constants
+import Codes.Section_03_Table_and_Figure_Title_Extraction.constants as constants
 
 load_dotenv(override=True)
 engine_string = f"mysql+mysqldb://esa_user_rw:{os.getenv('DB_PASS')}@os25.neb-one.gc.ca./esa?charset=utf8"
