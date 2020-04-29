@@ -17,6 +17,8 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize 
 import pandas as pd 
 
+from pathlib import Path
+
 
         
 def check_topic_present(topic, text):
@@ -59,37 +61,50 @@ def pdf_categorize(path, Index0):
         line = str(row['ESA Section(s)']) + str(row['File Name'])
         line = remove_string_special_characters(line).lower()
         line_topics = []
+        topic_found = 0
     
         if check_topic_present(land1, line) == 1:
             line_topics.append('Land')
+            topic_found = 1
         
         if check_topic_present(air2, line) == 1:
             line_topics.append('Air')
+            topic_found = 1
     
         if check_topic_present(water3, line) == 1:
             line_topics.append('Water')
+            topic_found = 1
         
         if check_topic_present(wildlife4, line) == 1:
             line_topics.append('Wildlife')
+            topic_found = 1
             
         if check_topic_present(vegetation5, line) == 1:
             line_topics.append('Vegetation')
+            topic_found = 1
         
         if check_topic_present(human6, line) == 1:
             line_topics.append('Human')
+            topic_found = 1
             
         if check_topic_present(alignment_sheet7, line) == 1:
             line_topics.append('Alignment Sheet')
+            topic_found = 1
         
         if check_topic_present(tech8, line) == 1:
             line_topics.append('Technology')
+            topic_found = 1
 
         if check_topic_present(traditional_knowledge9, line) == 1:
             line_topics.append('Traditional Knowledge')
+            topic_found = 1
     
         if check_topic_present(epp10, line) == 1:
             line_topics.append('Environment Protection Plan')
+            topic_found = 1
         
+        if topic_found == 0:
+            line_topics.append('Other')
         
         topics.append(line_topics)
         
@@ -98,3 +113,18 @@ def pdf_categorize(path, Index0):
     
     return(Index1)
 
+
+def pdf_size(path, Index0):
+    sizes = []
+    for index, row in Index0.iterrows():
+        pdf_path = path + "\\Data Files\\PDFs\\" + str(row['Data ID']) + '.pdf'
+        file = Path(pdf_path)
+        size = file.stat().st_size
+        sizes.append(size)
+    Index1 = Index0
+    Index1['PDF Size (bytes)'] = sizes
+    return(Index1)
+            
+
+def pdf_pagenumbers(path, Index0):
+    

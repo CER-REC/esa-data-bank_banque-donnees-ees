@@ -1,26 +1,18 @@
 from pathlib import Path
 from dotenv import load_dotenv
-from multiprocessing import Pool
-import time
 from sqlalchemy import text, create_engine
 import os
 import pandas as pd
-import json
 import PyPDF2
 
-
-pdf_files_folder = Path("//luxor/data/branch/Environmental Baseline Data\Version 4 - Final/PDF")
-csv_tables_folder = Path("//luxor/data/branch/Environmental Baseline Data\Version 4 - Final/all_csvs")
-index2 = Path().parent.parent.parent.absolute().joinpath(
+pdf_files_folder = Path("//luxor/data/branch/Environmental Baseline Data/Version 4 - Final/PDF")
+index2 = Path().resolve().parent.parent.joinpath(
     "Input_Files").joinpath("Index_of_PDFs_for_Major_Projects_with_ESAs.csv")
 
 if not pdf_files_folder.exists():
     print(pdf_files_folder, "does not exist!")
-elif not csv_tables_folder.exists():
-    print(csv_tables_folder, "does not exist!")
 elif not index2.exists():
     print(index2, "does not exist!")
-
 
 pd.set_option("display.max_columns", None)
 pd.set_option('display.max_rows', None)
