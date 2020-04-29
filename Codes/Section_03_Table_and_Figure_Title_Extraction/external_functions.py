@@ -19,46 +19,64 @@ load_dotenv(override=True)
 engine_string = f"mysql+mysqldb://esa_user_rw:{os.getenv('DB_PASS')}@os25.neb-one.gc.ca./esa?charset=utf8"
 engine = create_engine(engine_string)
 
-def figure_checker_old(args):
-    doc_id, toc_id, toc_page, word1_rex, word2_rex, s2_rex = args
-    # get the text and rotated text
-    with open(constants.pickles_path + str(doc_id) + '.pkl', 'rb') as f:  # unrotated pickle
-        data = pickle.load(f)
-    with open(constants.pickles_rotated_path + str(doc_id) + '.pkl', 'rb') as f:  # rotated pickle
-        data_rotated = pickle.load(f)
-    doc_text = data['content']
-    doc_text_rotated = data_rotated['content']  # save the rotated text
-
+def project_figure_titles(project):
     buf = StringIO()
-    p_list = []
     with redirect_stdout(buf), redirect_stderr(buf):
         try:
-            print("Start.")
-            # check unrotated
-            if '<body>' in doc_text:
-                soup = BeautifulSoup(doc_text, 'lxml')
-                pages = soup.find_all('div', attrs={'class': 'page'})
-                for page_num, page in enumerate(pages):
-                    text_clean = re.sub(constants.whitespace, ' ', page.text)
-                    # text_clean = re.sub(punctuation, ' ', text_clean)
-                    if re.search(word2_rex, text_clean) and re.search(s2_rex, text_clean):
-                        if (page_num not in p_list) and ((doc_id != toc_id) or (page_num != toc_page)):
-                            p_list.append(page_num)
+            # get all fig titles for this project from db
+            with engine.connect() as conn:
+                params = {"project": project}
+                stmt = text("SELECT toc.titleTOC, toc.page_name, toc.toc_page_num, toc.toc_pdfId, toc.toc_title_order "
+                            "FROM esa.toc LEFT JOIN esa.pdfs ON toc.toc_pdfId = pdfs.pdfId "
+                            "WHERE title_type='Figure' and and short_name = :project "
+                            "ORDER BY pdfs.short_name, toc.toc_pdfId, toc.toc_page_num, toc.toc_title_order;")
+                df_figs = pd.read_sql_query(stmt, conn, params=params)
 
-                # check rotated
-                soup = BeautifulSoup(doc_text_rotated, 'lxml')
-                pages = soup.find_all('div', attrs={'class': 'page'})
-                for page_num, page in enumerate(pages):
-                    text_clean = re.sub(constants.whitespace, ' ', page.text)
-                    # text_clean = re.sub(punctuation, ' ', text_clean)
-                    if re.search(word2_rex, text_clean) and re.search(s2_rex, text_clean):
-                        if (page_num not in p_list) and ((doc_id != toc_id) or (page_num != toc_page)):
-                            p_list.append(page_num)
-            print(f"Success. Found data on {len(p_list)} pages.")
-            return True, buf.getvalue(), p_list, doc_id
+                stmt = text("SELECT pdfId FROM esa.pdfs WHERE short_name = :project;")
+                project_df = pd.read_sql_query(stmt, conn, params=params)
+
+            prev_id = 0
+            project_ids = project_df['pdfId'].tolist()
+            for index, row in df_figs.iterrows():
+                title = row['titleTOC']
+                c = title.count(' ')
+                if c >= 2:
+                    word1, word2, s2 = title.split(' ', 2)
+                else:
+                    word1, word2 = title.split(' ', 1)
+                    s2 = ''
+                word2 = re.sub('[^a-zA-Z0-9]$', '', word2)
+                word2 = re.sub('[^a-zA-Z0-9]', '[^a-zA-Z0-9]', word2)
+                word1_rex = re.compile(r'(?i)\b' + word1 + r'\s')
+                word2_rex = re.compile(r'(?i)\b' + word2)
+                s2 = re.sub(constants.punctuation, ' ', s2)  # remove punctuation
+                s2 = re.sub(constants.whitespace, ' ', s2)  # remove whitespace
+                toc_id = row['toc_pdfId']
+                toc_page = row['toc_page_num']
+                page_str = row['page_name']
+                title_order = row['toc_title_order']
+                page_rex = re.sub('[^a-zA-Z0-9]', '[^a-zA-Z0-9]', word2)
+                page_rex = re.compile(r'(?i)\b' + page_rex + '\b')
+
+                docs_check = [prev_id, toc_id]
+                after = [i for i in project_ids if i > toc_id]
+                after.sort()
+                before = [i for i in project_ids if i < toc_id]
+                before.sort(reverse=True)
+                docs_check.extend(after)
+                docs_check.extend(before)
+                count = 0
+                for doc_id in docs_check:
+                    if (doc_id > 0):
+                        arg = (doc_id, toc_id, toc_page, title_order, word1_rex, word2_rex, s2.lower(), page_rex, title)
+                        count = figure_checker(arg)
+                    if count > 0:
+                        prev_id = doc_id
+                        break
+            return True, buf.getvalue()
         except Exception as e:
             traceback.print_tb(e.__traceback__)
-            return False, buf.getvalue(), p_list, doc_id
+            return False, buf.getvalue()
 
 def figure_checker(args):
     conn = engine.connect()
@@ -134,44 +152,39 @@ def figure_checker(args):
                     text_rotated_clean = re.sub(constants.whitespace, ' ', text_rotated_clean)
                     text_rotated_clean = text_rotated_clean.lower()
 
-                    if re.search(word2_rex, text_ws) or re.search(word2_rex, text_rotated_ws):
-                        word2_match = 1
-                    else:
-                        word2_match = 0
+                    if re.search(word2_rex, text_ws) or re.search(word2_rex, text_rotated_ws): # check fig number
+                        words = [word for word in s2.split() if (len(word) > 3) and (word != 'project')]
+                        match = [word for word in words if (regex.search(r'(?i)\b' + word + r'{e<=1}\b', text_clean))
+                                 or (regex.search(r'(?i)\b' + word + r'{e<=1}\b', text_rotated_clean))]
+                        if len(words) > 0:
+                            sim = len(match) / len(words)
+                        else:
+                            sim = 0
 
-                    words = [word for word in s2.split() if (len(word) > 3) and (word != 'project')]
-                    match = [word for word in words if (regex.search(r'(?i)\b' + word + r'{e<=1}\b', text_clean))
-                             or (regex.search(r'(?i)\b' + word + r'{e<=1}\b', text_rotated_clean))]
-                    if len(words) > 0:
-                        sim = len(match) / len(words)
-                    else:
-                        sim = 0
-                    l = len(s2)
-                    ratio = 0
-                    for i in range(len(text_clean) - l + 1):
-                        r = fuzz.ratio(s2, text_clean[i:i + l])
-                        if r > ratio:
-                            ratio = r
-                    for i in range(len(text_rotated_clean) - l + 1):
-                        r = fuzz.ratio(s2, text_rotated_clean[i:i + l])
-                        if r > ratio:
-                            ratio = r
-                    # ratio = max(fuzz.partial_ratio(s2, text_clean),
-                    #             fuzz.partial_ratio(s2, text_rotated_clean))
-                    add = 0
-                    if word2_match:
-                        if (sim >= 0.7) and (ratio >= 60):
-                            add = 1
-                    # else:
-                    #     if (sim >= 0.9) and (ratio >= 90):
-                    #         add = 1
+                        if (sim >= 0.7): # check that enough words exists
+                            l = len(s2)
+                            ratio = 0
+                            for i in range(len(text_clean) - l + 1):
+                                r = fuzz.ratio(s2, text_clean[i:i + l])
+                                if r > ratio:
+                                    ratio = r
+                                if ratio == 1:
+                                    break
+                            for i in range(len(text_rotated_clean) - l + 1):
+                                if ratio == 1:
+                                    break
+                                r = fuzz.ratio(s2, text_rotated_clean[i:i + l])
+                                if r > ratio:
+                                    ratio = r
+                            # ratio = max(fuzz.partial_ratio(s2, text_clean),
+                            #             fuzz.partial_ratio(s2, text_rotated_clean))
 
-                    if add:
-                        p_list.append(page_num)
-                        sim_list.append(sim)
-                        ratio_list.append(ratio)
-                        word2_list.append(word2_match)
-            if len(sim_list) > 0:
+                            if (ratio >= 60): # check that the fuzzy match is close enough
+                                p_list.append(page_num)
+                                sim_list.append(sim)
+                                ratio_list.append(ratio)
+
+            if len(sim_list) > 0: # if found in image pages don't check extra pages
                 break
 
         # only keep those with largest sim
@@ -179,15 +192,13 @@ def figure_checker(args):
             max_sim = max(sim_list)
             p_list2 = []
             ratio_list2 = []
-            word2_list2 = []
             for i, sim in enumerate(sim_list):
                 if sim >= max_sim:
                     p_list2.append(p_list[i])
                     ratio_list2.append(ratio_list[i])
-                    word2_list2.append(word2_list[i])
             max_ratio = max(ratio_list2)
             # now only keep those with largest ratio
-            final_list = [{'page_num':int(p_list2[i]), 'word2': word2_list2[i], 'sim':max_sim, 'ratio':ratio} for i, ratio in enumerate(ratio_list2) if ratio >= max_ratio]
+            final_list = [{'page_num':int(p_list2[i]), 'sim':max_sim, 'ratio':ratio} for i, ratio in enumerate(ratio_list2) if ratio >= max_ratio]
         else:
             final_list = []
         count = len(final_list)

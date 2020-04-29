@@ -39,5 +39,6 @@ yarn-error.log*
 tag_errors.txt
 toc_errors.txt
 final_errors.txt
+fig_errors.txt
 
 

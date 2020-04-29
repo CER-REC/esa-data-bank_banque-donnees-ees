@@ -17,7 +17,7 @@ punctuation = re.compile(r'[^\w\s]') # punctuation (not letter or number)
 # figure = re.compile(r'(?im)(^Figure .*?\n?.*?)\.{2,}(.*)')
 # table = re.compile(r'(?im)(^Table (?!of contents?).*?\n?.*?)\.{2,}(.*)')
 toc_old = re.compile(r'(?im)^(?! *LIST OF\b)(?! *Table of contents\b)(.+?\n?.*?)\.{2,}(.*)$')
-toc = re.compile(r'(?im)(?! *LIST OF\b)(?! *Table of contents\b)(.+?\n?.*?\n?.*?)\.{2,}(.*)$')
+toc = re.compile(r'(?im)^(?! *LIST OF\b)(?! *Table of contents\b)(.+?\n?.*?\n?.*?)\.{2,}(.*)$')
 accepted_toc = ['Figure', 'Table', 'Plate', 'Attachment', 'Detail', 'Drawing', 'Photograph', 'Photo',
                 'Sheet', 'Tableau', 'Index', 'Overview']
 
