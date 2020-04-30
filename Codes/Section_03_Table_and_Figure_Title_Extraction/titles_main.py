@@ -98,7 +98,7 @@ if __name__ == "__main__":
     # get page numbers for all the figures found in TOC
     if get_figure_titles:
         with Pool() as pool:
-            results = pool.map(project_figure_titles, projects)
+            results = pool.map(project_figure_titles, projects, chunksize=1)
         with open('fig_errors.txt', 'w', encoding='utf-8') as f:
             f.write('Errors found:\n')
         with open('fig_errors.txt', 'a', encoding='utf-8') as f:
@@ -110,7 +110,7 @@ if __name__ == "__main__":
     if do_tag_title_table:
         # print(len(list_ids))
         with Pool() as pool:
-            results = pool.map(find_tag_title_table, list_ids)
+            results = pool.map(find_tag_title_table, list_ids, chunksize=1)
         with open('../tag_errors.txt', 'w', encoding='utf-8') as f:
             f.write('Errors found:\n')
         with open('../tag_errors.txt', 'a', encoding='utf-8') as f:
@@ -122,7 +122,7 @@ if __name__ == "__main__":
     if do_toc_title_table:
         #print(len(list_ids))
         with Pool() as pool:
-            results = pool.map(find_toc_title_table, list_ids)
+            results = pool.map(find_toc_title_table, list_ids, chunksize=1)
         with open('toc_errors.txt', 'w', encoding='utf-8') as f:
             f.write('Errors found:\n')
         with open("toc_errors.txt", "a", encoding='utf-8') as f:
@@ -134,7 +134,7 @@ if __name__ == "__main__":
     if do_final_title_table:
         #print(len(list_ids))
         with Pool() as pool:
-            results = pool.map(find_final_title_table, list_ids)
+            results = pool.map(find_final_title_table, list_ids, chunksize=1)
         with open('final_errors.txt', 'w', encoding='utf-8') as f:
             f.write('Errors found:\n')
         with open("final_errors.txt", "a", encoding='utf-8') as f:
@@ -163,7 +163,7 @@ if __name__ == "__main__":
 
         # milti process
         with Pool() as pool:
-            results = pool.map(find_tag_title_fig, list_ids)
+            results = pool.map(find_tag_title_fig, list_ids, chunksize=1)
         with open('../tag_errors.txt', 'w', encoding='utf-8') as f:
             f.write('Errors found:\n')
         with open('../tag_errors.txt', 'a', encoding='utf-8') as f:
@@ -176,7 +176,7 @@ if __name__ == "__main__":
     if do_final_title_fig:
         #print(len(list_ids))
         with Pool() as pool:
-            results = pool.map(find_final_title_fig, list_ids)
+            results = pool.map(find_final_title_fig, list_ids, chunksize=1)
         with open('final_errors.txt', 'w', encoding='utf-8') as f:
             f.write('Errors found:\n')
         with open("final_errors.txt", "a", encoding='utf-8') as f:
