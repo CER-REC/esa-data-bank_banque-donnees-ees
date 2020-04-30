@@ -73,6 +73,15 @@ def project_figure_titles(project):
                     if count > 0:
                         prev_id = doc_id
                         break
+                if count == 0:
+                    # write 0 count to db
+                    stmt = text(
+                        "UPDATE esa.toc SET assigned_count = 0, loc_pdfId = null, loc_page_list = null  "
+                        "WHERE (toc_pdfId = :pdf_id) and (toc_page_num = :page_num) and (toc_title_order = :title_order);")
+                    params = {"pdf_id": toc_id, "page_num": toc_page, "title_order": title_order}
+                    result = conn.execute(stmt, params)
+                    if result.rowcount != 1:
+                        print('could not assign 0 count to: ', toc_id, toc_page, title_order)
             return True, buf.getvalue()
         except Exception as e:
             traceback.print_tb(e.__traceback__)

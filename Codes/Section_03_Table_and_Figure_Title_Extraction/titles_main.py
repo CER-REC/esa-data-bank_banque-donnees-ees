@@ -35,8 +35,6 @@ if __name__ == "__main__":
         all_projects = pd.read_sql_query(stmt, conn)
     projects = all_projects['short_name'].unique()
     list_ids = all_projects['pdfId'].tolist()
-    # print(len(projects))
-    # print(projects)
 
     # now get TOC from each document and create a list of all figs and tables (that were found in TOC's)
     if get_toc:
@@ -62,17 +60,7 @@ if __name__ == "__main__":
             #                     "WHERE (pdfId = :pdf_id);")
             # text_rotated_df = pd.read_sql_query(stmt_rotated, conn, params=params, index_col='page_num')
 
-            # with open(constants.pickles_path + str(doc_id) + '.pkl', 'rb') as f:  # unrotated pickle
-            #     data = pickle.load(f)
-            # content = data['content']
-            # # find tables of content and list of figures in the unrotated text
-            # soup = BeautifulSoup(content, 'lxml')
-            # pages = soup.find_all('div', attrs={'class': 'page'})
-
             for page_num, row in text_df.iterrows():
-                #for i, page in enumerate(pages):
-                #page_num = i + 1
-
                 # extract TOC
                 clean_text = re.sub(constants.empty_line, '', row['content'])  # get rid of empty lines
                 # clean_text = re.sub(constants.empty_line_xml, '', page.text)  # get rid of empty lines
