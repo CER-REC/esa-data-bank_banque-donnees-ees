@@ -10,8 +10,10 @@ import pickle
 from bs4 import BeautifulSoup
 
 from Codes.Section_03_Table_and_Figure_Title_Extraction.external_functions import project_figure_titles
-from Codes.Section_03_Table_and_Figure_Title_Extraction.external_functions import find_tag_title_table, find_toc_title_table, find_final_title_table
-from Codes.Section_03_Table_and_Figure_Title_Extraction.external_functions import find_tag_title_fig, find_final_title_fig
+from Codes.Section_03_Table_and_Figure_Title_Extraction.external_functions import find_tag_title_table, \
+    find_toc_title_table, find_final_title_table
+from Codes.Section_03_Table_and_Figure_Title_Extraction.external_functions import find_tag_title_fig, \
+    find_final_title_fig
 import Codes.Section_03_Table_and_Figure_Title_Extraction.constants as constants
 
 load_dotenv(override=True)
@@ -70,8 +72,8 @@ if __name__ == "__main__":
             # pages = soup.find_all('div', attrs={'class': 'page'})
 
             for page_num, row in text_df.iterrows():
-                #for i, page in enumerate(pages):
-                #page_num = i + 1
+                # for i, page in enumerate(pages):
+                # page_num = i + 1
 
                 # extract TOC
                 clean_text = re.sub(constants.empty_line, '', row['content'])  # get rid of empty lines
@@ -82,15 +84,15 @@ if __name__ == "__main__":
                     title = re.sub(constants.whitespace, ' ', toc[0]).strip()
                     page_name = toc[1].strip()
                     type = title.split(' ', 1)[0].capitalize()
-                    if type in constants.accepted_toc: # if accepted type
+                    if type in constants.accepted_toc:  # if accepted type
                         stmt = text("INSERT INTO esa.toc (assigned_count, title_type, titleTOC, page_name, "
                                     "toc_page_num, toc_pdfId, toc_title_order) "
                                     "VALUE (null, :type, :title, :page_name, :page_num, :pdfId, :order);")
-                        params = {"type": type, "title":title, "page_name":page_name,
-                                  "page_num":page_num, "pdfId":doc_id, "order":i+1}
+                        params = {"type": type, "title": title, "page_name": page_name,
+                                  "page_num": page_num, "pdfId": doc_id, "order": i + 1}
                         result = conn.execute(stmt, params)
                         if result.rowcount != 1:
-                            print('Did not go to database:',doc_id, page_num, toc)
+                            print('Did not go to database:', doc_id, page_num, toc)
         conn.close()
 
     if get_table_titles:
@@ -110,7 +112,7 @@ if __name__ == "__main__":
     # get page numbers for all the figures found in TOC
     if get_figure_titles:
         with Pool() as pool:
-            results = pool.map(project_figure_titles, projects)
+            results = pool.map(project_figure_titles, projects, chunksize=1)
         with open('fig_errors.txt', 'w', encoding='utf-8') as f:
             f.write('Errors found:\n')
         with open('fig_errors.txt', 'a', encoding='utf-8') as f:
@@ -122,7 +124,7 @@ if __name__ == "__main__":
     if do_tag_title_table:
         # print(len(list_ids))
         with Pool() as pool:
-            results = pool.map(find_tag_title_table, list_ids)
+            results = pool.map(find_tag_title_table, list_ids, chunksize=1)
         with open('../tag_errors.txt', 'w', encoding='utf-8') as f:
             f.write('Errors found:\n')
         with open('../tag_errors.txt', 'a', encoding='utf-8') as f:
@@ -132,9 +134,9 @@ if __name__ == "__main__":
 
     # update TOC method titles
     if do_toc_title_table:
-        #print(len(list_ids))
+        # print(len(list_ids))
         with Pool() as pool:
-            results = pool.map(find_toc_title_table, list_ids)
+            results = pool.map(find_toc_title_table, list_ids, chunksize=1)
         with open('toc_errors.txt', 'w', encoding='utf-8') as f:
             f.write('Errors found:\n')
         with open("toc_errors.txt", "a", encoding='utf-8') as f:
@@ -144,7 +146,7 @@ if __name__ == "__main__":
 
     # update final titles
     if do_final_title_table:
-        #print(len(list_ids))
+        # print(len(list_ids))
         with Pool() as pool:
             results = pool.map(find_final_title_table, list_ids)
         with open('final_errors.txt', 'w', encoding='utf-8') as f:
@@ -156,8 +158,9 @@ if __name__ == "__main__":
 
     # write to all_tables-final.csv from esa.csvs
     with engine.connect() as conn:
-        stmt = text("SELECT csvFullPath, pdfId, page, tableNumber, topRowJson, titleTag, titleTOC, titleFinal FROM esa.csvs "
-                    "WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78);")
+        stmt = text(
+            "SELECT csvFullPath, pdfId, page, tableNumber, topRowJson, titleTag, titleTOC, titleFinal FROM esa.csvs "
+            "WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78);")
         df = pd.read_sql_query(stmt, conn)
     df.to_csv(constants.save_dir + 'all_tables-final.csv', index=False, encoding='utf-8-sig')
 
@@ -175,7 +178,7 @@ if __name__ == "__main__":
 
         # milti process
         with Pool() as pool:
-            results = pool.map(find_tag_title_fig, list_ids)
+            results = pool.map(find_tag_title_fig, list_ids, chunksize=1)
         with open('../tag_errors.txt', 'w', encoding='utf-8') as f:
             f.write('Errors found:\n')
         with open('../tag_errors.txt', 'a', encoding='utf-8') as f:
@@ -183,12 +186,11 @@ if __name__ == "__main__":
                 if result[1] != "":
                     f.write(str(result[1]))
 
-
     # update final titles
     if do_final_title_fig:
-        #print(len(list_ids))
+        # print(len(list_ids))
         with Pool() as pool:
-            results = pool.map(find_final_title_fig, list_ids)
+            results = pool.map(find_final_title_fig, list_ids, chunksize=1)
         with open('final_errors.txt', 'w', encoding='utf-8') as f:
             f.write('Errors found:\n')
         with open("final_errors.txt", "a", encoding='utf-8') as f:
