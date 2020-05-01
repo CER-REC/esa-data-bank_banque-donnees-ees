@@ -1,5 +1,4 @@
-# ESA Data Bank
-## Methods
+# ESA Data Bank - Methods
 
 **** _**La version française suit**_ **** 
 
@@ -33,8 +32,7 @@ While it is not a perfect process due to inconsistency in formatting, tables and
 ### Acknowledgments
 The data science team at the University of British Columbia was instrumental in guiding this project in its early days. The Canada Energy Regulator acknowledges the work of Nipun Goyal, Louis (Xiang) Luo, and Prakhar Sinha (with support from Martha Essak, Erin Martin-Serrano, Stuart Donald, and Gene Moo Lee) at the [Centre for Operations Excellence](https://www.sauder.ubc.ca/thought-leadership/research-outreach-centres/centre-operations-excellence), UBC Sauder School of Business.
 
-# Banque de données des ÉES
-## Méthodes
+# Banque de données des ÉES - Méthodes
 
 Les évaluations environnementales et socioéconomiques (« EES ») peuvent compter plusieurs centaines de pages et sont soumises à la Régie de l’énergie du Canada sous forme de fichiers PDF. Ces fichiers renferment des données qualitatives et quantitatives, notamment du texte, des tableaux, des figures, des cartes et des images satellites. 
 
