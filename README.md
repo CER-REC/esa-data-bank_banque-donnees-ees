@@ -1,5 +1,5 @@
-# The ESA Data Bank
-### From the Canada Energy Regulator (CER)
+# ESA Data Bank
+### Methods
 
 **** _**La version française suit**_ **** 
 
@@ -33,3 +33,5 @@ While it is not a perfect process due to inconsistency in formatting, tables and
 ### Acknowledgments
 The data science team at the University of British Columbia was instrumental in guiding this project in its early days. The Canada Energy Regulator acknowledges the work of Nipun Goyal, Louis (Xiang) Luo, and Prakhar Sinha (with support from Martha Essak, Erin Martin-Serrano, Stuart Donald, and Gene Moo Lee) at the [Centre for Operations Excellence](https://www.sauder.ubc.ca/thought-leadership/research-outreach-centres/centre-operations-excellence), UBC Sauder School of Business.
 
+# Banque de données des ÉES
+### Méthodes
