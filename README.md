@@ -1,5 +1,5 @@
 # ESA Data Bank
-### Methods
+## Methods
 
 **** _**La version française suit**_ **** 
 
@@ -34,7 +34,7 @@ While it is not a perfect process due to inconsistency in formatting, tables and
 The data science team at the University of British Columbia was instrumental in guiding this project in its early days. The Canada Energy Regulator acknowledges the work of Nipun Goyal, Louis (Xiang) Luo, and Prakhar Sinha (with support from Martha Essak, Erin Martin-Serrano, Stuart Donald, and Gene Moo Lee) at the [Centre for Operations Excellence](https://www.sauder.ubc.ca/thought-leadership/research-outreach-centres/centre-operations-excellence), UBC Sauder School of Business.
 
 # Banque de données des ÉES
-### Méthodes
+## Méthodes
 
 Les évaluations environnementales et socioéconomiques (« EES ») peuvent compter plusieurs centaines de pages et sont soumises à la Régie de l’énergie du Canada sous forme de fichiers PDF. Ces fichiers renferment des données qualitatives et quantitatives, notamment du texte, des tableaux, des figures, des cartes et des images satellites. 
 
@@ -45,7 +45,7 @@ Une équipe de scientifiques de données de la Régie a établi un processus per
 ### Étape 1 – Recueillir les documents PDF pertinents
 Le personnel de la Régie a répertorié manuellement 1 902 EES en format PDF dans [REGDOCS](https://apps.cer-rec.gc.ca/REGDOCS/Home/Index), le dépôt en ligne de la Régie qui renferme des documents publics sur la conception, la construction, l’exploitation et la cessation d’exploitation des pipelines de ressort fédéral. Un fichier qui répertorie tous ces documents se trouve dans le dépôt central GitHub.
 
-## Étape 2 – Convertir les fichiers PDF en fichiers texte
+### Étape 2 – Convertir les fichiers PDF en fichiers texte
 Chaque fichier PDF a été converti dans un format texte plus convivial au moyen de la [bibliothèque Tika Python](https://github.com/chrismattmann/tika-python). 
 
 ### Étape 3 – Extraire des tableaux et des figures
