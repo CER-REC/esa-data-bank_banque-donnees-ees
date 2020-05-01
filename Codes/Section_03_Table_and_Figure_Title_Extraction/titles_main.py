@@ -19,7 +19,7 @@ engine_string = f"mysql+mysqldb://esa_user_rw:{os.getenv('DB_PASS')}@os25.neb-on
 engine = create_engine(engine_string)
 
 get_toc = 0  # need to go through all docs to create lists of tables and figures in csvs
-get_figure_titles = 1  # find all figs page #
+get_figure_titles = 0  # find all figs page #
 get_table_titles = 0
 do_tag_title_table = 0  # assign table titles to each table using text search method
 do_toc_title_table = 0  # assign table titles to each table using TOC method
@@ -187,12 +187,12 @@ if __name__ == "__main__":
     # get final figs csv files
     with engine.connect() as conn:
         stmt = text(
-            "SELECT toc.titleTOC, toc.page_name, toc.toc_page_num, toc.toc_pdfId, toc.toc_title_order, pdfs.short_name, "
+            "SELECT toc.titleTOC, toc.titleTOC_fr, toc.page_name, toc.toc_page_num, toc.toc_pdfId, toc.toc_title_order, pdfs.short_name, "
             "toc.assigned_count, toc.loc_pdfId, toc.loc_page_list "
             "FROM esa.toc LEFT JOIN esa.pdfs ON toc.toc_pdfId = pdfs.pdfId WHERE title_type='Figure' "
             "ORDER BY pdfs.short_name, toc.toc_pdfId, toc.toc_page_num, toc.toc_title_order;")
         df = pd.read_sql_query(stmt, conn)
-    df.rename(columns={'titleTOC': 'Name', 'loc_pdfId': 'location_DataID', 'loc_page': 'location_Page'}, inplace=True)
+    df.rename(columns={'titleTOC': 'Name', 'titleTOC_fr': 'Name_French', 'loc_pdfId': 'location_DataID', 'loc_page': 'location_Page'}, inplace=True)
 
     new_list = []
 
@@ -208,7 +208,8 @@ if __name__ == "__main__":
             df.loc[index, 'ratio'] = pages[0]['ratio']
 
             for page in pages:
-                new_row = {'Name': row['Name'], 'page_name': row['page_name'], 'toc_page_num': row['toc_page_num'],
+                new_row = {'Name': row['Name'], 'Name_French':row['Name_French'], 'page_name': row['page_name'],
+                           'toc_page_num': row['toc_page_num'],
                            'toc_pdfId': row['toc_pdfId'], 'toc_title_order': row['toc_title_order'],
                            'short_name': row['short_name'], 'location_DataID': row['location_DataID'],
                            'assigned_count': row['assigned_count'],
