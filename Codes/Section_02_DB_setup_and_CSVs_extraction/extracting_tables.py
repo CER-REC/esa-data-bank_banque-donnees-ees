@@ -13,7 +13,8 @@ import traceback
 import re
 
 pdf_files_folder = Path("//luxor/data/branch/Environmental Baseline Data/Version 4 - Final/PDF")
-csv_tables_folder = Path().resolve().parent.parent.joinpath("Data_Files").joinpath("CSVs")
+# csv_tables_folder = Path().resolve().parent.parent.joinpath("Data_Files").joinpath("CSVs")
+csv_tables_folder = Path(r"//luxor/data/branch/Environmental Baseline Data/Version 4 - Final/all_csvs")
 
 if not pdf_files_folder.exists():
     print(pdf_files_folder, "does not exist!")
@@ -99,8 +100,7 @@ def extract_csv(args):
             duration = round(time.time() - start_time)
             mins = round(duration / 60, 2)
             hrs = round(duration / 3600, 2)
-            print(
-                f"{pdf_id}: done {total_pages} pages in {duration} seconds ({mins} min or {hrs} hours)")
+            print(f"{pdf_id}: done {total_pages} pages in {duration} seconds ({mins} min or {hrs} hours)")
         except Exception as e:
             print(f'Error processing {pdf_id}:')
             print(e)
@@ -109,20 +109,21 @@ def extract_csv(args):
             return buf.getvalue()
 
 
-def clear_db():
-    with engine.connect() as conn:
-        result = conn.execute("DELETE FROM csvs;")
-        print(f"Deleted {result.rowcount} csvs from DB")
-        result = conn.execute("UPDATE pdfs SET csvsExtracted = NULL WHERE csvsExtracted IS NOT NULL;")
-        print(f"Reset {result.rowcount} PDFs from DB (csvsExtracted = NULL)")
-    csvs = list(csv_tables_folder.glob("*.csv"))
-    for f in csvs:
-        f.unlink()
-    print(f"Deleted {len(csvs)} CSV files")
-    print("Done")
+# CAREFUL! DELETES ALL CSV files and CSV DB entries, and resets PDFs (csvsExtracted = NULL)!
+# def clear_db():
+#     with engine.connect() as conn:
+#         result = conn.execute("DELETE FROM csvs;")
+#         print(f"Deleted {result.rowcount} csvs from DB")
+#         result = conn.execute("UPDATE pdfs SET csvsExtracted = NULL WHERE csvsExtracted IS NOT NULL;")
+#         print(f"Reset {result.rowcount} PDFs from DB (csvsExtracted = NULL)")
+#     csvs = list(csv_tables_folder.glob("*.csv"))
+#     for f in csvs:
+#         f.unlink()
+#     print(f"Deleted {len(csvs)} CSV files")
+#     print("Done")
 
 
-def create_args_for_csv_extraction():
+def extract_tables():
     statement = text("SELECT * FROM pdfs WHERE csvsExtracted IS NULL ORDER BY totalPages DESC;")
     with engine.connect() as conn:
         df = pd.read_sql(statement, conn)
@@ -136,22 +137,10 @@ def create_args_for_csv_extraction():
              engine_string,
              str(pdf_files_folder),
              str(csv_tables_folder)))
-    return files
-
-
-def extract_tables(files):
-    log_file = "log.txt"
-    with Path(log_file).open("w") as _:
-        pass  # Clearing the log file
-
-    def log_it(s):
-        with Path(log_file).open("a", encoding="utf-8-sig") as file:
-            file.write(s)
-        print(s, end='', flush=True)
 
     start_time = time.time()
     time_stamp = time.strftime("%H:%M:%S %Y-%m-%d")
-    log_it(f"Items to process: {len(files)} at {time_stamp}\n")
+    print(f"Items to process: {len(files)} at {time_stamp}\n")
 
     # Sequential mode - if using, please comment out the multiprocessing mode code  
     # for file in files[-12:]:
@@ -162,15 +151,13 @@ def extract_tables(files):
     with Pool() as pool:
         results = pool.map(extract_csv, files, chunksize=1)
     for result in results:
-        log_it(result)
+        print(result, end='', flush=True)
 
     duration = round(time.time() - start_time)
     mins = round(duration / 60, 2)
     secs = round(duration / 3600, 2)
-    log_it(f"\nDone {len(files)} items in {duration} seconds ({mins} min or {secs} hours)")
+    print(f"\nDone {len(files)} items in {duration} seconds ({mins} min or {secs} hours)")
 
 
 if __name__ == "__main__":
-    clear_db()  # CAREFUL! DELETES ALL CSV files and CSV DB entries, and resets PDFs (csvsExtracted = NULL)!
-    inputs = create_args_for_csv_extraction()
-    extract_tables(inputs)
+    extract_tables()

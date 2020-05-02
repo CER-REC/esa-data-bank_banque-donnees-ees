@@ -6,8 +6,9 @@ import pandas as pd
 import PyPDF2
 
 pdf_files_folder = Path("//luxor/data/branch/Environmental Baseline Data/Version 4 - Final/PDF")
-index2 = Path().resolve().parent.parent.joinpath(
-    "Input_Files").joinpath("Index_of_PDFs_for_Major_Projects_with_ESAs.csv")
+# index2 = Path().resolve().parent.parent.joinpath("Input_Files").joinpath(
+#     "Index_of_PDFs_for_Major_Projects_with_ESAs.csv")
+index2 = Path(r"\\luxor\data\branch\Environmental Baseline Data\Version 4 - Final\Indices\Github_ESA_Final1.csv")
 
 if not pdf_files_folder.exists():
     print(pdf_files_folder, "does not exist!")
@@ -29,13 +30,17 @@ engine = create_engine(engine_string)
 
 def insert_pdfs():
     df = pd.read_csv(index2)
-    df = df[["Data ID", "Application Name", "application_name", "Application Short Name", "Commodity", "Hearing order"]]
+    df = df[["Data ID", "Application Name", "Application Short Name", "Commodity", "Hearing order"]]
     df = df.rename(columns={"Data ID": "pdfId", "Commodity": "commodity", "Hearing order": "hearingOrder",
                             "Application Short Name": "short_name", "Application Name": "application_title_short"})
 
     with engine.connect() as conn:
         for row in df.itertuples():
             try:
+                r = conn.execute("SELECT * from pdfs WHERE pdfId = %s;", (row.pdfId,))
+                if r.rowcount == 1:
+                    continue
+
                 pdf_path = pdf_files_folder.joinpath(f"{row.pdfId}.pdf")
                 with pdf_path.open("rb") as pdf:
                     reader = PyPDF2.PdfFileReader(pdf)
@@ -44,16 +49,17 @@ def insert_pdfs():
                     total_pages = reader.getNumPages()
 
                 stmt = text(
-                    "INSERT INTO pdfs (pdfId, totalPages, hearingOrder, application_name, application_title_short," +
-                    "short_name, commodity) VALUES (:pdfId, :totalPages, :hearingOrder, :application_name," +
+                    "INSERT INTO pdfs (pdfId, totalPages, hearingOrder, application_title_short," +
+                    "short_name, commodity) VALUES (:pdfId, :totalPages, :hearingOrder," +
                     ":application_title_short, :short_name, :commodity);")
                 params = {
                     "pdfId": row.pdfId, "totalPages": total_pages, "hearingOrder": row.hearingOrder,
-                    "application_name": row.application_name, "application_title_short": row.application_title_short,
+                    "application_title_short": row.application_title_short,
                     "short_name": row.short_name, "commodity": row.commodity}
                 result = conn.execute(stmt, params)
                 if result.rowcount != 1:
-                    print(f"{row.pdfId}: ERROR! Updated {result.rowcount} rows!")
+                    return print(f"{row.pdfId}: ERROR! Updated {result.rowcount} rows!")
+                print(f"Inserted {result.rowcount} for {row.pdfId}")
             except Exception as e:
                 print(f"Error for {row.pdfId}: {e}")
     print("All done")
