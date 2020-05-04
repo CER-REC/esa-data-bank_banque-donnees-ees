@@ -21,23 +21,17 @@ engine = create_engine(engine_string)
 pdf_files_folder = Path("//luxor/data/branch/Environmental Baseline Data/Version 4 - Final/PDF")
 
 
-def get_all_pdfs():
-    with engine.connect() as conn:
-        stmt = text("SELECT pdfId, totalPages FROM pdfs ORDER BY totalPages DESC;")
-        df = pd.read_sql(stmt, conn)
-        return df.to_dict("records")
-
-
+# Careful! Deletes all pages and blocks data from the DB!
 # noinspection SqlWithoutWhere
-def clear_figures_db():
-    with engine.connect() as conn:
-        result2 = conn.execute("DELETE FROM blocks;")
-        print(f"Deleted {result2.rowcount} blocks.")
-        result1 = conn.execute("DELETE FROM pages;")
-        print(f"Deleted {result1.rowcount} pages.")
+# def clear_figures_db():
+#     with engine.connect() as conn:
+#         result2 = conn.execute("DELETE FROM blocks;")
+#         print(f"Deleted {result2.rowcount} blocks.")
+#         result1 = conn.execute("DELETE FROM pages;")
+#         print(f"Deleted {result1.rowcount} pages.")
 
 
-def insert_pdf(pdf):
+def insert(pdf):
     buf = StringIO()
     with redirect_stdout(buf), redirect_stderr(buf):
         try:
@@ -114,6 +108,9 @@ def insert_pdf(pdf):
                                   "bbox_height": bbox_height, "bbox_area": bbox_area,
                                   "bbox_area_image": bbox_area_image, "block_order": index + 1}
                         conn.execute(stmt, params)
+            with engine.connect() as conn:
+                statement = text("UPDATE pdfs SET pagesBlocksExtracted = 1 WHERE pdfId = :pdfId;")
+                conn.execute(statement, {"pdfId": pdf['pdfId']})
             print(f"{pdf['pdfId']} is done.")
         except Exception as e:
             print(f"{pdf['pdfId']}: ERROR! {e}")
@@ -122,7 +119,12 @@ def insert_pdf(pdf):
             return buf.getvalue()
 
 
-def insert_pdfs(args):
+def insert_pages_and_blocks():
+    stmt = text("SELECT pdfId, totalPages FROM pdfs WHERE pagesBlocksExtracted = 0 ORDER BY totalPages DESC;")
+    with engine.connect() as conn:
+        df = pd.read_sql(stmt, conn)
+    args = df.to_dict("records")
+
     print(f"Items to process: {len(args)}")
     start_time = time.time()
 
@@ -133,7 +135,7 @@ def insert_pdfs(args):
 
     # Multiprocessing mode - if using, please comment out the sequential mode code
     with Pool() as pool:
-        results = pool.map(insert_pdf, args, chunksize=1)
+        results = pool.map(insert, args, chunksize=1)
     for result in results:
         print(result, end='', flush=True)
 
@@ -142,6 +144,4 @@ def insert_pdfs(args):
 
 
 if __name__ == "__main__":
-    clear_figures_db()  # Careful! Deletes all pages and blocks data from the DB!
-    data = get_all_pdfs()
-    insert_pdfs(data)
+    insert_pages_and_blocks()
