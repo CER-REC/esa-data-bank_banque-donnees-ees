@@ -22,7 +22,7 @@ accepted_toc = ['Figure', 'Table', 'Plate', 'Attachment', 'Detail', 'Drawing', '
                 'Sheet', 'Tableau', 'Index', 'Overview']
 
 figures_rex = re.compile(r'.*\bF[iI][gG][uU][rR][eE][sS]?\b')
-tables_rex = re.compile(r'[^|\n]T[aA][bB][lL][eE][sS]?\b')
+tables_rex = re.compile(r'^T[aA][bB][lL][eE][sS]?\b')
 small_word = re.compile(r'\b[a-zA-Z]{1,2}\b') # words that are 1 or 2 letters (no numbers or punctuation)
 # cont_rex = re.compile(r'')
 # extra_chars = re.compile(r'-|:|-|\(|\.') # extra characters we want to delete from string
