@@ -2,6 +2,8 @@
 
 **** _**La version française suit**_ **** 
 
+Test paragraph.
+
 Environmental and Socio-Economic Assessments (ESAs) can be several hundred pages long and are submitted to the CER as a series of PDF documents. These PDFs contain qualitative and quantitative data, including text, tables, figures, maps and satellite images. 
 
 While the information contained in each ESA is comprehensive, it is not easily searchable or accessible due to the limitations of the PDF format. No raw data files, such as tables in CSV format, are filed with the CER -- all relevant information is contained within the PDF file. Those interested in analysing, comparing, or processing the data must extract it manually, by copying and pasting information from the PDF into other software programs, such as spreadsheet software. This is time-intensive and tedious.
