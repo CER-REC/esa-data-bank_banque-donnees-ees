@@ -25,7 +25,11 @@ The table extraction process utilizes a MySQL Database to store the results of t
     * `csvsExtracted` is the indication whether all pages of the PDF were processed and all the tables were extracted from it (NULL - not processed, "true" - processed)
     * `hearingOrder`, `application_name`, `application_title_short`, `title_short`, and `commodity` are metadata taken from the input Index file regarding the hearing order number, application name, etc.
 
-4. Run t
+4. Run the scripts:
+    * `pdfs_db_seeding.py` populates `pdfs` table
+    * `pages_and_blocks_db_seeding.py` populates `pages` and `blocks` tables
+    * `extracting_pages_content.py` populates a series of pages tables with pdf content
+    * `extracting_tables.py` populate `csvs` table
 
 ## Setting up the DB
 
