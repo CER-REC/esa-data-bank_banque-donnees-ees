@@ -126,4 +126,4 @@ for table_id in df_index['Table ID'].unique():
 
 
 # =============================== Create Master Index File ===============================
-# TODO: create master index file
+df_index[columns_index].to_csv(os.path.join(new_folder, 'ESA_website_ENG.csv'), index=False)
