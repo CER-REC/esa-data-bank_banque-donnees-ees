@@ -30,11 +30,21 @@ df_table_id = df_index.groupby(['Title', 'Data ID']).size()\
     .reset_index().rename(columns={'index': 'Table ID'})
 df_index = df_index.merge(df_table_id, left_on=['Title', 'Data ID'], right_on=['Title', 'Data ID'])
 
-# TODO: delete 'CSV Download URL' col, replace the usage of it with 'filename'
-# TODO: create master index file
+# Create two new columns: Project Download URL, Table Download URL
+url_prefix = 'http://www.cer-rec.gc.ca/esa-ees'
+df_index['Project Download URL'] = df_index['Download folder name'].apply(lambda x: '{}/projects/{}.zip'.format(url_prefix, x))
 
+df_index['filename'] = df_index['CSV Download URL'].apply(lambda x: x.split('/')[-1])
+df_table_filename = df_index.sort_values(['PDF Page Number']).groupby('Table ID')['filename'].first().reset_index().rename(columns={'filename': 'Table Name'})
+df_index = df_index.merge(df_table_filename, left_on='Table ID', right_on='Table ID')
+df_index['Table Download URL'] = df_index['Table Name'].apply(lambda x: '{}/tables/{}.zip'.format(url_prefix, x))
+
+# TODO: delete 'CSV Download URL' col, replace the usage of it with 'filename'
+# Prepare a list of column names for the final index files
 columns_index = df_index.columns.to_list()
-columns_index.remove('CSV Download URL')  # TODO: ???
+for col in columns_index:
+    if col in ('Table ID', 'CSV Download URL', 'Download folder name', 'Zipped Project Link'):
+        columns_index.remove(col)
 
 # =============================== Create Project Download Files ===============================
 for project_folder_name in df_index['Download folder name'].unique():
@@ -58,7 +68,7 @@ for project_folder_name in df_index['Download folder name'].unique():
             shutil.copy(os.path.join(old_project_folder, csv), os.path.join(temp_folder_for_bundling, csv))
 
         # Create a zip file of the table csvs
-        # Use the name of the first csv file in the series  # TODO: decide on the zip file name of a table
+        # Use the name of the first csv file in the series
         zipfile_name = df_table['CSV Download URL'].iloc[0].split('/')[-1]
         shutil.make_archive(os.path.join(new_project_folder, zipfile_name), 'zip', temp_folder_for_bundling)
 
@@ -66,9 +76,8 @@ for project_folder_name in df_index['Download folder name'].unique():
         shutil.rmtree(temp_folder_for_bundling, ignore_errors=True)
 
     # Create index file for the project
-    # TODO: add a column for table zip files
-    # TODO: update master index file download url links
-    df_project_index = df_project.groupby('Table ID').first().reset_index()[columns_index]
+    df_project_index = df_project.sort_values(['Table ID', 'PDF Page Number'])\
+        .groupby('Table ID').first().reset_index()[columns_index]
     df_project_index.to_csv(os.path.join(new_project_folder, 'INDEX_PROJECT.csv'), index=False)
 
     # Create readme.txt
@@ -109,9 +118,12 @@ for table_id in df_index['Table ID'].unique():
 
     # Create a zip file of the table csvs and readme.txt
     # Use the name of the first csv file in the series
-    zipfile_name = df_table['CSV Download URL'].iloc[0].split('/')[-1]
+    zipfile_name = df_table.sort_values('PDF Page Number')['CSV Download URL'].iloc[0].split('/')[-1]
     shutil.make_archive(os.path.join(new_folder_tables, zipfile_name), 'zip', temp_folder_for_bundling)
 
     # Delete temp folder
     shutil.rmtree(temp_folder_for_bundling, ignore_errors=True)
 
+
+# =============================== Create Master Index File ===============================
+# TODO: create master index file
