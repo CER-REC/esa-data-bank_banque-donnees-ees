@@ -3,7 +3,7 @@ import os
 import shutil
 import multiprocessing
 
-from Codes.Section_04_Final_Data_Merge_and_Visualization.bundle_utilites import bundle_for_project
+from Codes.Section_04_Final_Data_Merge_and_Visualization.bundle_utilites import filename_to_tablename, bundle_for_project
 
 index_filepath_eng = 'F:/Environmental Baseline Data/Version 4 - Final/Indices/ESA_website_ENG_12302020.csv'
 # 'G:/ESA_downloads/copy_Bingjie/ESA_website_ENG.csv'
@@ -41,10 +41,6 @@ df_index['Project Download URL'] = df_index['Download folder name']\
 
 
 # Add a new column - Table Download URL
-def filename_to_tablename(filename):
-    return filename.replace('.csv', '').replace('-pt1', '').replace('--', '-')
-
-
 df_table_filename = df_index.sort_values(['PDF Page Number'])\
     .groupby('Table ID')['filename'].first().reset_index().rename(columns={'filename': 'Table Name'})
 df_index = df_index.merge(df_table_filename, left_on='Table ID', right_on='Table ID')
@@ -63,47 +59,47 @@ args = [(df_index, project_folder_name, new_folder_projects, csv_file_folder, co
 pool.starmap(bundle_for_project, args)
 pool.close()
 
-# =============================== Create Project Download Files ===============================
-for project_folder_name in sorted(df_index['Download folder name'].unique().tolist()):
-    df_project = df_index[df_index['Download folder name'] == project_folder_name]
-
-    # old_project_folder = os.path.join(csv_file_folder, project_folder_name)
-
-    # Create new project folder
-    new_project_folder = os.path.join(new_folder_projects, project_folder_name)
-    os.mkdir(new_project_folder)
-
-    # Iterate over the table ids and create zip files of tables
-    for table_id in df_project['Table ID'].unique():
-        # Create a temporary folder in the new project folder for zipping csv files
-        temp_folder_for_bundling = os.path.join(new_project_folder, 'temp-{}'.format(table_id))
-        os.mkdir(temp_folder_for_bundling)
-
-        # Copy the csv files of one table to the temporary folder in the new project folder
-        df_table = df_project[df_project['Table ID'] == table_id]
-        for csv in df_table['filename']:
-            shutil.copy(os.path.join(csv_file_folder, csv), os.path.join(temp_folder_for_bundling, csv))
-
-        # Create a zip file of the table csvs
-        zipfile_name = filename_to_tablename(df_table['filename'].iloc[0])
-        shutil.make_archive(os.path.join(new_project_folder, zipfile_name), 'zip', temp_folder_for_bundling)
-
-        # Delete the temporary folder after zipping csv files of a table
-        shutil.rmtree(temp_folder_for_bundling, ignore_errors=True)
-
-    # Create index file for the project
-    df_project_index = df_project.sort_values(['Table ID', 'PDF Page Number'])\
-        .groupby('Table ID').first().reset_index()[columns_index]
-    df_project_index.to_csv(os.path.join(new_project_folder, 'INDEX_PROJECT.csv'), index=False)
-
-    # Create readme.txt
-    shutil.copy(readme_project_filepath, os.path.join(new_project_folder, 'readme.txt'))
-
-    # Create project zip file
-    shutil.make_archive(new_project_folder, 'zip', new_folder_projects, project_folder_name)
-
-    # Delete project folder
-    shutil.rmtree(new_project_folder, ignore_errors=True)
+# # =============================== Create Project Download Files ===============================
+# for project_folder_name in sorted(df_index['Download folder name'].unique().tolist()):
+#     df_project = df_index[df_index['Download folder name'] == project_folder_name]
+#
+#     # old_project_folder = os.path.join(csv_file_folder, project_folder_name)
+#
+#     # Create new project folder
+#     new_project_folder = os.path.join(new_folder_projects, project_folder_name)
+#     os.mkdir(new_project_folder)
+#
+#     # Iterate over the table ids and create zip files of tables
+#     for table_id in df_project['Table ID'].unique():
+#         # Create a temporary folder in the new project folder for zipping csv files
+#         temp_folder_for_bundling = os.path.join(new_project_folder, 'temp-{}'.format(table_id))
+#         os.mkdir(temp_folder_for_bundling)
+#
+#         # Copy the csv files of one table to the temporary folder in the new project folder
+#         df_table = df_project[df_project['Table ID'] == table_id]
+#         for csv in df_table['filename']:
+#             shutil.copy(os.path.join(csv_file_folder, csv), os.path.join(temp_folder_for_bundling, csv))
+#
+#         # Create a zip file of the table csvs
+#         zipfile_name = filename_to_tablename(df_table['filename'].iloc[0])
+#         shutil.make_archive(os.path.join(new_project_folder, zipfile_name), 'zip', temp_folder_for_bundling)
+#
+#         # Delete the temporary folder after zipping csv files of a table
+#         shutil.rmtree(temp_folder_for_bundling, ignore_errors=True)
+#
+#     # Create index file for the project
+#     df_project_index = df_project.sort_values(['Table ID', 'PDF Page Number'])\
+#         .groupby('Table ID').first().reset_index()[columns_index]
+#     df_project_index.to_csv(os.path.join(new_project_folder, 'INDEX_PROJECT.csv'), index=False)
+#
+#     # Create readme.txt
+#     shutil.copy(readme_project_filepath, os.path.join(new_project_folder, 'readme.txt'))
+#
+#     # Create project zip file
+#     shutil.make_archive(new_project_folder, 'zip', new_folder_projects, project_folder_name)
+#
+#     # Delete project folder
+#     shutil.rmtree(new_project_folder, ignore_errors=True)
 
 
 # =============================== Create Table Download Files ===============================
