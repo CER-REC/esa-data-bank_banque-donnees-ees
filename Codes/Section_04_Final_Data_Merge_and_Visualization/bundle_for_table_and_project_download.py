@@ -1,6 +1,9 @@
 import pandas as pd
 import os
 import shutil
+import multiprocessing
+
+from Codes.Section_04_Final_Data_Merge_and_Visualization.bundle_utilites import bundle_for_project
 
 index_filepath_eng = 'F:/Environmental Baseline Data/Version 4 - Final/Indices/ESA_website_ENG_12302020.csv'
 # 'G:/ESA_downloads/copy_Bingjie/ESA_website_ENG.csv'
@@ -11,7 +14,7 @@ csv_file_folder = 'F:/Environmental Baseline Data/Version 4 - Final/all_csvs_cle
 readme_project_filepath = 'G:/ESA_downloads/README-ENG-projects.txt'
 
 # Create a new folder as the destination for downloading files
-new_folder = os.path.join('G:/ESA_downloads/', 'download_Bingjie')
+new_folder = os.path.join('G:/ESA_downloads/', 'download_Bingjie_test')
 os.mkdir(new_folder)
 
 # Create a sub-folder for project download files
@@ -53,6 +56,12 @@ columns_index = [col for col in df_index.columns.to_list() if col not in (
     'Table ID', 'Table Name', 'CSV Download URL', 'Download folder name', 'Zipped Project Link', 'Unnamed: 0',
     'Unnamed: 0.1', 'Index', 'filename', 'old_filename', 'Content Type', 'Data ID')]
 
+# =============================== Create Project Download Files ===============================
+pool = multiprocessing.Pool()
+args = [(df_index, project_folder_name, new_folder_projects, csv_file_folder, columns_index, readme_project_filepath)
+        for project_folder_name in sorted(df_index['Download folder name'].unique().tolist())[:5]]
+pool.starmap(bundle_for_project, args)
+pool.close()
 
 # =============================== Create Project Download Files ===============================
 for project_folder_name in sorted(df_index['Download folder name'].unique().tolist()):
