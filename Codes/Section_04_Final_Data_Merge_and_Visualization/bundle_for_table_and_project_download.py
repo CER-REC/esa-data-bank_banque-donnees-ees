@@ -1,9 +1,9 @@
 import pandas as pd
 import os
-import shutil
 import multiprocessing
 
-from Codes.Section_04_Final_Data_Merge_and_Visualization.bundle_utilites import filename_to_tablename, bundle_for_project
+from Codes.Section_04_Final_Data_Merge_and_Visualization.bundle_utilites \
+    import filename_to_tablename, bundle_for_project, bundle_for_table
 
 index_filepath_eng = 'F:/Environmental Baseline Data/Version 4 - Final/Indices/ESA_website_ENG_12302020.csv'
 # 'G:/ESA_downloads/copy_Bingjie/ESA_website_ENG.csv'
@@ -55,7 +55,7 @@ columns_index = [col for col in df_index.columns.to_list() if col not in (
 # =============================== Create Project Download Files ===============================
 pool = multiprocessing.Pool()
 args = [(df_index, project_folder_name, new_folder_projects, csv_file_folder, columns_index, readme_project_filepath)
-        for project_folder_name in sorted(df_index['Download folder name'].unique().tolist())[:5]]
+        for project_folder_name in sorted(df_index['Download folder name'].unique().tolist())]
 pool.starmap(bundle_for_project, args)
 pool.close()
 
@@ -101,39 +101,45 @@ pool.close()
 #     # Delete project folder
 #     shutil.rmtree(new_project_folder, ignore_errors=True)
 
+# =============================== Create Table Download Files ===============================
+pool = multiprocessing.Pool()
+args_table = [(df_index, table_id, new_folder_tables, csv_file_folder, columns_index, readme_project_filepath)
+              for table_id in sorted(df_index['Table ID'].unique().tolist())]
+pool.starmap(bundle_for_table, args_table)
+pool.close()
 
 # =============================== Create Table Download Files ===============================
-for table_id in sorted(df_index['Table ID'].unique().tolist()):
-    df_table = df_index[df_index['Table ID'] == table_id]
-
-    # Create a temporary folder in the new tables folder for zipping csv files
-    temp_folder_for_bundling = os.path.join(new_folder_tables, 'temp-{}'.format(table_id))
-    os.mkdir(temp_folder_for_bundling)
-
-    # Copy the csv files of one table to the temporary folder in the new tables folder
-    for _, row in df_table.iterrows():
-        csv = row['filename']
-        shutil.copy(os.path.join(csv_file_folder, csv),
-                    os.path.join(temp_folder_for_bundling, csv))
-
-    # Create readme.txt by append table metadata to the generic readme file
-    readme_table_filepath = os.path.join(temp_folder_for_bundling, 'readme.txt')
-    shutil.copy(readme_project_filepath, readme_table_filepath)
-    with open(readme_table_filepath, 'a', encoding="utf-8") as file:
-        metadata = ''
-        for col in columns_index:
-            if col == 'PDF Page Number' and df_table[col].min() != df_table[col].max():
-                metadata += '{}: {} - {}\n'.format(col, df_table[col].min(), df_table[col].max())
-            else:
-                metadata += '{}: {}\n'.format(col, df_table.iloc[0][col])
-        file.write(metadata)
-
-    # Create a zip file of the table csvs and readme.txt
-    zipfile_name = filename_to_tablename(df_table.sort_values('PDF Page Number')['filename'].iloc[0])
-    shutil.make_archive(os.path.join(new_folder_tables, zipfile_name), 'zip', temp_folder_for_bundling)
-
-    # Delete temp folder
-    shutil.rmtree(temp_folder_for_bundling, ignore_errors=True)
+# for table_id in sorted(df_index['Table ID'].unique().tolist()):
+#     df_table = df_index[df_index['Table ID'] == table_id]
+#
+#     # Create a temporary folder in the new tables folder for zipping csv files
+#     temp_folder_for_bundling = os.path.join(new_folder_tables, 'temp-{}'.format(table_id))
+#     os.mkdir(temp_folder_for_bundling)
+#
+#     # Copy the csv files of one table to the temporary folder in the new tables folder
+#     for _, row in df_table.iterrows():
+#         csv = row['filename']
+#         shutil.copy(os.path.join(csv_file_folder, csv),
+#                     os.path.join(temp_folder_for_bundling, csv))
+#
+#     # Create readme.txt by append table metadata to the generic readme file
+#     readme_table_filepath = os.path.join(temp_folder_for_bundling, 'readme.txt')
+#     shutil.copy(readme_project_filepath, readme_table_filepath)
+#     with open(readme_table_filepath, 'a', encoding="utf-8") as file:
+#         metadata = ''
+#         for col in columns_index:
+#             if col == 'PDF Page Number' and df_table[col].min() != df_table[col].max():
+#                 metadata += '{}: {} - {}\n'.format(col, df_table[col].min(), df_table[col].max())
+#             else:
+#                 metadata += '{}: {}\n'.format(col, df_table.iloc[0][col])
+#         file.write(metadata)
+#
+#     # Create a zip file of the table csvs and readme.txt
+#     zipfile_name = filename_to_tablename(df_table.sort_values('PDF Page Number')['filename'].iloc[0])
+#     shutil.make_archive(os.path.join(new_folder_tables, zipfile_name), 'zip', temp_folder_for_bundling)
+#
+#     # Delete temp folder
+#     shutil.rmtree(temp_folder_for_bundling, ignore_errors=True)
 
 
 # =============================== Create Master Index File ===============================
