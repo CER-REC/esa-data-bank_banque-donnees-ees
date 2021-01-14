@@ -63,3 +63,24 @@ df_merge_dup = df_merge_dup.merge(df_meta)
 # cshng                  1
 
 df_merge_dup.to_csv('index_duplicates.csv', index=False)
+
+# ================================
+from csv_diff import load_csv, compare
+
+for index, item in df_merge_dup.iterrows():
+    csv_files = item['CSV Download URL'].split('; ')
+    if len(csv_files) == 2:
+        csv_files = [file.replace('http://www.cer-rec.gc.ca/esa-ees', 'G:/ESA_downloads/copy_Bingjie') for file in csv_files]
+        try:
+            diff = compare(
+                load_csv(open(csv_files[0])),
+                load_csv(open(csv_files[1]))
+            )
+            if not (diff['added'] or diff['removed'] or diff['changed'] or diff['columns_added'] or diff['columns_removed']):
+                print('Same CSV files: {}, {}'.format(csv_files[0], csv_files[1]))
+        except:
+            continue
+            # TODO: look into UnicodeDecodeError: 'charmap' codec can't decode byte 0x9d in position 736: character maps to <undefined>
+    else:
+        continue
+        # TODO: look into compare multiple csv files
