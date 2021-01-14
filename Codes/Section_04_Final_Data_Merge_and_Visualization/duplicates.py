@@ -1,4 +1,5 @@
 import pandas as pd
+from csv_diff import load_csv, compare
 
 file = 'G:/ESA_downloads/copy_Bingjie/ESA_website_ENG.csv'
 
@@ -64,23 +65,33 @@ df_merge_dup = df_merge_dup.merge(df_meta)
 
 df_merge_dup.to_csv('index_duplicates.csv', index=False)
 
-# ================================
-from csv_diff import load_csv, compare
-
+# ======================================== Compare csv files ========================================
 for index, item in df_merge_dup.iterrows():
     csv_files = item['CSV Download URL'].split('; ')
-    if len(csv_files) == 2:
-        csv_files = [file.replace('http://www.cer-rec.gc.ca/esa-ees', 'G:/ESA_downloads/copy_Bingjie') for file in csv_files]
-        try:
-            diff = compare(
-                load_csv(open(csv_files[0])),
-                load_csv(open(csv_files[1]))
-            )
-            if not (diff['added'] or diff['removed'] or diff['changed'] or diff['columns_added'] or diff['columns_removed']):
-                print('Same CSV files: {}, {}'.format(csv_files[0], csv_files[1]))
-        except:
-            continue
-            # TODO: look into UnicodeDecodeError: 'charmap' codec can't decode byte 0x9d in position 736: character maps to <undefined>
-    else:
-        continue
-        # TODO: look into compare multiple csv files
+    csv_files = [file.replace('http://www.cer-rec.gc.ca/esa-ees', 'G:/ESA_downloads/copy_Bingjie') for file in
+                 csv_files]
+    count_error = 0
+    for i in range(len(csv_files)):
+        for j in range(i):
+            try:
+                diff = compare(load_csv(open(csv_files[i])), load_csv(open(csv_files[j])))
+                if not (diff['added'] or diff['removed'] or diff['changed'] or diff['columns_added'] or diff['columns_removed']):
+                    # print(item['Title'])
+                    print('*** Same CSV files: {}, {}'.format(csv_files[i], csv_files[j]))
+                    print('PDF Download URL: {}, PDF Page Number: {}'.format(item['PDF Download URL'], item['PDF Page Number']))
+            except:
+                # print('Error comparing files: {}, {}'.format(csv_files[i], csv_files[j]))
+                count_error += 1
+
+
+# Same CSV files: G:/ESA_downloads/copy_Bingjie/vntg/667050_14_2.csv, G:/ESA_downloads/copy_Bingjie/vntg/667050_14_1.csv
+# PDF Download URL: https://apps.cer-rec.gc.ca/REGDOCS/File/Download/667050, PDF Page Number: 14
+
+# Same CSV files: G:/ESA_downloads/copy_Bingjie/vntg/667248_13_2.csv, G:/ESA_downloads/copy_Bingjie/vntg/667248_13_1.csv
+# PDF Download URL: https://apps.cer-rec.gc.ca/REGDOCS/File/Download/667248, PDF Page Number: 13
+
+# Same CSV files: G:/ESA_downloads/copy_Bingjie/strnmnln/2541470_609_3.csv, G:/ESA_downloads/copy_Bingjie/strnmnln/2541470_609_2.csv
+# PDF Download URL: https://apps.cer-rec.gc.ca/REGDOCS/File/Download/2541470, PDF Page Number: 609
+
+# Same CSV files: G:/ESA_downloads/copy_Bingjie/strnmnln/2541470_469_5.csv, G:/ESA_downloads/copy_Bingjie/strnmnln/2541470_469_3.csv
+# PDF Download URL: https://apps.cer-rec.gc.ca/REGDOCS/File/Download/2541470, PDF Page Number: 469
