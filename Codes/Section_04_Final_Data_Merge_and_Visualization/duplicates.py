@@ -76,9 +76,9 @@ for index, item in df_merge_dup.iterrows():
             try:
                 diff = compare(load_csv(open(csv_files[i])), load_csv(open(csv_files[j])))
                 if not (diff['added'] or diff['removed'] or diff['changed'] or diff['columns_added'] or diff['columns_removed']):
-                    # print(item['Title'])
                     print('*** Same CSV files: {}, {}'.format(csv_files[i], csv_files[j]))
                     print('PDF Download URL: {}, PDF Page Number: {}'.format(item['PDF Download URL'], item['PDF Page Number']))
+                    # print(item['Title'])
             except:
                 # print('Error comparing files: {}, {}'.format(csv_files[i], csv_files[j]))
                 count_error += 1
