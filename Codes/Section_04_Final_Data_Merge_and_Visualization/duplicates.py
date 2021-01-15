@@ -62,8 +62,71 @@ df_merge_dup = df_merge_dup.merge(df_meta)
 # kwn                    1
 # sthrnlghts             1
 # cshng                  1
-
 df_merge_dup.to_csv('index_duplicates.csv', index=False)
+
+df_index_dup = df_index.merge(df_merge[df_merge['count'] > 1], how='left', on=['Title', 'Data ID', 'PDF Page Number'])
+df_index_dup['duplicate'] = df_index_dup['count'].notna()
+# df_index_dup['duplicate'].value_counts()
+# False     27558
+# True      1333
+
+df_project_dup = df_index_dup.groupby('Download folder name')['duplicate'].sum().reset_index()
+df_project_count = df_index_dup.groupby('Download folder name')['duplicate'].count().reset_index().rename(columns={'duplicate': 'count'})
+df_project_count = df_project_count.merge(df_project_dup, how='left')
+
+df_project_count['percent'] = df_project_count.apply(lambda x: round(x['duplicate']/x['count']*100, 2), axis=1)
+df_project_count.sort_values('percent', ascending=False)
+#    Download folder name  count  duplicate  percent
+# 3               brnswck    379        275    72.56
+# 35      wlvrnrvrltrlllp    427        240    56.21
+# 20    lsmrkttlrvrcrssvr    415        203    48.92
+# 31             strnmnln    694        329    47.41
+# 33              twrbrch    565        112    19.82
+# 34                 vntg    531         20     3.77
+# 1              2021ngtl    768         24     3.12
+# 4                 cshng     73          2     2.74
+# 12                  kwn     96          2     2.08
+# 11               kmnrth    305          6     1.97
+# 23            nrthcrrdr    636         12     1.89
+# 14              kystnxl    829         10     1.21
+# 2                  bkkn    337          4     1.19
+# 37           wstpthdlvr    351          4     1.14
+# 7               dsnmnln    397          4     1.01
+# 24             nrthmntn    610          6     0.98
+# 32                  tmx   3874         36     0.93
+# 30           sthrnlghts    270          2     0.74
+# 13                kystn    624          4     0.64
+# 28              sprcrdg    647          4     0.62
+# 22                nrgst   5763         26     0.45
+# 16            lbrtclppr    524          2     0.38
+# 0              2017ngtl   1869          4     0.21
+# 25           nrthrngtwy   1152          2     0.17
+
+df_pdf_dup = df_index_dup.groupby('Data ID')['duplicate'].sum().reset_index()
+df_pdf_count = df_index_dup.groupby('Data ID')['duplicate'].count().reset_index().rename(columns={'duplicate': 'count'})
+df_pdf_count = df_pdf_count.merge(df_pdf_dup, how='left')
+
+df_pdf_count['percent'] = df_pdf_count.apply(lambda x: round(x['duplicate']/x['count']*100, 2), axis=1)
+# df_pdf_count.shape (860, 4)
+df_pdf = df_index[['Data ID', 'PDF Download URL', 'Download folder name']].drop_duplicates()
+df_pdf_count = df_pdf_count.merge(df_pdf, on='Data ID')
+
+df_pdf_count = df_pdf_count.sort_values('percent', ascending=False)
+# df_pdf_count[df_pdf_count['percent'] > 50].shape  (9, 6)
+# df_pdf_count[df_pdf_count['percent'] > 10].shape  (32, 6)
+
+# Data ID  count  duplicate  percent
+# 11    408937    379        275    72.56
+# 412  2445655    276        198    71.74
+# 264   702747    187        114    60.96
+# 205   667050      7          4    57.14
+# 260   702730     16          9    56.25
+# ..       ...    ...        ...      ...
+# 301   895339      5          0     0.00
+# 302  1059614     29          0     0.00
+# 303  1059803     24          0     0.00
+# 304  1059806     41          0     0.00
+# 859  3892459    161          0     0.00
 
 # ======================================== Compare csv files ========================================
 for index, item in df_merge_dup.iterrows():
