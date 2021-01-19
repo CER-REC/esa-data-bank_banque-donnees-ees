@@ -114,6 +114,7 @@ df_pdf_count = df_pdf_count.merge(df_pdf, on='Data ID')
 df_pdf_count = df_pdf_count.sort_values('percent', ascending=False)
 # df_pdf_count[df_pdf_count['percent'] > 50].shape  (9, 6)
 # df_pdf_count[df_pdf_count['percent'] > 10].shape  (32, 6)
+# df_pdf_count[df_pdf_count['percent'] > 0].shape   (67, 6)
 
 # Data ID  count  duplicate  percent
 # 11    408937    379        275    72.56
