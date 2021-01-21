@@ -38,7 +38,7 @@ def check_topic_present(topic, text):
     Returns
     ----------
     Binary_Value:
-        It returs binary value 1 or 0, depecding on if there is a keyword that 
+        It returns a binary value of 1 or 0 if there is a keyword that 
         is present in the textual description line for the PDF. 
         
     """
@@ -50,10 +50,10 @@ def check_topic_present(topic, text):
           
 def remove_string_special_characters(s): 
     """
-    This basic function attempts to replace special characters, and multiple 
-    white spaces with a single pscae. It also removes all leading and trailing 
+    This basic function attempts to replace special characters and multiple 
+    white spaces with a single space. It also removes all leading and trailing 
     characters from the string. Furthermore, it converts the string into lower 
-    case characters. thus making the input string into easy to process string.
+    case characters. It is thus making the input string easy to process.
     
     Parameters
     ----------
@@ -62,7 +62,7 @@ def remove_string_special_characters(s):
     Returns
     ----------
     Easy to process string:
-        It reurns easy to process string, which means the string does not have 
+        It returns easy to process string, which means the string does not have 
         unnecessary white spaces and all characters are in lower case.
         
     """
@@ -294,7 +294,7 @@ def get_outline_present(path, Index0):
         Data_ID: It is the unique ID of the PDF file which will be used as the 
         name of the PDF downloaded
         esa_download_link: URL addresses stored as a list of string
-        a list of the pdf URLs so that the respepctive files could be 
+        a list of the pdf URLs so that the respective files could be 
         downloaded
         
     Returns
