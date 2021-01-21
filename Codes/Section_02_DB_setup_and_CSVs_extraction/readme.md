@@ -25,7 +25,7 @@ The table extraction process utilizes a MySQL Database to store the results of t
     * `csvsExtracted` is the indication whether all pages of the PDF were processed and all the tables were extracted from it (NULL - not processed, "true" - processed)
     * `hearingOrder`, `application_name`, `application_title_short`, `title_short`, and `commodity` are metadata taken from the input Index file regarding the hearing order number, application name, etc.
 
-4. Run t ~TO DO: Fix sentence~
+4. Run t --TO DO: Fix sentence--
 
 ## Setting up the DB
 
@@ -43,4 +43,4 @@ The table extraction process utilizes a MySQL Database to store the results of t
 
 1. Open the MySQL Workbench and connect to the local MySQL DB
 2. In the Navigator window, select 'Schemas' tab on the bottom
-3. Right click in the free space in the list of ~TO DO: Fix sentence~
+3. Right click in the free space in the list of --TO DO: Fix sentence--
