@@ -14,7 +14,7 @@ def file_scraper(path, Index0):
     This method attempts to download all the PDF files from the list of PDF 
     URLs that are sent to the function.
     
-    It is assumesed that the list of PDFs sent to the function are relevant to 
+    It is assumed that the list of PDFs sent to the function are relevant to 
     Environmental and Social Assessment. The files in this list are then 
     downloaded and saved in the PDFs folder which will be read and processed 
     later.
