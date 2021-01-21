@@ -81,7 +81,7 @@ def remove_string_special_characters(s):
 def pdf_categorize(path, Index0):
     """
     This method attempts to categorize all the PDF files from the list of PDFs 
-    into one more ESA categories. 
+    into one or more ESA categories. 
     
     Based on the contents of a ESA files, we were able to identify the top 10 
     ESA categories. We performed frequency analysis of the keywords from the 
