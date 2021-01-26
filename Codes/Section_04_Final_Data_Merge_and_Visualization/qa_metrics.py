@@ -51,3 +51,33 @@ df_index = df_index.merge(df_duplicate, how='left', on=['Title', 'Data ID', 'PDF
 df_index['qa_duplicate'] = df_index['count'].notna()
 
 # df_index.to_csv('G:/ESA_downloads/index_qa_temp.csv', index=False)
+df_top = df_index.sort_values('qa_blank_cell_percent', ascending=False)
+df_top = df_top[df_top['qa_blank_cell_percent'] > 50]
+
+
+#
+file_all = 'Input_Files/Index_of_PDFs_for_Major_Projects_with_ESAs.csv'
+df_all = pd.read_csv(file_all)
+
+# df_all.shape
+# (1902, 21)
+
+# df_all['Application Short Name'].nunique()
+# 37
+
+df_index.columns
+df_index[['Application Short Name', 'Data ID']].nunique()
+# Application Short Name 38, Data ID 860
+# The difference is the Keystone project
+
+df_fig = pd.read_csv('F:/Environmental Baseline Data/Version 4 - Final/Indices/ESA_website_ENG.csv')
+# (38025, 31)
+
+
+df_project_all = df_all.groupby('Application Short Name')['Data ID'].nunique().reset_index().rename(columns={'Data ID': 'pdf_count_all'})
+df_project_table_fig = df_fig.groupby('Application Short Name')['Data ID'].nunique().reset_index().rename(columns={'Data ID': 'pdf_count_table_fig'})
+df_project_table = df_index.groupby('Application Short Name')['Data ID'].nunique().reset_index().rename(columns={'Data ID': 'pdf_count_table'})
+
+df_project_all.merge(df_project_table_fig, how='outer').merge(df_project_table, how='outer')\
+    .to_csv('project_pdf_count.csv', index=False)
+
