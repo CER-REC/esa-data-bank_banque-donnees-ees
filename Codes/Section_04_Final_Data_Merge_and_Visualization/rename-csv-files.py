@@ -29,9 +29,9 @@ df_FRA = df_FRA.reset_index()
 df_FRA.rename(columns = {"Index": "Indice"}, inplace = True)
 
 # Creating the names of each csv file
-df['filename'] = df['Download folder name'] + '-' + df['Title'].str.lower().str.replace('(', '').str.replace(')', '').str.replace(' ', '-').str.replace('.', '-').str.replace('[^\w+-]', '').str.slice(0,30)
+df['filename'] = df['Download folder name'] + '-' + df['Title'].str.lower().str.replace('(', '').str.replace(')', '').str.replace(' ', '-').str.replace('.', '-').str.replace('[^\w+-]', '').str.slice(0,80)
 
-df_FRA['nom_du_fichier'] = df_FRA['Télécharger le nom du dossier'] + '-' + df_FRA['Titre'].str.lower().str.replace('(', '').str.replace(')', '').str.replace(' ', '-').str.replace('.', '-').str.replace('[^\w+-]', '').str.slice(0,30)
+df_FRA['nom_du_fichier'] = df_FRA['Télécharger le nom du dossier'] + '-' + df_FRA['Titre'].str.lower().str.replace('(', '').str.replace(')', '').str.replace(' ', '-').str.replace('.', '-').str.replace('[^\w+-]', '').str.slice(0,80)
 
 # Creating a column with the old filename so that we can rename the files
 old_filename_df = df['CSV Download URL'].str.split('/').str[-1].str.split('_')
@@ -56,6 +56,9 @@ for index, row in df.iterrows():
     df.loc[index, 'CSV Download URL'] = os.path.join('http://www.cer-rec.gc.ca/esa-ees/', row['Download folder name'] + '/' + current_title + '.csv')
     prev_title = row['filename']
 
+# Making sure there are no duplicates in English filenames
+assert len(df) - len(df['filename'].unique()) == 0, "Should be 0."
+
 # For French index file
 prev_title = ''
 for index, row in df_FRA.iterrows():
@@ -71,12 +74,16 @@ for index, row in df_FRA.iterrows():
     df_FRA.loc[index, 'URL de téléchargement CSV'] = os.path.join('http://www.cer-rec.gc.ca/esa-ees/', row['Télécharger le nom du dossier'] + '/' + current_title + '.csv')
     prev_title = row['nom_du_fichier']
 
+# Making sure there are no duplicates in French filenames
+assert len(df_FRA) - len(df_FRA['nom_du_fichier'].unique()) == 0, "Should be 0."
+
 # Adding an index ID to each file to avoid duplicates
 df['filename'] = df['filename'] + '-' + 'no' + df['Index'].astype(str) + '.csv'
 df_FRA['nom_du_fichier'] = df_FRA['nom_du_fichier'] + '-' + 'no' + df_FRA['Indice'].astype(str) + '.csv'
 
-# Where the files are located
-csv_folder_path = 'F:/Environmental Baseline Data/Version 4 - Final/all_csvs_cleaned_renamed/'
+# Where the CSVs are located
+csv_folder_path_ENG = 'F:/Environmental Baseline Data/Version 4 - Final/all_csvs_cleaned_latest_ENG/'
+csv_folder_path_FRA = 'F:/Environmental Baseline Data/Version 4 - Final/all_csvs_cleaned_latest_FRA/'
 
 # Making the folder the base path
 os.chdir(csv_folder_path)
