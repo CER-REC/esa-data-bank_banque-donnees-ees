@@ -1,14 +1,17 @@
 import pandas as pd
 import numpy as np
 
-file = 'G:/ESA_downloads/copy_Bingjie/ESA_website_ENG.csv'
+# This is the data prepartion for quality check
+# Refer to the jupyter notebook (QA_metrics.ipynb) for the analytical part where at the end we select a list of PDFs
+# that we will exclude csvs files from
 
+# ===== Data preparation for quality check =====
+file = 'G:/ESA_downloads/copy_Bingjie/ESA_website_ENG.csv'
 df_index = pd.read_csv(file)
 
 # add columns
 for col in ['csv_row_count', 'csv_column_count', 'csv_null_cell_count', 'csv_cid_cell_count']:
     df_index[col] = np.nan
-
 
 for index, (csv_url) in df_index[['CSV Download URL']].itertuples():
     path = 'G:/ESA_downloads/copy_Bingjie/{}'.format('/'.join(csv_url.split('/')[-2:]))
@@ -27,6 +30,7 @@ for index, (csv_url) in df_index[['CSV Download URL']].itertuples():
     except:
         print(path)
         continue
+        # Empty files:
         # G:/ESA_downloads/copy_Bingjie/tmx/2392795_369_1.csv
         # G:/ESA_downloads/copy_Bingjie/tmx/2393470_72_1.csv
         # G:/ESA_downloads/copy_Bingjie/nrgst/2968028_16_1.csv
@@ -50,12 +54,10 @@ df_duplicate = df_table_count[df_table_count['count'] > 1]
 df_index = df_index.merge(df_duplicate, how='left', on=['Title', 'Data ID', 'PDF Page Number'])
 df_index['qa_duplicate'] = df_index['count'].notna()
 
-# df_index.to_csv('G:/ESA_downloads/index_qa_temp.csv', index=False)
-df_top = df_index.sort_values('qa_blank_cell_percent', ascending=False)
-df_top = df_top[df_top['qa_blank_cell_percent'] > 50]
+df_index.to_csv('G:/ESA_downloads/index_qa_temp.csv', index=False)
 
 
-#
+# ====== Calculate the numbers of projects and pdfs during the whole process ======
 file_all = 'Input_Files/Index_of_PDFs_for_Major_Projects_with_ESAs.csv'
 df_all = pd.read_csv(file_all)
 
@@ -65,14 +67,12 @@ df_all = pd.read_csv(file_all)
 # df_all['Application Short Name'].nunique()
 # 37
 
-df_index.columns
 df_index[['Application Short Name', 'Data ID']].nunique()
 # Application Short Name 38, Data ID 860
 # The difference is the Keystone project
 
 df_fig = pd.read_csv('F:/Environmental Baseline Data/Version 4 - Final/Indices/ESA_website_ENG.csv')
 # (38025, 31)
-
 
 df_project_all = df_all.groupby('Application Short Name')['Data ID'].nunique().reset_index().rename(columns={'Data ID': 'pdf_count_all'})
 df_project_table_fig = df_fig.groupby('Application Short Name')['Data ID'].nunique().reset_index().rename(columns={'Data ID': 'pdf_count_table_fig'})
