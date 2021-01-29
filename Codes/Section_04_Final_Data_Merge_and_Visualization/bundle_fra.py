@@ -35,7 +35,7 @@ df_table_id = df_index_raw_eng.groupby(['Title', 'Data ID']).size()\
     .reset_index().rename(columns={'index': 'Table ID'})
 df_index_raw_eng = df_index_raw_eng.merge(df_table_id, left_on=['Title', 'Data ID'], right_on=['Title', 'Data ID'])
 
-df_index_raw_fra = pd.read_csv(index_filepath_fra)
+df_index_raw_fra = pd.read_csv(index_filepath_fra, encoding=)
 
 # Remove bad csvs
 df_index = df_index_raw_fra[~df_index_raw_fra['bad_csv']]

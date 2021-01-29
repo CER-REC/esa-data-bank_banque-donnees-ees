@@ -70,6 +70,28 @@ pool.starmap(bundle_for_table, args_table)
 pool.close()
 
 # =============================== Create Master Index File ===============================
-# Todo: add figures; add bad tables
-df_index.sort_values(['Table ID', 'PDF Page Number']).groupby('Table ID').first()\
-    .reset_index()[columns_index].to_csv(os.path.join(new_folder, 'ESA_website_ENG.csv'), index=False)
+# Added figures back to alpha index file
+df_index_with_figure = pd.read_csv('F:/Environmental Baseline Data/Version 4 - Final/Indices/ESA_website_ENG.csv')
+figure_columns = columns_index.copy()
+figure_columns.insert(1, 'Content Type')
+figure_columns.remove('Project Download URL')
+figure_columns.remove('Table Download URL')
+df_figure = df_index_with_figure[df_index_with_figure['Content Type'] == 'Figure'][figure_columns]
+
+# Add bad tables
+bad_table_columns = columns_index.copy()
+bad_table_columns.remove('Project Download URL')
+bad_table_columns.remove('Table Download URL')
+df_table_bad = df_index_raw[df_index_raw['bad_csv']].sort_values(['Table ID', 'PDF Page Number']).groupby('Table ID').first()\
+    .reset_index()[bad_table_columns]
+df_table_bad['Good Quality'] = False
+
+# Concatenate all tables
+df_table = df_index.sort_values(['Table ID', 'PDF Page Number']).groupby('Table ID').first()\
+    .reset_index()[columns_index]
+df_table['Good Quality'] = True
+
+df_index_new = pd.concat([df_figure, df_table, df_table_bad])
+
+# Export alpha index
+df_index_new.to_csv(os.path.join(new_folder, 'ESA_website_ENG.csv'), index=False)
