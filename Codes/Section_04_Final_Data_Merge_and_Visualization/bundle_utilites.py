@@ -11,17 +11,17 @@ def bundle_for_project(df_index, project_folder_name, new_folder_projects, csv_f
 
     df_project = df_index[df_index['Download folder name'] == project_folder_name]
 
-    # old_project_folder = os.path.join(csv_file_folder, project_folder_name)
-
     # Create new project folder
     new_project_folder = os.path.join(new_folder_projects, project_folder_name)
-    os.mkdir(new_project_folder)
+    if not os.path.exists(new_project_folder):
+        os.mkdir(new_project_folder)
 
     # Iterate over the table ids and create zip files of tables
     for table_id in df_project['Table ID'].unique():
         # Create a temporary folder in the new project folder for zipping csv files
         temp_folder_for_bundling = os.path.join(new_project_folder, 'temp-{}'.format(table_id))
-        os.mkdir(temp_folder_for_bundling)
+        if not os.path.exists(temp_folder_for_bundling):
+            os.mkdir(temp_folder_for_bundling)
 
         # Copy the csv files of one table to the temporary folder in the new project folder
         df_table = df_project[df_project['Table ID'] == table_id]
@@ -56,7 +56,8 @@ def bundle_for_table(df_index, table_id, new_folder_tables, csv_file_folder, col
 
     # Create a temporary folder in the new tables folder for zipping csv files
     temp_folder_for_bundling = os.path.join(new_folder_tables, 'temp-{}'.format(table_id))
-    os.mkdir(temp_folder_for_bundling)
+    if not os.path.exists(temp_folder_for_bundling):
+        os.mkdir(temp_folder_for_bundling)
 
     # Copy the csv files of one table to the temporary folder in the new tables folder
     for _, row in df_table.iterrows():

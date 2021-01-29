@@ -5,16 +5,13 @@ import multiprocessing
 from Codes.Section_04_Final_Data_Merge_and_Visualization.bundle_utilites \
     import filename_to_tablename, bundle_for_project, bundle_for_table
 
-index_filepath_eng = 'F:/Environmental Baseline Data/Version 4 - Final/Indices/ESA_website_ENG_12302020.csv'
-# 'G:/ESA_downloads/copy_Bingjie/ESA_website_ENG.csv'
-# 'F:/Environmental Baseline Data/Version 4 - Final/Indices/ESA_website_ENG.csv'
+index_filepath_eng = 'F:/Environmental Baseline Data/Version 4 - Final/Indices/ESA_website_ENG_2021_01_28.csv'
 
-csv_file_folder = 'F:/Environmental Baseline Data/Version 4 - Final/all_csvs_cleaned_renamed'
-# 'G:/ESA_downloads/copy_Bingjie/'
+csv_file_folder = 'F:/Environmental Baseline Data/Version 4 - Final/all_csvs_cleaned_latest_ENG'
 readme_project_filepath = 'G:/ESA_downloads/README-ENG-projects.txt'
 
 # Create a new folder as the destination for downloading files
-new_folder = os.path.join('G:/ESA_downloads/', 'download_Bingjie_test')
+new_folder = os.path.join('G:/ESA_downloads/', 'download_Bingjie_Jan292021')
 if not os.path.exists(new_folder):
     os.mkdir(new_folder)
 
@@ -30,6 +27,7 @@ if not os.path.exists(new_folder_tables):
 
 # =============================== Prepare index dataframe ===============================
 df_index = pd.read_csv(index_filepath_eng)
+df_index = df_index[~df_index['bad_csv']]
 
 # Create a temporary column in the index dataframe as table identification
 df_table_id = df_index.groupby(['Title', 'Data ID']).size()\
@@ -52,9 +50,9 @@ df_index['Table Download URL'] = df_index['Table Name']\
 # Prepare a list of column names for the final index files
 columns_index = [col for col in df_index.columns.to_list() if col not in (
     'Table ID', 'Table Name', 'CSV Download URL', 'Download folder name', 'Zipped Project Link', 'Unnamed: 0',
-    'Unnamed: 0.1', 'Index', 'filename', 'old_filename', 'Content Type', 'Data ID')]
+    'Unnamed: 0.1', 'Index', 'filename', 'old_filename', 'Content Type', 'Data ID', 'bad_csv')]
 
-# =============================== Create Project Download Files ===============================
+# =============================== Create Project Download Files ==============================
 pool = multiprocessing.Pool()
 args = [(df_index, project_folder_name, new_folder_projects, csv_file_folder, columns_index, readme_project_filepath)
         for project_folder_name in sorted(df_index['Download folder name'].unique().tolist())]
@@ -69,5 +67,6 @@ pool.starmap(bundle_for_table, args_table)
 pool.close()
 
 # =============================== Create Master Index File ===============================
+# Todo: add figures; add bad tables
 df_index.sort_values(['Table ID', 'PDF Page Number']).groupby('Table ID').first()\
     .reset_index()[columns_index].to_csv(os.path.join(new_folder, 'ESA_website_ENG.csv'), index=False)
