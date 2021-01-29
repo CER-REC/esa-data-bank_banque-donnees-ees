@@ -5,11 +5,11 @@ import multiprocessing
 from Codes.Section_04_Final_Data_Merge_and_Visualization.bundle_utilites \
     import filename_to_tablename, bundle_for_project, bundle_for_table
 
-
 index_filepath_eng = 'F:/Environmental Baseline Data/Version 4 - Final/Indices/ESA_website_ENG_2021_01_28.csv'
+index_filepath_fra = 'F:/Environmental Baseline Data/Version 4 - Final/Indices/ESA_website_FRA_2021_01_28.csv'
 
-csv_file_folder = 'F:/Environmental Baseline Data/Version 4 - Final/all_csvs_cleaned_latest_ENG'
-readme_project_filepath = 'G:/ESA_downloads/README-ENG-projects.txt'
+csv_file_folder = 'F:/Environmental Baseline Data/Version 4 - Final/all_csvs_cleaned_latest_FRA'
+readme_project_filepath = 'G:/ESA_downloads/README-FRA-projects.txt'
 
 # Create a new folder as the destination for downloading files
 new_folder = os.path.join('G:/ESA_downloads/', 'download_Bingjie_Jan292021_fra')
@@ -27,16 +27,18 @@ if not os.path.exists(new_folder_tables):
     os.mkdir(new_folder_tables)
 
 # =============================== Prepare index dataframe ===============================
-df_index_raw = pd.read_csv(index_filepath_eng)
+df_index_raw_eng = pd.read_csv(index_filepath_eng)
 
 # Create a temporary column in the index dataframe as table identification
-df_table_id = df_index_raw.groupby(['Title', 'Data ID']).size()\
+df_table_id = df_index_raw_eng.groupby(['Title', 'Data ID']).size()\
     .reset_index().drop(columns=[0])\
     .reset_index().rename(columns={'index': 'Table ID'})
-df_index_raw = df_index_raw.merge(df_table_id, left_on=['Title', 'Data ID'], right_on=['Title', 'Data ID'])
+df_index_raw_eng = df_index_raw_eng.merge(df_table_id, left_on=['Title', 'Data ID'], right_on=['Title', 'Data ID'])
+
+df_index_raw_fra = pd.read_csv(index_filepath_fra)
 
 # Remove bad csvs
-df_index = df_index_raw[~df_index_raw['bad_csv']]
+df_index = df_index_raw_fra[~df_index_raw_fra['bad_csv']]
 
 # Add a new column - Project Download URL
 url_prefix = 'http://www.cer-rec.gc.ca/esa-ees'
