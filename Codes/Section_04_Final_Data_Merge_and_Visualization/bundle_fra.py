@@ -85,6 +85,15 @@ pool.close()
 # =============================== Create Master Index File ===============================
 # Added figures back to alpha index file
 df_index_with_figure = pd.read_csv('F:/Environmental Baseline Data/Version 4 - Final/Indices/ESA_website_FRA.csv')
+for column in df_index_with_figure.columns:
+    if '\u2019' in column:
+        df_index_with_figure.rename(columns={column: column.replace('\u2019', '\'')}, inplace=True)
+for column in df_index_with_figure.columns:
+    df_index_with_figure[column] = df_index_with_figure[column]\
+        .apply(lambda x: x.replace('\u2013', '-').replace('\u2014', '-').replace('\u2019', '\'') if type(x) is str else x)
+    df_index_with_figure[column] = df_index_with_figure[column] \
+        .apply(lambda x: x.encode('latin-1', errors='ignore').decode('latin-1', errors='ignore') if type(x) is str else x)
+
 figure_columns = columns_index.copy()
 figure_columns.insert(1, 'Type de contenu')
 figure_columns.remove('URL de téléchargement projet')
