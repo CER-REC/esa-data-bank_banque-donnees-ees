@@ -27,7 +27,7 @@ if not os.path.exists(new_folder_tables):
     os.mkdir(new_folder_tables)
 
 # =============================== Prepare index dataframe ===============================
-df_index_raw = pd.read_csv(index_filepath_eng)
+df_index_raw = pd.read_csv(index_filepath_eng, encoding='ISO-8859-1')
 
 # Create a temporary column in the index dataframe as table identification
 df_table_id = df_index_raw.groupby(['Title', 'Data ID']).size()\
@@ -94,4 +94,4 @@ df_table['Good Quality'] = True
 df_index_new = pd.concat([df_figure, df_table, df_table_bad])
 
 # Export alpha index
-df_index_new.to_csv(os.path.join(new_folder, 'ESA_website_ENG.csv'), index=False)
+df_index_new.to_csv(os.path.join(new_folder, 'ESA_website_ENG.csv'), index=False, encoding='ISO-8859-1')
