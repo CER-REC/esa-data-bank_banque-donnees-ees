@@ -6,13 +6,14 @@ from Codes.Section_04_Final_Data_Merge_and_Visualization.bundle_utilites \
     import filename_to_tablename, bundle_for_project, bundle_for_table
 
 
-index_filepath_eng = 'F:/Environmental Baseline Data/Version 4 - Final/Indices/ESA_website_ENG_2021_01_28.csv'
+index_filepath_eng = '//luxor/data/Board/ESA_downloads/renamed/ESA_website_ENG_2021_01_28.csv'
+# '//luxor/data/Branch/Environmental Baseline Data/Version 4 - Final/Indices/ESA_website_ENG_2021_01_28.csv'
 
-csv_file_folder = 'F:/Environmental Baseline Data/Version 4 - Final/all_csvs_cleaned_latest_ENG'
-readme_project_filepath = 'G:/ESA_downloads/README-ENG-projects.txt'
+csv_file_folder = '//luxor/data/Board/ESA_downloads/renamed/all_csvs_cleaned_latest_ENG'
+readme_project_filepath = '//luxor/data/Board/ESA_downloads/README-ENG-projects.txt'
 
 # Create a new folder as the destination for downloading files
-new_folder = os.path.join('G:/ESA_downloads/', 'download_Bingjie_Jan292021_fra')
+new_folder = os.path.join('//luxor/data/Board/ESA_downloads/', 'download_Bingjie_Feb232021')
 if not os.path.exists(new_folder):
     os.mkdir(new_folder)
 
@@ -39,21 +40,20 @@ df_index_raw = df_index_raw.merge(df_table_id, left_on=['Title', 'Data ID'], rig
 df_index = df_index_raw[~df_index_raw['bad_csv']]
 
 # Add a new column - Project Download URL
-url_prefix = 'http://www.cer-rec.gc.ca/esa-ees'
 df_index['Project Download URL'] = df_index['Download folder name']\
-    .apply(lambda x: '{}/projects/{}.zip'.format(url_prefix, x))
+    .apply(lambda x: '/projects/{}.zip'.format(x))
 
 # Add a new column - Table Download URL
 df_table_filename = df_index.sort_values(['PDF Page Number'])\
     .groupby('Table ID')['filename'].first().reset_index().rename(columns={'filename': 'Table Name'})
 df_index = df_index.merge(df_table_filename, left_on='Table ID', right_on='Table ID')
 df_index['Table Download URL'] = df_index['Table Name']\
-    .apply(lambda x: '{}/tables/{}.zip'.format(url_prefix, filename_to_tablename(x)))
+    .apply(lambda x: '/tables/{}.zip'.format(filename_to_tablename(x)))
 
 # Prepare a list of column names for the final index files
 columns_index = [col for col in df_index.columns.to_list() if col not in (
-    'Table ID', 'Table Name', 'CSV Download URL', 'Download folder name', 'Zipped Project Link', 'Unnamed: 0',
-    'Unnamed: 0.1', 'Index', 'filename', 'old_filename', 'Content Type', 'Data ID', 'bad_csv')]
+    'Table Name', 'CSV Download URL', 'Download folder name', 'Zipped Project Link', 'Unnamed: 0',
+    'Unnamed: 0.1', 'Index', 'filename', 'old_filename', 'Data ID', 'bad_csv')]
 
 # =============================== Create Project Download Files ==============================
 pool = multiprocessing.Pool()
@@ -71,9 +71,9 @@ pool.close()
 
 # =============================== Create Master Index File ===============================
 # Added figures back to alpha index file
-df_index_with_figure = pd.read_csv('F:/Environmental Baseline Data/Version 4 - Final/Indices/ESA_website_ENG.csv')
+df_index_with_figure = pd.read_csv('//luxor/data/Board/ESA_downloads/renamed/ESA_website_ENG.csv')
 figure_columns = columns_index.copy()
-figure_columns.insert(1, 'Content Type')
+figure_columns.remove('Table ID')
 figure_columns.remove('Project Download URL')
 figure_columns.remove('Table Download URL')
 df_figure = df_index_with_figure[df_index_with_figure['Content Type'] == 'Figure'][figure_columns]
@@ -92,6 +92,20 @@ df_table = df_index.sort_values(['Table ID', 'PDF Page Number']).groupby('Table 
 df_table['Good Quality'] = True
 
 df_index_new = pd.concat([df_figure, df_table, df_table_bad])
+
+# Remove ',All' from Pipeline Location, ESA Section(s) Topics
+df_index_new['Pipeline Location'] = df_index_new['Pipeline Location']\
+    .apply(lambda x: ', '.join([location for location in x.split(', ') if location != 'All']))
+df_index_new['ESA Section(s) Topics'] = df_index_new['ESA Section(s) Topics']\
+    .apply(lambda x: ', '.join([section for section in x.split(', ') if section != 'All']) if type(x) is str else x)
+
+# Make columns data type integer
+columns_int = ['ESA Section(s) Index', 'PDF Page Number', 'PDF Page Count']
+df_index_new[columns_int] = df_index_new[columns_int].astype('Int64')
+
+# TODO: Add ID to figures
+
+
 
 # Export alpha index
 df_index_new.to_csv(os.path.join(new_folder, 'ESA_website_ENG.csv'), index=False, encoding='ISO-8859-1')
