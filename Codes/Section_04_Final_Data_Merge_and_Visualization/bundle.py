@@ -13,7 +13,7 @@ csv_file_folder = '//luxor/data/Board/ESA_downloads/renamed/all_csvs_cleaned_lat
 readme_project_filepath = '//luxor/data/Board/ESA_downloads/README-ENG-projects.txt'
 
 # Create a new folder as the destination for downloading files
-new_folder = os.path.join('//luxor/data/Board/ESA_downloads/', 'download_Bingjie_Feb232021')
+new_folder = os.path.join('//luxor/data/Board/ESA_downloads/', 'download_Bingjie_Feb242021')
 if not os.path.exists(new_folder):
     os.mkdir(new_folder)
 
@@ -56,16 +56,16 @@ columns_index = [col for col in df_index.columns.to_list() if col not in (
     'Unnamed: 0.1', 'Index', 'filename', 'old_filename', 'Data ID', 'bad_csv')]
 
 # =============================== Create Project Download Files ==============================
-pool = multiprocessing.Pool()
 args = [(df_index, project_folder_name, new_folder_projects, csv_file_folder, columns_index, readme_project_filepath)
-        for project_folder_name in sorted(df_index['Download folder name'].unique().tolist())]
+        for project_folder_name in sorted(df_index['Download folder name'].unique().tolist())[:1]]
+pool = multiprocessing.Pool()
 pool.starmap(bundle_for_project, args)
 pool.close()
 
 # =============================== Create Table Download Files ===============================
-pool = multiprocessing.Pool()
 args_table = [(df_index, table_id, new_folder_tables, csv_file_folder, columns_index, readme_project_filepath)
-              for table_id in sorted(df_index['Table ID'].unique().tolist())]
+              for table_id in sorted(df_index['Table ID'].unique().tolist())[:1]]
+pool = multiprocessing.Pool()
 pool.starmap(bundle_for_table, args_table)
 pool.close()
 
