@@ -29,7 +29,7 @@ if not os.path.exists(new_folder_tables):
 # =============================== Prepare index dataframe ===============================
 df_index_raw_eng = pd.read_csv(index_filepath_eng, encoding='ISO-8859-1')
 
-# Create a temporary column in the index dataframe as table identification
+# Create a temporary column in the index dataframe as table identification TODO: Table ID to ID
 df_table_id = df_index_raw_eng.groupby(['Title', 'Data ID']).size()\
     .reset_index().drop(columns=[0])\
     .reset_index().rename(columns={'index': 'Table ID'})
@@ -43,12 +43,12 @@ df_index_raw_fra = df_index_raw_fra.join(df_index_raw_eng[['Index', 'Table ID']]
 # Remove bad csvs
 df_index = df_index_raw_fra[~df_index_raw_fra['mauvais_csv']]
 
-# Add a new column - Project Download URL
+# Add a new column - Project Download URL TODO: to Project download path
 url_prefix = 'http://www.cer-rec.gc.ca/esa-ees'
 df_index['URL de téléchargement projet'] = df_index['Télécharger le nom du dossier']\
     .apply(lambda x: '{}/projects/{}.zip'.format(url_prefix, x))
 
-# Add a new column - Table Download URL
+# Add a new column - Table Download URL TODO: to project download path
 df_table_filename = df_index.sort_values(['Numéro de page PDF'])\
     .groupby('Table ID')['nom_du_fichier'].first().reset_index().rename(columns={'nom_du_fichier': 'Table Name'})
 df_index = df_index.merge(df_table_filename, left_on='Table ID', right_on='Table ID')
