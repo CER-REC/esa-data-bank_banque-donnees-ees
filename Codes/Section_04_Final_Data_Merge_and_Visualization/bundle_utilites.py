@@ -2,10 +2,6 @@ import os
 import shutil
 
 
-def filename_to_tablename(filename):
-    return filename.replace('.csv', '').replace('-pt1', '').replace('--', '-')
-
-
 def bundle_for_project(df_index, project_folder_name, new_folder_projects, csv_file_folder, columns_index, readme_project_filepath, is_french=False):
     print('Start processing for project: {}'.format(project_folder_name))
     if is_french:
@@ -44,7 +40,7 @@ def bundle_for_project(df_index, project_folder_name, new_folder_projects, csv_f
                 print('File missing: {}'.format(os.path.join(csv_file_folder, csv)))
 
         # Create a zip file of the table csvs
-        zipfile_name = filename_to_tablename(df_table[column_name_filename].iloc[0])
+        zipfile_name = df_table['Table Name'].iloc[0]
         shutil.make_archive(os.path.join(new_project_folder, zipfile_name), 'zip', temp_folder_for_bundling)
 
         # Delete the temporary folder after zipping csv files of a table
@@ -103,7 +99,7 @@ def bundle_for_table(df_index, table_id, new_folder_tables, csv_file_folder, col
         file.write(metadata)
 
     # Create a zip file of the table csvs and readme.txt
-    zipfile_name = filename_to_tablename(df_table.sort_values(column_name_pdf_page_number)[column_name_filename].iloc[0])
+    zipfile_name = df_table['Table Name'].iloc[0]
     shutil.make_archive(os.path.join(new_folder_tables, zipfile_name), 'zip', temp_folder_for_bundling)
 
     # Delete temp folder

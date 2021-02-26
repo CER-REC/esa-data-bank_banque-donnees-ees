@@ -3,7 +3,7 @@ import os
 import multiprocessing
 
 from Codes.Section_04_Final_Data_Merge_and_Visualization.bundle_utilites \
-    import filename_to_tablename, bundle_for_project, bundle_for_table
+    import bundle_for_project, bundle_for_table
 
 
 index_filepath_eng = '//luxor/data/Board/ESA_downloads/renamed/ESA_website_ENG_2021_01_28.csv'
@@ -13,7 +13,7 @@ csv_file_folder = '//luxor/data/Board/ESA_downloads/renamed/all_csvs_cleaned_lat
 readme_project_filepath = '//luxor/data/Board/ESA_downloads/README-ENG-projects.txt'
 
 # Create a new folder as the destination for downloading files
-new_folder = os.path.join('//luxor/data/Board/ESA_downloads/', 'download_Bingjie_Feb242021')
+new_folder = os.path.join('//luxor/data/Board/ESA_downloads/', 'download_Bingjie_Feb262021')
 if not os.path.exists(new_folder):
     os.mkdir(new_folder)
 
@@ -46,9 +46,11 @@ df_index['Project Download Path'] = df_index['Download folder name']\
 # Add a new column - Table Download Path
 df_table_filename = df_index.sort_values(['PDF Page Number'])\
     .groupby('ID')['filename'].first().reset_index().rename(columns={'filename': 'Table Name'})
+df_table_filename['Table Name'] = df_table_filename['Table Name']\
+    .apply(lambda x: x.replace('.csv', '').replace('--', '-'))
 df_index = df_index.merge(df_table_filename, left_on='ID', right_on='ID')
 df_index['Table Download Path'] = df_index['Table Name']\
-    .apply(lambda x: '/tables/{}.zip'.format(filename_to_tablename(x)))
+    .apply(lambda x: '/tables/{}.zip'.format(x))
 
 # Remove ',All' from Pipeline Location, ESA Section(s) Topics
 df_index['Pipeline Location'] = df_index['Pipeline Location']\
@@ -102,4 +104,34 @@ df_table['Good Quality'] = True
 df_index_new = pd.concat([df_figure, df_table, df_table_bad])
 
 # Export alpha index
-df_index_new.to_csv(os.path.join(new_folder, 'ESA_website_ENG.csv'), index=False, encoding='ISO-8859-1')
+df_index_new.to_csv(os.path.join(new_folder, 'ESA_website_ENG.csv'), index=False)
+
+
+# TODO: quality check; delete temp files
+
+df_index_new = pd.read_csv(os.path.join(new_folder, 'ESA_website_ENG.csv'))
+
+for project_path in df_index_new['Project Download Path'].unique():
+    if type(project_path) is str:
+        project_folder = project_path.split('/')[-1]
+        if project_folder not in os.listdir(new_folder_projects):
+            print('Missing project folder: {}'.format(project_folder))
+
+for table_path in df_index_new['Table Download Path']:
+    if type(table_path) is str:
+        table_folder = table_path.split('/')[-1]
+        if table_folder not in os.listdir(new_folder_tables):
+            print('Missing table folder: {}'.format(table_folder))
+
+df_index_new['table missing'] = df_index_new['Table Download Path']\
+    .apply(lambda x: x.split('/')[-1] not in os.listdir(new_folder_tables) if type(x) is str else x)
+
+for table_id in df_index_new[df_index_new['table missing'] == True]['ID']:
+    print(table_id)
+    bundle_for_table(df_index, table_id, new_folder_tables, csv_file_folder, columns_index, readme_project_filepath)
+
+for table_path in df_index_new[df_index_new['table missing'] == True]['Table Download Path']:
+    if type(table_path) is str:
+        table_folder = table_path.split('/')[-1]
+        if table_folder not in os.listdir(new_folder_tables):
+            print('Missing table folder: {}'.format(table_folder))
