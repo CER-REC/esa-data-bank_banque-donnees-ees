@@ -54,12 +54,13 @@ def translate(en_section, fr_section):
     return
 
 
-df_section_unique = df_corrected_titles[['In_En_Section', 'Tr_Fr_Section']].drop_duplicates()
-df_section_unique['Tr_Fr_Section_New'] = df_section_unique\
+# df_section_unique = df_corrected_titles[['In_En_Section', 'Tr_Fr_Section']].drop_duplicates()
+# df_section_unique['Tr_Fr_Section_New'] = df_section_unique\
+#     .apply(lambda x: translate(x['In_En_Section'], x['Tr_Fr_Section']), axis=1)
+
+# df_corrected_titles = df_corrected_titles.merge(df_section_unique) # Merge changed the order of rows
+df_corrected_titles['Tr_Fr_Section_New'] = df_corrected_titles\
     .apply(lambda x: translate(x['In_En_Section'], x['Tr_Fr_Section']), axis=1)
-
-df_corrected_titles = df_corrected_titles.merge(df_section_unique)
-
 # Below is for exporting files in 'latin-1' encoding
 df_corrected_titles = df_corrected_titles\
     .applymap(lambda x: x.replace('\u2019', '\'').replace('\u2013', '-').replace('\u2010', '-').replace('\u2212', '-')
