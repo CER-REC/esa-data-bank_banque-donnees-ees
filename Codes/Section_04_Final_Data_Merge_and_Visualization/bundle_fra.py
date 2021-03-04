@@ -3,16 +3,16 @@ import os
 import multiprocessing
 
 from Codes.Section_04_Final_Data_Merge_and_Visualization.bundle_utilites \
-    import filename_to_tablename, bundle_for_project, bundle_for_table
+    import bundle_for_project, bundle_for_table
 
 index_filepath_eng = 'F:/Environmental Baseline Data/Version 4 - Final/Indices/ESA_website_ENG_2021_01_28.csv'
-index_filepath_fra = 'F:/Environmental Baseline Data/Version 4 - Final/Indices/ESA_website_FRA_2021_01_28.csv'
+index_filepath_fra = 'F:/Environmental Baseline Data/Version 4 - Final/Indices/ESA_website_FRA_2021_03_04_final.csv'
 
 csv_file_folder = 'F:/Environmental Baseline Data/Version 4 - Final/all_csvs_cleaned_latest_FRA'
 readme_project_filepath = 'G:/ESA_downloads/README-FRA-projects.txt'
 
 # Create a new folder as the destination for downloading files
-new_folder = os.path.join('G:/ESA_downloads/', 'download_Bingjie_Jan292021_fra')
+new_folder = os.path.join('G:/ESA_downloads/', 'download_Bingjie_Mar042021_fra')
 if not os.path.exists(new_folder):
     os.mkdir(new_folder)
 
@@ -27,46 +27,57 @@ if not os.path.exists(new_folder_tables):
     os.mkdir(new_folder_tables)
 
 # =============================== Prepare index dataframe ===============================
-df_index_raw_eng = pd.read_csv(index_filepath_eng, encoding='ISO-8859-1')
-
-# Create a temporary column in the index dataframe as table identification TODO: Table ID to ID
-df_table_id = df_index_raw_eng.groupby(['Title', 'Data ID']).size()\
-    .reset_index().drop(columns=[0])\
-    .reset_index().rename(columns={'index': 'Table ID'})
-df_index_raw_eng = df_index_raw_eng.merge(df_table_id, left_on=['Title', 'Data ID'], right_on=['Title', 'Data ID'])
-
+df_index_raw_eng = pd.read_csv(index_filepath_eng)
 df_index_raw_fra = pd.read_csv(index_filepath_fra, encoding='ISO-8859-1')
 
+df_eng_index_final = pd.read_csv('G:/ESA_downloads/download_Bingjie_Feb262021/ESA_website_ENG.csv')
+
+# Clean up unrecognized characters
+for col in df_index_raw_fra.columns:
+    df_index_raw_fra.rename(columns={col: col.replace('\x92', '\'')}, inplace=True)
+df_index_raw_fra = df_index_raw_fra.applymap(lambda x: x.replace('\x92', '\'') if type(x) is str else x)
+
+df_merge = pd.merge(df_index_raw_eng, df_index_raw_fra, left_on=['Index'], right_on=['Indice'])
+df_merge_id = pd.merge(df_merge, df_eng_index_final, left_on=['Document Number', 'Title'], right_on=['Document Number', 'Title'], how='left')
+df_x = df_merge_id[df_merge_id['ID'].isna()]  # empty dataframe
+
+# # Create a temporary column in the index dataframe as table identification
+# df_table_id = df_index_raw_eng.groupby(['Title', 'Data ID']).size()\
+#     .reset_index().drop(columns=[0])\
+#     .reset_index().rename(columns={'index': 'ID'})
+# df_index_raw_eng = df_index_raw_eng.merge(df_table_id, left_on=['Title', 'Data ID'], right_on=['Title', 'Data ID'])
+
 # Add table id to french index (table id is identified by Title and Data ID from English index file
-df_index_raw_fra = df_index_raw_fra.join(df_index_raw_eng[['Index', 'Table ID']])
+df_index_raw_fra = df_index_raw_fra.merge(df_merge_id[['Indice', 'ID']])
 
 # Remove bad csvs
-df_index = df_index_raw_fra[~df_index_raw_fra['mauvais_csv']]
+df_index = df_index_raw_fra[~df_index_raw_fra['CSV Manquant']]
 
-# Add a new column - Project Download URL TODO: to Project download path
-url_prefix = 'http://www.cer-rec.gc.ca/esa-ees'
-df_index['URL de téléchargement projet'] = df_index['Télécharger le nom du dossier']\
-    .apply(lambda x: '{}/projects/{}.zip'.format(url_prefix, x))
+# Add a new column - Project Download Path
+df_index["Chemin d'accès pour télécharger le projet"] = df_index['Télécharger le nom du dossier']\
+    .apply(lambda x: '/projects/{}.zip'.format(x))
 
-# Add a new column - Table Download URL TODO: to project download path
+# Add a new column - Table Download Path
 df_table_filename = df_index.sort_values(['Numéro de page PDF'])\
-    .groupby('Table ID')['nom_du_fichier'].first().reset_index().rename(columns={'nom_du_fichier': 'Table Name'})
-df_index = df_index.merge(df_table_filename, left_on='Table ID', right_on='Table ID')
-df_index['URL de téléchargement phréatique'] = df_index['Table Name']\
-    .apply(lambda x: '{}/tables/{}.zip'.format(url_prefix, filename_to_tablename(x)))
+    .groupby('ID')['Nom du CSV'].first().reset_index().rename(columns={'Nom du CSV': 'Table Name'})
+df_table_filename['Table Name'] = df_table_filename['Table Name']\
+    .apply(lambda x: x.replace('.csv', '').replace('--', '-'))
+df_index = df_index.merge(df_table_filename, left_on='ID', right_on='ID')
+df_index["Chemin d'accès pour télécharger le tableau"] = df_index['Table Name']\
+    .apply(lambda x: '/tables/{}.zip'.format(x))
 
 # Prepare a list of column names for the final index files
 columns_index = [col for col in df_index.columns.to_list() if col not in (
-    'Unnamed: 0', 'Unnamed: 0.1', 'Table ID', 'Table Name',
+    'Unnamed: 0', 'Unnamed: 0.1', 'Table Name',
     'Data ID', 'Identificateur de données',
     'CSV Download URL', 'URL de téléchargement CSV',
     'Download folder name', 'Télécharger le nom du dossier',
-    'Zipped Project Link','Lien vers le projet compressé',
+    'Zipped Project Link', 'Lien vers le projet compressé',
     'Indice', 'Index',
-    'filename', 'nom_du_fichier',
-    'old_filename', 'vieux_nom_de_fichier',
-    'Content Type', 'Type de contenu',
-    'bad_csv', 'mauvais_csv')]
+    'filename', 'Nom du CSV',
+    'bad_csv', 'CSV Manquant',
+    'Vieux Nom du CSV')]
+
 
 # =============================== Create Project Download Files ==============================
 pool = multiprocessing.Pool()
@@ -78,38 +89,44 @@ pool.close()
 # =============================== Create Table Download Files ===============================
 pool = multiprocessing.Pool()
 args_table = [(df_index, table_id, new_folder_tables, csv_file_folder, columns_index, readme_project_filepath, True)
-              for table_id in sorted(df_index['Table ID'].unique().tolist())]
+              for table_id in sorted(df_index['ID'].unique().tolist()[:1])]
 pool.starmap(bundle_for_table, args_table)
 pool.close()
 
 # =============================== Create Master Index File ===============================
 # Added figures back to alpha index file
-df_index_with_figure = pd.read_csv('F:/Environmental Baseline Data/Version 4 - Final/Indices/ESA_website_FRA.csv')
-for column in df_index_with_figure.columns:
-    if '\u2019' in column:
-        df_index_with_figure.rename(columns={column: column.replace('\u2019', '\'')}, inplace=True)
-for column in df_index_with_figure.columns:
-    df_index_with_figure[column] = df_index_with_figure[column]\
-        .apply(lambda x: x.replace('\u2013', '-').replace('\u2014', '-').replace('\u2019', '\'') if type(x) is str else x)
-    df_index_with_figure[column] = df_index_with_figure[column] \
-        .apply(lambda x: x.encode('latin-1', errors='ignore').decode('latin-1', errors='ignore') if type(x) is str else x)
+df_index_with_figure = pd.read_csv('F:/Environmental Baseline Data/Version 4 - Final/Indices/ESA_website_FRA_03032021.csv', encoding='latin-1')
+df_index_with_figure = df_index_with_figure[df_index_with_figure['Type de contenu'] == 'Figure']
+for col in df_index_with_figure.columns:
+    df_index_with_figure.rename(columns={col: col.replace('\x92', '\'')}, inplace=True)
+df_index_with_figure = df_index_with_figure.applymap(lambda x: x.replace('\x92', '\'') if type(x) is str else x)
+
+# for column in df_index_with_figure.columns:
+#     if '\u2019' in column:
+#         df_index_with_figure.rename(columns={column: column.replace('\u2019', '\'')}, inplace=True)
+# for column in df_index_with_figure.columns:
+#     df_index_with_figure[column] = df_index_with_figure[column]\
+#         .apply(lambda x: x.replace('\u2013', '-').replace('\u2014', '-').replace('\u2019', '\'') if type(x) is str else x)
+#     df_index_with_figure[column] = df_index_with_figure[column] \
+#         .apply(lambda x: x.encode('latin-1', errors='ignore').decode('latin-1', errors='ignore') if type(x) is str else x)
 
 figure_columns = columns_index.copy()
-figure_columns.insert(1, 'Type de contenu')
-figure_columns.remove('URL de téléchargement projet')
-figure_columns.remove('URL de téléchargement phréatique')
-df_figure = df_index_with_figure[df_index_with_figure['Type de contenu'] == 'Figure'][figure_columns]
+figure_columns.remove('ID')
+figure_columns.remove("Chemin d'accès pour télécharger le projet")
+figure_columns.remove("Chemin d'accès pour télécharger le tableau")
+df_figure = df_index_with_figure[figure_columns]
+df_figure['ID'] = df_figure.index + df_index_raw_fra['ID'].max() + 1
 
 # Add bad tables
 bad_table_columns = columns_index.copy()
-bad_table_columns.remove('URL de téléchargement projet')
-bad_table_columns.remove('URL de téléchargement phréatique')
-df_table_bad = df_index_raw_fra[df_index_raw_fra['mauvais_csv']].sort_values(['Table ID', 'Numéro de page PDF']).groupby('Table ID').first()\
+bad_table_columns.remove("Chemin d'accès pour télécharger le projet")
+bad_table_columns.remove("Chemin d'accès pour télécharger le tableau")
+df_table_bad = df_index_raw_fra[df_index_raw_fra['CSV Manquant']].sort_values(['ID', 'Numéro de page PDF']).groupby('ID').first()\
     .reset_index()[bad_table_columns]
 df_table_bad['Bonne qualité'] = False
 
 # Concatenate all tables
-df_table = df_index.sort_values(['Table ID', 'Numéro de page PDF']).groupby('Table ID').first()\
+df_table = df_index.sort_values(['ID', 'Numéro de page PDF']).groupby('ID').first()\
     .reset_index()[columns_index]
 df_table['Bonne qualité'] = True
 
@@ -117,3 +134,47 @@ df_index_new = pd.concat([df_figure, df_table, df_table_bad])
 
 # Export alpha index
 df_index_new.to_csv(os.path.join(new_folder, 'ESA_website_FRA.csv'), index=False, encoding='ISO-8859-1')
+
+
+# ------ Check if English and French IDs match
+df_index_merge = pd.merge(df_eng_index_final, df_index_new, on='ID')
+
+# English to French translation
+translation = {
+    'Title': 'Titre',
+    'Content Type': 'Type de contenu',
+    'Application Name': 'Nom de la demande',
+    'Application Short Name': 'Nom abrégé de la demande',
+    'Application Filing Date': 'Dépôt de la demande',
+    'Company Name': 'Nom de la société',
+    'Commodity': 'Produit de base',
+    'File Name': 'Nom de fichier',
+    'ESA Folder URL': 'URL du dossier de l\'ÉES',
+    'Document Number': 'Numéro de document',
+    'Data ID': 'Identificateur de données',
+    'PDF Download URL': 'URL de téléchargement PDF',
+    'Application Type (NEB Act)': 'Type de demande (Loi sur l\'Office national de l\'énergie)',
+    'Pipeline Location': 'Emplacement du pipeline',
+    'Hearing order': 'Ordonnance d\'audience',
+    'Consultant Name': 'Nom du consultant',
+    'Pipeline Status': 'État d\'avancement',
+    'Regulatory Instrument(s)': 'Instruments réglementaires',
+    'Application URL': 'URL de la demande',
+    'Decision URL': 'URL de la décision',
+    'ESA Section(s)': 'Sections de l\'EES',
+    'ESA Section(s) Index': 'Index des sections de l\'ÉES',
+    'ESA Section(s) Topics': 'Sujets des sections de l\'ÉES',
+    'CSV Download URL': 'URL de téléchargement CSV',
+    'PDF Page Number': 'Numéro de page PDF',
+    'PDF Page Count': 'Nombre de pages PDF',
+    'PDF Size': 'Taille PDF',
+    'PDF Outline': 'Aperçu PDF',
+    'Download folder name': 'Télécharger le nom du dossier'
+}
+for eng in translation:
+    french = translation[eng]
+    if eng in df_index_merge.columns and french in df_index_merge.columns:
+        match_sum = df_index_merge[[eng, french]].apply(lambda x: x[eng] == x[french], axis=1).sum()
+        print(eng, match_sum)
+
+

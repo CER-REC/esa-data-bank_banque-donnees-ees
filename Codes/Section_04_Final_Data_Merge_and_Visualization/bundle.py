@@ -86,7 +86,7 @@ figure_columns.remove('ID')
 figure_columns.remove('Project Download Path')
 figure_columns.remove('Table Download Path')
 df_figure = df_index_with_figure[df_index_with_figure['Content Type'] == 'Figure'][figure_columns]
-df_figure['ID'] = df_figure.index + df_index['ID'].max() + 1
+df_figure['ID'] = df_figure.index + df_index_raw['ID'].max() + 1
 
 # Add bad tables
 bad_table_columns = columns_index.copy()

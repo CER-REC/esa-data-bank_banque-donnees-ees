@@ -6,7 +6,7 @@ def bundle_for_project(df_index, project_folder_name, new_folder_projects, csv_f
     print('Start processing for project: {}'.format(project_folder_name))
     if is_french:
         column_name_download_folder_name = 'Télécharger le nom du dossier'
-        column_name_filename = 'nom_du_fichier'
+        column_name_filename = 'Nom du CSV'
         column_name_pdf_page_number = 'Numéro de page PDF'
         index_filename = 'INDEX_PROJET.csv'
         encode = 'latin-1'
@@ -64,7 +64,7 @@ def bundle_for_project(df_index, project_folder_name, new_folder_projects, csv_f
 def bundle_for_table(df_index, table_id, new_folder_tables, csv_file_folder, columns_index, readme_project_filepath, is_french=False):
     print('Start processing table - table id: {}'.format(table_id))
     if is_french:
-        column_name_filename = 'nom_du_fichier'
+        column_name_filename = 'Nom du CSV'
         column_name_pdf_page_number = 'Numéro de page PDF'
     else:
         column_name_filename = 'filename'
