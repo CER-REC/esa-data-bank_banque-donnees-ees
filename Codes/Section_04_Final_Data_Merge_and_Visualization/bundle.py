@@ -103,6 +103,12 @@ df_table['Good Quality'] = True
 
 df_index_new = pd.concat([df_figure, df_table, df_table_bad])
 
+# Remove ',All' from Pipeline Location, ESA Section(s) Topics
+df_index_new['Pipeline Location'] = df_index_new['Pipeline Location']\
+    .apply(lambda x: ', '.join([location for location in x.split(', ') if location != 'All']))
+df_index_new['ESA Section(s) Topics'] = df_index_new['ESA Section(s) Topics']\
+    .apply(lambda x: ', '.join([section for section in x.split(', ') if section != 'All']) if type(x) is str else x)
+
 # Export alpha index
 df_index_new.to_csv(os.path.join(new_folder, 'ESA_website_ENG.csv'), index=False)
 
