@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import multiprocessing
 
-from Codes.Section_04_Final_Data_Merge_and_Visualization.bundle_utilites \
+from Codes.Section_04_Final_Data_Merge_and_Visualization.bundle.bundle_utilites \
     import bundle_for_project, bundle_for_table
 
 index_filepath_eng = 'F:/Environmental Baseline Data/Version 4 - Final/Indices/ESA_website_ENG_2021_01_28.csv'
