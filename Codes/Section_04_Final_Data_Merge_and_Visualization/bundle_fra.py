@@ -89,7 +89,7 @@ pool.close()
 # =============================== Create Table Download Files ===============================
 pool = multiprocessing.Pool()
 args_table = [(df_index, table_id, new_folder_tables, csv_file_folder, columns_index, readme_project_filepath, True)
-              for table_id in sorted(df_index['ID'].unique().tolist()[:1])]
+              for table_id in sorted(df_index['ID'].unique().tolist())]
 pool.starmap(bundle_for_table, args_table)
 pool.close()
 
@@ -177,4 +177,18 @@ for eng in translation:
         match_sum = df_index_merge[[eng, french]].apply(lambda x: x[eng] == x[french], axis=1).sum()
         print(eng, match_sum)
 
+# quality check; delete temp files
 
+df_index_new = pd.read_csv(os.path.join(new_folder, 'ESA_website_FRA.csv'), encoding='latin-1')
+
+for project_path in df_index_new["Chemin d'accès pour télécharger le projet"].unique():
+    if type(project_path) is str:
+        project_folder = project_path.split('/')[-1]
+        if project_folder not in os.listdir(new_folder_projects):
+            print('Missing project folder: {}'.format(project_folder))
+
+for table_path in df_index_new["Chemin d'accès pour télécharger le tableau"]:
+    if type(table_path) is str:
+        table_folder = table_path.split('/')[-1]
+        if table_folder not in os.listdir(new_folder_tables):
+            print('Missing table folder: {}'.format(table_folder))
