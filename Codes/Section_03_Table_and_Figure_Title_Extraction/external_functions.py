@@ -73,7 +73,7 @@ def project_figure_titles(project):
                 docs_check.extend(before)
                 count = 0
                 for doc_id in docs_check:
-                    if (doc_id > 0):
+                    if doc_id > 0:
                         arg = (doc_id, toc_id, toc_page, title_order, word1_rex, word2_rex, s2.lower(), page_rex, title)
                         count = figure_checker(arg)
                     if count > 0:
@@ -121,7 +121,7 @@ def figure_checker(args):
         extra_pages = [p for p in extra_pages_df['page'].tolist() if p not in image_pages] # list of extra pages to check
 
         # get text
-        if (len(extra_pages) > 0) and (len(image_pages) > 0):
+        if len(extra_pages) > 0 and len(image_pages) > 0:
             params = {"pdf_id": doc_id, "image_list": image_pages, "extra_list": extra_pages}
             stmt = text("SELECT page_num, clean_content FROM esa.pages_normal_txt "
                         "WHERE (pdfId = :pdf_id) and (page_num in :image_list or page_num in :extra_list);")
@@ -130,7 +130,7 @@ def figure_checker(args):
             text_df = pd.read_sql_query(stmt, conn, params=params, index_col='page_num')
             text_rotated_df = pd.read_sql_query(stmt_rotated, conn, params=params, index_col='page_num')
 
-        elif (len(image_pages) > 0):
+        elif len(image_pages) > 0:
             params = {"pdf_id": doc_id, "image_list": image_pages}
             stmt = text("SELECT page_num, clean_content FROM esa.pages_normal_txt "
                         "WHERE (pdfId = :pdf_id) and (page_num in :image_list);")
@@ -139,7 +139,7 @@ def figure_checker(args):
             text_df = pd.read_sql_query(stmt, conn, params=params, index_col='page_num')
             text_rotated_df = pd.read_sql_query(stmt_rotated, conn, params=params, index_col='page_num')
 
-        elif (len(extra_pages) > 0):
+        elif len(extra_pages) > 0:
             params = {"pdf_id": doc_id, "extra_list": extra_pages}
             stmt = text("SELECT page_num, clean_content FROM esa.pages_normal_txt "
                         "WHERE (pdfId = :pdf_id) and (page_num in :extra_list);")
@@ -178,7 +178,7 @@ def figure_checker(args):
                         else:
                             sim = 0
 
-                        if (sim >= 0.7): # check that enough words exists
+                        if sim >= 0.7: # check that enough words exists
                             l = len(s2)
                             ratio = 0
                             for i in range(len(text_clean) - l + 1):
@@ -196,12 +196,12 @@ def figure_checker(args):
                             # ratio = max(fuzz.partial_ratio(s2, text_clean),
                             #             fuzz.partial_ratio(s2, text_rotated_clean))
 
-                            if (ratio >= 60): # check that the fuzzy match is close enough
+                            if ratio >= 60:  # check that the fuzzy match is close enough
                                 p_list.append(page_num)
                                 sim_list.append(sim)
                                 ratio_list.append(ratio)
 
-            if len(sim_list) > 0: # if found in image pages don't check extra pages
+            if len(sim_list) > 0:  # if found in image pages don't check extra pages
                 break
 
         # only keep those with largest sim
@@ -537,7 +537,7 @@ def project_table_titles(project):
                 count = 0
 
                 for doc_id in docs_check:
-                    if (doc_id > 0):
+                    if doc_id > 0:
                         arg = (doc_id, toc_id, toc_page, title_order, word1_rex, word2_rex, s2_rex, page_rex, title)
                         count = table_checker(arg)
                     if count > 0:

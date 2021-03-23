@@ -12,8 +12,8 @@ save_dir = main_path + 'Saved2/'
 # regexes
 empty_line_xml = re.compile(r'<\/p>\s*<p ?\/?>')
 empty_line = re.compile(r'^\s*$')
-whitespace = re.compile(r'\s+') # all white space
-punctuation = re.compile(r'[^\w\s]') # punctuation (not letter or number)
+whitespace = re.compile(r'\s+')  # all white space
+punctuation = re.compile(r'[^\w\s]')  # punctuation (not letter or number)
 # figure = re.compile(r'(?im)(^Figure .*?\n?.*?)\.{2,}(.*)')
 # table = re.compile(r'(?im)(^Table (?!of contents?).*?\n?.*?)\.{2,}(.*)')
 toc_old = re.compile(r'(?im)^(?! *LIST OF\b)(?! *Table of contents\b)(.+?\n?.*?)\.{2,}(.*)$')
