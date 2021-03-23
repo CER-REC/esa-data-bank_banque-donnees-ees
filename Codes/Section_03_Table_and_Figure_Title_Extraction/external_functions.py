@@ -158,7 +158,6 @@ def figure_checker(args):
         word2_list = []
         for check_list in [image_pages, extra_pages]:
             for page_num in check_list:
-                # print(check_list)
                 if (doc_id != toc_id) or (page_num != toc_page):  # if not toc page
                     text_ws = text_df.loc[page_num, 'clean_content']
                     text_clean = re.sub(constants.punctuation, ' ', text_ws)
@@ -380,15 +379,10 @@ def find_tag_title_fig(data_id):
             figs_pages = df_pages['page_num'].tolist()
 
             for page_num in figs_pages:
-                # print(page_num)
                 page_figs = df[df['page_num'] == page_num].reset_index() #.set_index('Real Order')
                 page_text = pages[page_num - 1]
                 lines = [x.text for x in page_text.find_all('p')]  # list of lines
-                # for l in lines:
-                #     if len(l) > 0:
-                #         print(l)
-                num_lines = len(lines)
-                final_table_titles = [] # holds all titles found on this page
+                final_table_titles = []  # holds all titles found on this page
                 for i, line in enumerate(lines):
                     title = re.sub(constants.whitespace, ' ', line).strip()  # replace all whitespace with single space
                     # identify if this line is a figure line (took out exceptions, should not need)
@@ -404,7 +398,6 @@ def find_tag_title_fig(data_id):
                         #     else:
                         #         final_table_title = title
                         final_table_titles.append(title)
-                        # print(title)
 
                 count_figs = page_figs.shape[0]
                 for i, title in enumerate(final_table_titles):
@@ -586,8 +579,6 @@ def find_toc_title_table(data_id):
                 df_all_titles = pd.read_sql_query(stmt, conn, params=params)
 
                 for index, row in df.iterrows():
-                    # print(row)
-
                     page_num = int(row['page'])
                     table_num = int(row['tableNumber'])
                     order = int(row['Real Order'])
@@ -626,7 +617,6 @@ def find_toc_title_fig(data_id):
             df_pages['imageProportion'] = df_pages['bbox_area_image'] / df_pages['bbox_area']
             df_pages = df_pages[df_pages['imageProportion'] > 0.1]
             # df['Real Order'] = df.groupby(['page'])['tableNumber'].rank()
-            # print(data_id, df.shape)
 
             df_all_titles = pd.read_csv(constants.main_path + 'Saved/final_figs.csv', header=0)
             df_all_titles['location_DataID'] = df_all_titles['location_DataID'].fillna(0)
@@ -668,7 +658,6 @@ def find_toc_title_fig(data_id):
 
 
 def find_final_title_table(data_id):
-    # print(data_id)
     buf = StringIO()
     conn = engine.connect()
     with redirect_stdout(buf), redirect_stderr(buf):
@@ -693,7 +682,6 @@ def find_final_title_table(data_id):
                     title = row['titleFinal']
                     page_num = row['page']
                     table_num = row['tableNumber']
-                    # print('try title: ', title)
                     if (title == '') or ('cont' in title.lower()):
                         # check against previous table's columns
                         cols = ', '.join(cols_list)
@@ -722,7 +710,6 @@ def find_final_title_table(data_id):
 
 
 def find_final_title_fig(data_id):
-    # print(data_id)
     buf = StringIO()
     conn = engine.connect()
     with redirect_stdout(buf), redirect_stderr(buf):
@@ -746,7 +733,6 @@ def find_final_title_fig(data_id):
                 title = row['titleFinal']
                 page_num = row['page']
                 table_num = row['tableNumber']
-                # print('try title: ', title)
                 if (title == '') or ('cont' in title.lower()):
                     # check against previous table's columns
                     cols = ', '.join(cols_list)
