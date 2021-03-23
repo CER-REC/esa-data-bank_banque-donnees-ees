@@ -16,8 +16,13 @@ import numpy as np
 import Codes.Section_03_Table_and_Figure_Title_Extraction.constants as constants
 
 load_dotenv(override=True)
-engine_string = f"mysql+mysqldb://esa_user_rw:{os.getenv('DB_PASS')}@os25.neb-one.gc.ca./esa?charset=utf8"
+host = os.getenv("DB_HOST")
+database = os.getenv("DB_DATABASE")
+user = os.getenv("DB_USER")
+password = os.getenv("DB_PASS")
+engine_string = f"mysql+mysqldb://{user}:{password}@{host}/{database}?charset=utf8mb4"
 engine = create_engine(engine_string)
+
 
 # take a project and assign all Figure titles from toc to a pdf id and page
 def project_figure_titles(project):
@@ -88,6 +93,7 @@ def project_figure_titles(project):
         except Exception as e:
             traceback.print_tb(e.__traceback__)
             return False, buf.getvalue()
+
 
 # For a Figure TOC title, find a pdf id and page where that figure lives
 def figure_checker(args):
@@ -231,6 +237,7 @@ def figure_checker(args):
         print(traceback.print_tb(e.__traceback__))
         return 0
 
+
 # determine category of table tag title (if continued title --> 1, if regular title --> 2, if just text --> 0)
 def get_category(title):
     category = False
@@ -252,6 +259,7 @@ def get_category(title):
         else:
             category = 0
     return category
+
 
 def find_tag_title_table(data_id):
     buf = StringIO()
@@ -346,6 +354,7 @@ def find_tag_title_table(data_id):
             traceback.print_tb(e.__traceback__)
             return False, buf.getvalue()
 
+
 def find_tag_title_fig(data_id):
     buf = StringIO()
     conn = engine.connect()
@@ -418,6 +427,7 @@ def find_tag_title_fig(data_id):
             traceback.print_tb(e.__traceback__)
             return False, buf.getvalue()
 
+
 def table_checker(args):
     conn = engine.connect()
     try:
@@ -478,6 +488,7 @@ def table_checker(args):
         print('Error in', doc_id)
         print(traceback.print_tb(e.__traceback__))
         return 0
+
 
 def project_table_titles(project):
     buf = StringIO()
@@ -554,6 +565,7 @@ def project_table_titles(project):
             traceback.print_tb(e.__traceback__)
             return False, buf.getvalue()
 
+
 def find_toc_title_table(data_id):
     buf = StringIO()
     conn = engine.connect()
@@ -598,6 +610,7 @@ def find_toc_title_table(data_id):
             conn.close()
             traceback.print_tb(e.__traceback__)
             return False, buf.getvalue()
+
 
 def find_toc_title_fig(data_id):
     buf = StringIO()
@@ -653,6 +666,7 @@ def find_toc_title_fig(data_id):
             traceback.print_tb(e.__traceback__)
             return False, buf.getvalue()
 
+
 def find_final_title_table(data_id):
     # print(data_id)
     buf = StringIO()
@@ -706,6 +720,7 @@ def find_final_title_table(data_id):
             traceback.print_tb(e.__traceback__)
             return False, buf.getvalue()
 
+
 def find_final_title_fig(data_id):
     # print(data_id)
     buf = StringIO()
@@ -757,6 +772,3 @@ def find_final_title_fig(data_id):
             print('errors on title:', title)
             traceback.print_tb(e.__traceback__)
             return False, buf.getvalue()
-
-
-

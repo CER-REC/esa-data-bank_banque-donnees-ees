@@ -1,7 +1,7 @@
 1) Get a list of unique project names and all pdf IDs . These lists are required in later analysis. This data is retrieved form 
 the database, table esa.pdfs.
 
-2) Get all Table of Contents: go through all the pdfs (list from #1), identify table of comtents entries using regex expressions, 
+2) Get all Table of Contents: go through all the pdfs (list from #1), identify table of contents entries using regex expressions,
    and save these Table of Contents entries to a list of all extracted TOC titles.
 
 3) Assign TOC table titles to tables (tables are represented by a csv and all are listed in csvs table in the database).
