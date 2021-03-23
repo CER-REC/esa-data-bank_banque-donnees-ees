@@ -220,7 +220,7 @@ def figure_checker(args):
             final_list = []
         count = len(final_list)
 
-        if (count > 0):
+        if count > 0:
             stmt = text("UPDATE esa.toc SET assigned_count = :count, loc_pdfId = :loc_id, loc_page_list = :loc_pages "
                         "WHERE (toc_pdfId = :pdf_id) and (toc_page_num = :page_num) and (toc_title_order = :title_order);")
             params = {"count": count, "loc_id": doc_id, "loc_pages": json.dumps(final_list), "pdf_id": toc_id, "page_num": toc_page, "title_order": toc_order}
