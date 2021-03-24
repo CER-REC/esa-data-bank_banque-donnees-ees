@@ -82,13 +82,14 @@ pool.close()
 
 # =============================== Create Master Index File ===============================
 # Added figures back to alpha index file
-df_index_with_figure = pd.read_csv('//luxor/data/Board/ESA_downloads/renamed/ESA_website_ENG.csv')
+df_index_with_figure = pd.read_excel('//luxor/data/Branch/Environmental Baseline Data/Version 4 - Final/Indices/ESA_website_ENG.xlsx')
 figure_columns = columns_index.copy()
 figure_columns.remove('ID')
 figure_columns.remove('Project Download Path')
 figure_columns.remove('Table Download Path')
 df_figure = df_index_with_figure[df_index_with_figure['Content Type'] == 'Figure'][figure_columns]
 df_figure['ID'] = df_figure.index + df_index_raw['ID'].max() + 1
+df_figure['Application Filing Date'] = df_figure['Application Filing Date'].apply(lambda x: x.strftime('%Y-%m-%d'))
 
 # Add bad tables
 bad_table_columns = columns_index.copy()
@@ -164,7 +165,7 @@ df_project = df.groupby(['Application Short Name'])[[
     'Project Download Path'
     ]].nunique()
 
-df_project_fra = df_fra.groupby(['Nom abrégé de la demande'])[[
+df_project_fra = df_index_new.groupby(['Nom abrégé de la demande'])[[
     'Nom de la demande',
     'Dépôt de la demande',
     'Nom de la société',

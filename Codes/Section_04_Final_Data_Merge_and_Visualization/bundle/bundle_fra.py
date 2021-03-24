@@ -13,7 +13,7 @@ readme_project_filepath = 'G:/ESA_downloads/README-FRA-projects.txt'
 readme_table_filepath = '//luxor/data/Board/ESA_downloads/README-FRA-tables.txt'
 
 # Create a new folder as the destination for downloading files
-new_folder = os.path.join('G:/ESA_downloads/', 'download_Bingjie_Mar042021_fra')
+new_folder = os.path.join('G:/ESA_downloads/', 'download_Bingjie_Mar262021_fra')
 if not os.path.exists(new_folder):
     os.mkdir(new_folder)
 
@@ -31,7 +31,7 @@ if not os.path.exists(new_folder_tables):
 df_index_raw_eng = pd.read_csv(index_filepath_eng)
 df_index_raw_fra = pd.read_csv(index_filepath_fra, encoding='ISO-8859-1')
 
-df_eng_index_final = pd.read_csv('G:/ESA_downloads/download_Bingjie_Feb262021/ESA_website_ENG.csv')
+df_eng_index_final = pd.read_csv('G:/ESA_downloads/download_Bingjie_Mar262021/ESA_website_ENG.csv')
 
 # Clean up unrecognized characters
 for col in df_index_raw_fra.columns:
@@ -138,6 +138,10 @@ df_index_new = pd.concat([df_figure, df_table, df_table_bad])
 
 # Update ESA Download URLs
 df_index_new['URL du dossier de l\'ÉES'] = df_index_new['URL du dossier de l\'ÉES'].apply(lambda x: x.replace('LoadResult', 'View'))
+# Translate 'Nom de la demande'
+
+df_index_new.loc[df_index_new['Nom de la demande'] == 'Application for the Keystone Pipeline', 'Nom de la demande'] = \
+    'Demande relative au projet de Keystone Pipeline'
 
 # Export alpha index
 df_index_new.to_csv(os.path.join(new_folder, 'ESA_website_FRA.csv'), index=False, encoding='ISO-8859-1')
