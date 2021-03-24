@@ -10,6 +10,7 @@ index_filepath_fra = 'F:/Environmental Baseline Data/Version 4 - Final/Indices/E
 
 csv_file_folder = 'F:/Environmental Baseline Data/Version 4 - Final/all_csvs_cleaned_latest_FRA'
 readme_project_filepath = 'G:/ESA_downloads/README-FRA-projects.txt'
+readme_table_filepath = '//luxor/data/Board/ESA_downloads/README-FRA-tables.txt'
 
 # Create a new folder as the destination for downloading files
 new_folder = os.path.join('G:/ESA_downloads/', 'download_Bingjie_Mar042021_fra')
@@ -66,6 +67,9 @@ df_index = df_index.merge(df_table_filename, left_on='ID', right_on='ID')
 df_index["Chemin d'accès pour télécharger le tableau"] = df_index['Table Name']\
     .apply(lambda x: '/tables/{}.zip'.format(x))
 
+# Update ESA Download URLs
+df_index['URL du dossier de l\'ÉES'] = df_index['URL du dossier de l\'ÉES'].apply(lambda x: x.replace('LoadResult', 'View'))
+
 # Prepare a list of column names for the final index files
 columns_index = [col for col in df_index.columns.to_list() if col not in (
     'Unnamed: 0', 'Unnamed: 0.1', 'Table Name',
@@ -88,7 +92,7 @@ pool.close()
 
 # =============================== Create Table Download Files ===============================
 pool = multiprocessing.Pool()
-args_table = [(df_index, table_id, new_folder_tables, csv_file_folder, columns_index, readme_project_filepath, True)
+args_table = [(df_index, table_id, new_folder_tables, csv_file_folder, columns_index, readme_table_filepath, True)
               for table_id in sorted(df_index['ID'].unique().tolist())]
 pool.starmap(bundle_for_table, args_table)
 pool.close()
@@ -131,6 +135,9 @@ df_table = df_index.sort_values(['ID', 'Numéro de page PDF']).groupby('ID').fir
 df_table['Bonne qualité'] = True
 
 df_index_new = pd.concat([df_figure, df_table, df_table_bad])
+
+# Update ESA Download URLs
+df_index_new['URL du dossier de l\'ÉES'] = df_index_new['URL du dossier de l\'ÉES'].apply(lambda x: x.replace('LoadResult', 'View'))
 
 # Export alpha index
 df_index_new.to_csv(os.path.join(new_folder, 'ESA_website_FRA.csv'), index=False, encoding='ISO-8859-1')
