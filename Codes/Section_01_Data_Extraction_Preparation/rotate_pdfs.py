@@ -7,6 +7,7 @@ Created on Fri Apr 24 08:58:13 2020
 import PyPDF2
 import pandas as pd
 
+
 def rotate_pdf(path, Index0):
     """
     This method attempts to rotate all the PDF files from the list of PDFs 
@@ -50,11 +51,8 @@ def rotate_pdf(path, Index0):
     error_dataIDs = []
     dataID = ""
     
-    # Itterating each row in the Index0 dataframe  
+    # Iterating each row in the Index0 dataframe
     for index, row in Index0.iterrows():
-        #print(index)
-        #print(row)
-        
         try:
             full_path = path + "\\Data_Files\\PDFs\\" + str(row['Data ID']) + ".pdf"
             pdf_in = open(full_path, 'rb')
@@ -72,14 +70,12 @@ def rotate_pdf(path, Index0):
 
         except:
             # storing the error logs 
-            error_urls.append(download_url)
             error_dataIDs.append(dataID)
             print("error with file {}".format(row['File Name']))
-            
-            
+
     # creating and and saving the error logs dataframe
-    df_rotating_errorlog = pd.DataFrame({'error_dataIDs' : error_dataIDs,
-                                         'error_urls' : error_urls
-                                      })
-    df_rotating_errorlog.to_csv(path + '\\Error_Logs\\RotatingErrorLogs.csv', index = False, encoding='utf-8-sig')
-    return(count)    
+    df_rotating_errorlog = pd.DataFrame({'error_dataIDs': error_dataIDs,
+                                         'error_urls': error_urls
+                                         })
+    df_rotating_errorlog.to_csv(path + '\\Error_Logs\\RotatingErrorLogs.csv', index=False, encoding='utf-8-sig')
+    return count

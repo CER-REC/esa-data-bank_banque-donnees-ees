@@ -8,7 +8,6 @@ from tika import parser
 import pickle
 
 
-##create the argument
 def get_argument(list_of_files, path):
     """
     This basic function attempts to create the an arrar or array of file 
@@ -58,12 +57,10 @@ def pickle_pdf_xml(arguments):
     file = arguments[0]
     path = arguments[1]
     try:
-        xml = parser.from_file(file, xmlContent = True)
+        xml = parser.from_file(file, xmlContent=True)
         replace_string = file.split('\\')[-1].replace('.pdf', '')
         save_string = path + replace_string + '.pkl'
         print(save_string)
         pickle.dump(xml, open(save_string, "wb"))
     except: 
         return file
-
-

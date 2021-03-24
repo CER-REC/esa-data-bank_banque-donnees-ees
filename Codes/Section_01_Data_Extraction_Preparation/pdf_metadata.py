@@ -4,25 +4,11 @@ Created on Fri Apr 17 10:47:06 2020
 
 @author: singvibu
 """
-import pandas as pd
-import nltk
-
 from IPython.core.interactiveshell import InteractiveShell
 InteractiveShell.ast_node_interactivity = "all"
-# Importing libraries 
-import nltk 
-import re 
-from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer 
-from nltk.corpus import stopwords 
-from nltk.tokenize import word_tokenize 
-import pandas as pd 
-
-from pathlib import Path
-
-
+import re
 import PyPDF2
 from pathlib import Path
-
 
         
 def check_topic_present(topic, text):
@@ -47,7 +33,8 @@ def check_topic_present(topic, text):
         if key in text:
             return 1
     return 0
-          
+
+
 def remove_string_special_characters(s): 
     """
     This basic function attempts to replace special characters and multiple 
@@ -77,7 +64,8 @@ def remove_string_special_characters(s):
     # Remove start and end white spaces 
     stripped = stripped.strip() 
     return stripped.lower() 
-        
+
+
 def pdf_categorize(path, Index0):
     """
     This method attempts to categorize all the PDF files from the list of PDFs 
@@ -112,7 +100,7 @@ def pdf_categorize(path, Index0):
         
     """
     
-    #Defining 10 categories based on the keywords chosen 
+    # Defining 10 categories based on the keywords chosen
     land1 = ['soil', 'land', 'ground', 'terrain', 'topography', 'ecozones', 'terrain']
     air2 = ['air', 'emission', 'ghg', 'gas', 'greenhouse', 'weather' , 'climate', 'meteorological', 'atmospher']
     water3 = ['water', 'fish', 'wetlands', 'navigation', 'marine', 'aqua', 'drain', 'river']
@@ -131,7 +119,7 @@ def pdf_categorize(path, Index0):
         # PDF name might have useful data about the contents of the PDF
         line = str(row['ESA Section(s)']) + str(row['File Name'])
         
-        # unnecessary white spacxes is removed and text converted to lower case 
+        # unnecessary white space is removed and text converted to lower case
         line = remove_string_special_characters(line).lower()
         line_topics = []
         topic_found = 0
@@ -183,10 +171,10 @@ def pdf_categorize(path, Index0):
         # the detected topics for each PDF is appended in the array 
         topics.append(line_topics)
         
-    # New Index1 has all the couloumns as Index0 and an addition coloumn
+    # New Index1 has all the columns as Index0 and an addition column
     Index1 = Index0
     Index1['Topics'] = topics
-    return(Index1)
+    return Index1
 
 
 def pdf_size(path, Index0):
@@ -227,10 +215,10 @@ def pdf_size(path, Index0):
         except:
             sizes.append(0)
     
-    # New Index1 has all the couloumns as Index0 and an addition coloumn
+    # New Index1 has all the columns as Index0 and an addition column
     Index1 = Index0
     Index1['PDF Size (bytes)'] = sizes
-    return(Index1)
+    return Index1
             
 
 def pdf_pagenumbers(path, Index0):
@@ -274,11 +262,12 @@ def pdf_pagenumbers(path, Index0):
         except:
             page_numbers.append(0)
     
-    # New Index1 has all the couloumns as Index0 and an addition coloumn
+    # New Index1 has all the columns as Index0 and an addition column
     Index1 = Index0
     Index1['Number of Pages'] = page_numbers
-    return(Index1)
-    
+    return Index1
+
+
 def get_outline_present(path, Index0):
     """
     This method attempts to identify if the outline (Table of contents) is 
@@ -326,9 +315,7 @@ def get_outline_present(path, Index0):
         except:
             outline_present.append(0)
     
-    # New Index1 has all the couloumns as Index0 and an addition coloumn
+    # New Index1 has all the columns as Index0 and an addition column
     Index1 = Index0
     Index1['Outline Present'] = outline_present
-    return(Index1)
-    
-    
+    return Index1
