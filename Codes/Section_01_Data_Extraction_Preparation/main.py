@@ -12,7 +12,7 @@ from Codes.Section_01_Data_Extraction_Preparation.pdf_metadata import get_pdf_me
 Index0_path = os.path.join(os.getcwd(), 'Input_Files/Index_of_PDFs_for_Major_Projects_with_ESAs.csv')
 
 Index0 = pd.read_csv(Index0_path, index_col=0)
-Index0 = Index0.head(3)
+# Index0 = Index0.head(3)
 
 # Download files
 count = download_file(os.getcwd(), Index0)
