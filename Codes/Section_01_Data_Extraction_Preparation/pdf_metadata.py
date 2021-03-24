@@ -10,7 +10,23 @@ import re
 import PyPDF2
 from pathlib import Path
 
-        
+
+def get_pdf_metadata(root_folder, Index0):
+    # Identify ESA categories for the PDF files
+    Index1 = pdf_categorize(Index0)
+
+    # Identify the PDF File size
+    Index1 = pdf_size(root_folder, Index1)
+
+    # Identify the number of pages in the PDF file
+    Index1 = pdf_pagenumbers(root_folder, Index1)
+
+    # Identify if Outline (or TOC) is present in the PDF file or not
+    Index1 = get_outline_present(root_folder, Index1)
+
+    return Index1
+
+
 def check_topic_present(topic, text):
     """
     This basic function attempts to check if any of the keywords of a 
@@ -66,7 +82,7 @@ def remove_string_special_characters(s):
     return stripped.lower() 
 
 
-def pdf_categorize(path, Index0):
+def pdf_categorize(Index0):
     """
     This method attempts to categorize all the PDF files from the list of PDFs 
     into one or more ESA categories. 
