@@ -4,13 +4,9 @@ import os
 
 
 def connect_to_db():
-        """
-    This method attempts to download all the PDF files from the list of PDF
-    URLs that are sent to the function.
-    It is assumed that the list of PDFs sent to the function are relevant to
-    Environmental and Social Assessment. The files in this list are then
-    downloaded and saved in the PDFs folder which will be read and processed
-    later.
+    """
+    This method connects Python to the database using the credentials stored in
+    the .env file located in the Database_Connection_Files folder.
     Returns
     ----------
     engine:
@@ -31,6 +27,6 @@ def connect_to_db():
     user = os.getenv("DB_USER") # username
     password = os.getenv("DB_PASS")
     engine_string = f"mysql+mysqldb://{user}:{password}@{host}/{database}?charset=utf8mb4"
-    print(engine_string)
+    # print(engine_string) # check the .env is loaded and working.
     engine = create_engine(engine_string) # connect to server
     return engine
