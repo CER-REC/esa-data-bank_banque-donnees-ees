@@ -37,7 +37,7 @@ pd.set_option("display.max_columns", None)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.width', 1200)
 
-
+# Set up Tika to extract text content from PDFs
 tika.TikaClientOnly = True
 os.environ["TIKA_STARTUP_MAX_RETRY"] = "10"
 os.environ["TIKA_CLIENT_ONLY"] = "True"

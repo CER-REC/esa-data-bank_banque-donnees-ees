@@ -13,7 +13,6 @@ from contextlib import redirect_stdout, redirect_stderr
 from io import StringIO
 import traceback
 
-
 # Load environment variables (from .env file) for the database
 engine = connect_to_db()
 

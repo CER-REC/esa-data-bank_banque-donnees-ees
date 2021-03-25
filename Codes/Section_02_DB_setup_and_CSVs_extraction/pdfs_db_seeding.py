@@ -26,6 +26,7 @@ pd.set_option("display.max_columns", None)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.width', 1200)
 
+
 def insert_pdfs():
     df = pd.read_csv(index2)
     df = df[["Data ID", "Application Name", "Application Short Name", "Commodity", "Hearing order"]]
