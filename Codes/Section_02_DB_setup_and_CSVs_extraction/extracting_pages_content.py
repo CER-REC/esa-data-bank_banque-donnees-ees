@@ -2,6 +2,7 @@ import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent.absolute()))
 from Database_Connection_Files.connect_to_database import connect_to_db
+from dotenv import load_dotenv
 import os
 import pandas as pd
 import PyPDF2
@@ -13,19 +14,16 @@ import traceback
 import re
 from bs4 import BeautifulSoup
 
-# Load environment variables (from .env file) for the database
+# Load environment variables from .env file
+load_dotenv(override=True)
 
+# Load environment variables (from .env file) for the database
 engine = connect_to_db()
 
 # Load environment variables (from .env file) for the PDF folder path
-
 pdf_files_folder_normal = Path(os.getenv("PDFS_FILEPATH"))
 pdf_files_folder_rotated90 = Path(os.getenv("PDFS_FILEPATH") + "_rotated90")
 pdf_files_folder_rotated270 = Path(os.getenv("PDFS_FILEPATH") + "_rotated270")
-
-pdf_files_folder_normal = Path("//luxor/data/branch/Environmental Baseline Data/Version 4 - Final/PDF")
-pdf_files_folder_rotated90 = Path("//luxor/data/branch/Environmental Baseline Data/Version 4 - Final/PDF_rotated90")
-pdf_files_folder_rotated270 = Path("//luxor/data/branch/Environmental Baseline Data/Version 4 - Final/PDF_rotated270")
 
 if not pdf_files_folder_normal.exists():
     print(pdf_files_folder_normal, "does not exist!")
@@ -34,6 +32,7 @@ if not pdf_files_folder_rotated90.exists():
 if not pdf_files_folder_rotated270.exists():
     print(pdf_files_folder_rotated270, "does not exist!")
 
+# Increase max size of pandas dataframe output when using a notebook
 pd.set_option("display.max_columns", None)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.width', 1200)

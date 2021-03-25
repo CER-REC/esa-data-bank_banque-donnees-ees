@@ -15,11 +15,9 @@ import traceback
 
 
 # Load environment variables (from .env file) for the database
-
 engine = connect_to_db()
 
 # Load environment variables (from .env file) for the PDF folder path
-
 pdf_files_folder = Path(os.getenv("PDFS_FILEPATH"))
 
 # Careful! Deletes all pages and blocks data from the DB!

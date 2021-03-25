@@ -16,11 +16,9 @@ import traceback
 import re
 
 # Load environment variables (from .env file) for the database
-
 engine = connect_to_db()
 
 # Load environment variables (from .env file) for the PDF folder path and Index filepath
-
 pdf_files_folder = Path(os.getenv("PDFS_FILEPATH"))
 # csv_tables_folder = Path().resolve().parent.parent.joinpath("Data_Files").joinpath("CSVs")
 csv_tables_folder = Path(os.getenv("CSV_TABLES_FOLDER_PATH"))
@@ -30,6 +28,7 @@ if not pdf_files_folder.exists():
 elif not csv_tables_folder.exists():
     print(csv_tables_folder, "does not exist!")
 
+# Increase max size of pandas dataframe output when using a notebook
 pd.set_option("display.max_columns", None)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.width', 1200)

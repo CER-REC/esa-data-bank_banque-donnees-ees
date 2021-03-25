@@ -8,11 +8,9 @@ import pandas as pd
 import PyPDF2
 
 # Load environment variables (from .env file) for the database
-
 engine = connect_to_db()
 
 # Load environment variables (from .env file) for the PDF folder path and Index filepath
-
 pdf_files_folder = Path(os.getenv("PDFS_FILEPATH"))
 # index2 = Path().resolve().parent.parent.joinpath("Input_Files").joinpath(
 #     "Index_of_PDFs_for_Major_Projects_with_ESAs.csv")
@@ -24,7 +22,6 @@ elif not index2.exists():
     print(index2, "does not exist!")
 
 # Increase max size of pandas dataframe output when using a notebook
-
 pd.set_option("display.max_columns", None)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.width', 1200)

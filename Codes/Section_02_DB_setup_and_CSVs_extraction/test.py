@@ -5,6 +5,9 @@ from Database_Connection_Files.connect_to_database import connect_to_db
 from sqlalchemy import text
 import pandas as pd
 import os
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(override=True)
 
 # engine = connect_to_db()
 
@@ -13,4 +16,4 @@ import os
 #     df = pd.read_sql(stmt, conn)
 #     print(df.head())
 
-print(Path(os.getenv("PDFS_FILEPATH")))
+print(Path(os.getenv("PDFS_FILEPATH") + '_rotated90'))
