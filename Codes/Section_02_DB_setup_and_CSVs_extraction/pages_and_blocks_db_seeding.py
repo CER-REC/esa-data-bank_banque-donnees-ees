@@ -1,8 +1,11 @@
+import sys
 from pathlib import Path
+sys.path.append(str(Path(__file__).parent.parent.absolute()))
+from Database_Connection_Files.connect_to_database import connect_to_db
 from dotenv import load_dotenv
 from multiprocessing import Pool
 import time
-from sqlalchemy import text, create_engine
+from sqlalchemy import text
 import os
 import pandas as pd
 import fitz
@@ -10,16 +13,14 @@ from contextlib import redirect_stdout, redirect_stderr
 from io import StringIO
 import traceback
 
-load_dotenv(override=True)
-host = os.getenv("DB_HOST")
-database = os.getenv("DB_DATABASE")
-user = os.getenv("DB_USER")
-password = os.getenv("DB_PASS")
-engine_string = f"mysql+mysqldb://{user}:{password}@{host}/{database}?charset=utf8mb4"
-engine = create_engine(engine_string)
 
-pdf_files_folder = Path("//luxor/data/branch/Environmental Baseline Data/Version 4 - Final/PDF")
+# Load environment variables (from .env file) for the database
 
+engine = connect_to_db()
+
+# Load environment variables (from .env file) for the PDF folder path
+
+pdf_files_folder = Path(os.getenv("PDFS_FILEPATH"))
 
 # Careful! Deletes all pages and blocks data from the DB!
 # noinspection SqlWithoutWhere

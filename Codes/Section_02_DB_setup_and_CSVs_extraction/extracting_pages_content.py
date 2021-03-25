@@ -1,6 +1,7 @@
+import sys
 from pathlib import Path
-from dotenv import load_dotenv
-from sqlalchemy import text, create_engine
+sys.path.append(str(Path(__file__).parent.parent.absolute()))
+from Database_Connection_Files.connect_to_database import connect_to_db
 import os
 import pandas as pd
 import PyPDF2
@@ -11,6 +12,16 @@ from multiprocessing import Pool
 import traceback
 import re
 from bs4 import BeautifulSoup
+
+# Load environment variables (from .env file) for the database
+
+engine = connect_to_db()
+
+# Load environment variables (from .env file) for the PDF folder path
+
+pdf_files_folder_normal = Path(os.getenv("PDFS_FILEPATH"))
+pdf_files_folder_rotated90 = Path(os.getenv("PDFS_FILEPATH") + "_rotated90")
+pdf_files_folder_rotated270 = Path(os.getenv("PDFS_FILEPATH") + "_rotated270")
 
 pdf_files_folder_normal = Path("//luxor/data/branch/Environmental Baseline Data/Version 4 - Final/PDF")
 pdf_files_folder_rotated90 = Path("//luxor/data/branch/Environmental Baseline Data/Version 4 - Final/PDF_rotated90")
@@ -27,13 +38,6 @@ pd.set_option("display.max_columns", None)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.width', 1200)
 
-load_dotenv(override=True)
-host = os.getenv("DB_HOST")
-database = os.getenv("DB_DATABASE")
-user = os.getenv("DB_USER")
-password = os.getenv("DB_PASS")
-engine_string = f"mysql+mysqldb://{user}:{password}@{host}/{database}?charset=utf8mb4"
-engine = create_engine(engine_string)
 
 tika.TikaClientOnly = True
 os.environ["TIKA_STARTUP_MAX_RETRY"] = "10"

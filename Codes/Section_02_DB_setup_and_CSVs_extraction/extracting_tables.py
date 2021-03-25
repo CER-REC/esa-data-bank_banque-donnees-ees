@@ -1,4 +1,7 @@
+import sys
 from pathlib import Path
+sys.path.append(str(Path(__file__).parent.parent.absolute()))
+from Database_Connection_Files.connect_to_database import connect_to_db
 from dotenv import load_dotenv
 from multiprocessing import Pool
 import time
@@ -12,9 +15,15 @@ import camelot
 import traceback
 import re
 
-pdf_files_folder = Path("//luxor/data/branch/Environmental Baseline Data/Version 4 - Final/PDF")
+# Load environment variables (from .env file) for the database
+
+engine = connect_to_db()
+
+# Load environment variables (from .env file) for the PDF folder path and Index filepath
+
+pdf_files_folder = Path(os.getenv("PDFS_FILEPATH"))
 # csv_tables_folder = Path().resolve().parent.parent.joinpath("Data_Files").joinpath("CSVs")
-csv_tables_folder = Path(r"//luxor/data/branch/Environmental Baseline Data/Version 4 - Final/all_csvs")
+csv_tables_folder = Path(os.getenv("CSV_TABLES_FOLDER_PATH"))
 
 if not pdf_files_folder.exists():
     print(pdf_files_folder, "does not exist!")
@@ -24,14 +33,6 @@ elif not csv_tables_folder.exists():
 pd.set_option("display.max_columns", None)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.width', 1200)
-
-load_dotenv(override=True)
-host = os.getenv("DB_HOST")
-database = os.getenv("DB_DATABASE")
-user = os.getenv("DB_USER")
-password = os.getenv("DB_PASS")
-engine_string = f"mysql+mysqldb://{user}:{password}@{host}/{database}?charset=utf8mb4"
-engine = create_engine(engine_string)
 
 regex = re.compile("[0-9a-zA-Z]")
 
