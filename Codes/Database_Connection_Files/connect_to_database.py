@@ -5,8 +5,9 @@ import os
 
 def connect_to_db():
     """
-    This method connects Python to the database using the credentials stored in
-    the .env file located in the Database_Connection_Files folder.
+    This method creates the engine that allows a connection to the 
+    database using the credentials stored in the .env file located 
+    in the Database_Connection_Files folder.
     Returns
     ----------
     engine:
