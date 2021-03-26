@@ -259,6 +259,6 @@ def clean_xml(xml_string):
 
 
 if __name__ == "__main__":
-    # rotate_pdfs()
+    # rotate_pdfs() # run this if you need to rotate PDFs
     insert_contents()
     # insert_clean_contents()
