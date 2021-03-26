@@ -1,6 +1,8 @@
+import sys
 from pathlib import Path
+sys.path.append(str(Path(__file__).parent.parent.absolute()))
+from Database_Connection_Files.connect_to_database import connect_to_db
 from dotenv import load_dotenv
-from sqlalchemy import text, create_engine
 import os
 import pandas as pd
 import PyPDF2
@@ -12,9 +14,23 @@ import traceback
 import re
 from bs4 import BeautifulSoup
 
-pdf_files_folder_normal = Path("//luxor/data/branch/Environmental Baseline Data/Version 4 - Final/PDF")
-pdf_files_folder_rotated90 = Path("//luxor/data/branch/Environmental Baseline Data/Version 4 - Final/PDF_rotated90")
-pdf_files_folder_rotated270 = Path("//luxor/data/branch/Environmental Baseline Data/Version 4 - Final/PDF_rotated270")
+# Load environment variables from .env file
+load_dotenv(override=True)
+
+# Load environment variables (from .env file) for the database
+engine = connect_to_db()
+
+# Load environment variables (from .env file) for the PDF folder path
+# In order to extract the content from the PDFs, it is important to
+# rotate the PDFs that are not in the normal top-to-bottom structure.
+# You will likely need to run this code first and the PDFs with bad
+# results are likely due to the PDF structure. Put the PDFs that
+# need to be rotated by 90 degrees in a PDF_rotated90 folder and
+# those that need to be rotated by 270 in a PDF_rotated270 folder.
+# The rotate_pdf function will rotate those PDFs to a normal structure.
+pdf_files_folder_normal = Path(os.getenv("PDFS_FILEPATH"))
+pdf_files_folder_rotated90 = Path(os.getenv("PDFS_FILEPATH") + "_rotated90")
+pdf_files_folder_rotated270 = Path(os.getenv("PDFS_FILEPATH") + "_rotated270")
 
 if not pdf_files_folder_normal.exists():
     print(pdf_files_folder_normal, "does not exist!")
@@ -23,18 +39,12 @@ if not pdf_files_folder_rotated90.exists():
 if not pdf_files_folder_rotated270.exists():
     print(pdf_files_folder_rotated270, "does not exist!")
 
+# Increase max size of pandas dataframe output when using a notebook
 pd.set_option("display.max_columns", None)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.width', 1200)
 
-load_dotenv(override=True)
-host = os.getenv("DB_HOST")
-database = os.getenv("DB_DATABASE")
-user = os.getenv("DB_USER")
-password = os.getenv("DB_PASS")
-engine_string = f"mysql+mysqldb://{user}:{password}@{host}/{database}?charset=utf8mb4"
-engine = create_engine(engine_string)
-
+# Set up Tika to extract text content from PDFs
 tika.TikaClientOnly = True
 os.environ["TIKA_STARTUP_MAX_RETRY"] = "10"
 os.environ["TIKA_CLIENT_ONLY"] = "True"
@@ -71,9 +81,57 @@ def clean_tmp():
     print(f"Attempted to clean up {len(g)} files the tmp folder")
 
 
+def insert_content(row):
+    pdf_id, total_pages = row["pdfId"], int(row["totalPages"])
+
+    # Using PyPDF2 and Tika's parser method to extract PDF contents
+    def process_pdf(pdf_folder, table_name, xml):
+        # print(f"Starting {pdf_id}")
+        pdf = pdf_folder.joinpath(f"{pdf_id}.pdf")
+        if not pdf.exists():
+            raise Exception(f"{pdf} does not exist! :(")
+        with pdf.open(mode="rb") as infile, engine.connect() as conn:
+            reader = PyPDF2.PdfFileReader(infile)
+            if reader.isEncrypted:
+                reader.decrypt("")
+            # Looping for every PDF page and storing page contents into database table
+            for p in range(1, total_pages + 1):
+                check = f"SELECT pdfId FROM {table_name} WHERE pdfId = %s AND page_num = %s;"
+                result = conn.execute(check, (pdf_id, p))
+                if result.rowcount > 0:
+                    continue
+                # print(f"Working through {pdf_id} - page {p}")
+                writer = PyPDF2.PdfFileWriter()
+                writer.addPage(reader.getPage(p - 1))  # Reads from 0 page
+                random_file = tmp_folder.joinpath(f"{os.urandom(24).hex()}.pdf")
+                with random_file.open(mode="wb") as outfile:
+                    writer.write(outfile)
+                content = parser.from_file(outfile.name, xmlContent=xml, requestOptions={'timeout': 300})["content"] # Tika's parser extracts content of one page
+                if content is None:
+                    content = ""
+                content = content.strip()
+                # Using the custom clean_text function to strip the contents of specific characters with regex
+                cleaned_content = clean_text(content)
+
+                random_file.unlink()
+
+                stmt = f"INSERT INTO {table_name} (pdfId, page_num, content, clean_content) VALUES (%s,%s,%s,%s);"
+                result = conn.execute(stmt, (pdf_id, p, content, cleaned_content))
+                if result.rowcount != 1:
+                    raise Exception(f"{pdf_id}-{p}: ERROR! Updated {result.rowcount} rows!")
+
+    process_pdf(pdf_folder=pdf_files_folder_normal, table_name="pages_normal_xml", xml=True)
+    process_pdf(pdf_folder=pdf_files_folder_normal, table_name="pages_normal_txt", xml=False)
+    process_pdf(pdf_folder=pdf_files_folder_rotated90, table_name="pages_rotated90_xml", xml=True)
+    process_pdf(pdf_folder=pdf_files_folder_rotated90, table_name="pages_rotated90_txt", xml=False)
+    process_pdf(pdf_folder=pdf_files_folder_rotated270, table_name="pages_rotated270_xml", xml=True)
+    process_pdf(pdf_folder=pdf_files_folder_rotated270, table_name="pages_rotated270_txt", xml=False)
+
+
 def insert_contents():
     t = time.time()
 
+    # Reading from the MySQL Database and creating dataframe from query
     stmt = text("SELECT pdfId, totalPages FROM pdfs ORDER BY totalPages DESC;")
     with engine.connect() as conn:
         df = pd.read_sql(stmt, conn)
@@ -99,6 +157,7 @@ def insert_contents():
     # for row in data:
     #     insert_content(row)
 
+    # Running the insert_content function with multiprocessing
     with Pool(96) as pool:
         pool.map(insert_content, data, chunksize=1)
 
@@ -122,60 +181,10 @@ def insert_contents():
     print(f"Done {len(data)} in {sec} seconds ({round(sec / 60, 2)} min or {round(sec / 3600, 2)} hours)")
 
 
-def insert_content(row):
-    pdf_id, total_pages = row["pdfId"], int(row["totalPages"])
-
-    def process_pdf(pdf_folder, table_name, xml):
-        # print(f"Starting {pdf_id}")
-        pdf = pdf_folder.joinpath(f"{pdf_id}.pdf")
-        if not pdf.exists():
-            raise Exception(f"{pdf} does not exist! :(")
-        with pdf.open(mode="rb") as infile, engine.connect() as conn:
-            reader = PyPDF2.PdfFileReader(infile)
-            if reader.isEncrypted:
-                reader.decrypt("")
-            for p in range(1, total_pages + 1):
-                check = f"SELECT pdfId FROM {table_name} WHERE pdfId = %s AND page_num = %s;"
-                result = conn.execute(check, (pdf_id, p))
-                if result.rowcount > 0:
-                    continue
-                # print(f"Working through {pdf_id} - page {p}")
-                writer = PyPDF2.PdfFileWriter()
-                writer.addPage(reader.getPage(p - 1))  # Reads from 0 page
-                random_file = tmp_folder.joinpath(f"{os.urandom(24).hex()}.pdf")
-                with random_file.open(mode="wb") as outfile:
-                    writer.write(outfile)
-                content = parser.from_file(outfile.name, xmlContent=xml, requestOptions={'timeout': 300})["content"]
-                if content is None:
-                    content = ""
-                content = content.strip()
-                cleaned_content = clean_text(content)
-
-                random_file.unlink()
-
-                stmt = f"INSERT INTO {table_name} (pdfId, page_num, content, clean_content) VALUES (%s,%s,%s,%s);"
-                result = conn.execute(stmt, (pdf_id, p, content, cleaned_content))
-                if result.rowcount != 1:
-                    raise Exception(f"{pdf_id}-{p}: ERROR! Updated {result.rowcount} rows!")
-
-    process_pdf(pdf_folder=pdf_files_folder_normal, table_name="pages_normal_xml", xml=True)
-    process_pdf(pdf_folder=pdf_files_folder_normal, table_name="pages_normal_txt", xml=False)
-    process_pdf(pdf_folder=pdf_files_folder_rotated90, table_name="pages_rotated90_xml", xml=True)
-    process_pdf(pdf_folder=pdf_files_folder_rotated90, table_name="pages_rotated90_txt", xml=False)
-    process_pdf(pdf_folder=pdf_files_folder_rotated270, table_name="pages_rotated270_xml", xml=True)
-    process_pdf(pdf_folder=pdf_files_folder_rotated270, table_name="pages_rotated270_txt", xml=False)
-
-
 def clean_text(txt):
     rgx = re.compile(r'[^\w`~!@#$%^&*()_=+[{}|;:\',<.>/?\-\\\"\]]+')
     result = re.sub(rgx, " ", txt)
     return result.strip()
-
-
-def insert_clean_contents():
-    insert_clean_content("pages_normal_txt")
-    insert_clean_content("pages_rotated90_txt")
-    insert_clean_content("pages_rotated270_txt")
 
 
 def insert_clean_content(table):
@@ -195,6 +204,12 @@ def insert_clean_content(table):
 
     sec = round(time.time() - t)
     print(f"Done {len(data)} in {sec} seconds ({round(sec / 60, 2)} min or {round(sec / 3600, 2)} hours)")
+
+
+def insert_clean_contents():
+    insert_clean_content("pages_normal_txt")
+    insert_clean_content("pages_rotated90_txt")
+    insert_clean_content("pages_rotated270_txt")
 
 
 def rotate_pdf(pdf):
@@ -244,6 +259,6 @@ def clean_xml(xml_string):
 
 
 if __name__ == "__main__":
-    # rotate_pdfs()
+    # rotate_pdfs() # run this if you need to rotate PDFs
     insert_contents()
     # insert_clean_contents()

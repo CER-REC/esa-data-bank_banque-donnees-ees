@@ -1,4 +1,7 @@
+import sys
 from pathlib import Path
+sys.path.append(str(Path(__file__).parent.parent.absolute()))
+from Database_Connection_Files.connect_to_database import connect_to_db
 from dotenv import load_dotenv
 from multiprocessing import Pool
 import time
@@ -12,26 +15,23 @@ import camelot
 import traceback
 import re
 
-pdf_files_folder = Path("//luxor/data/branch/Environmental Baseline Data/Version 4 - Final/PDF")
+# Load environment variables (from .env file) for the database
+engine = connect_to_db()
+
+# Load environment variables (from .env file) for the PDF folder path and Index filepath
+pdf_files_folder = Path(os.getenv("PDFS_FILEPATH"))
 # csv_tables_folder = Path().resolve().parent.parent.joinpath("Data_Files").joinpath("CSVs")
-csv_tables_folder = Path(r"//luxor/data/branch/Environmental Baseline Data/Version 4 - Final/all_csvs")
+csv_tables_folder = Path(os.getenv("CSV_TABLES_FOLDER_PATH"))
 
 if not pdf_files_folder.exists():
     print(pdf_files_folder, "does not exist!")
 elif not csv_tables_folder.exists():
     print(csv_tables_folder, "does not exist!")
 
+# Increase max size of pandas dataframe output when using a notebook
 pd.set_option("display.max_columns", None)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.width', 1200)
-
-load_dotenv(override=True)
-host = os.getenv("DB_HOST")
-database = os.getenv("DB_DATABASE")
-user = os.getenv("DB_USER")
-password = os.getenv("DB_PASS")
-engine_string = f"mysql+mysqldb://{user}:{password}@{host}/{database}?charset=utf8mb4"
-engine = create_engine(engine_string)
 
 regex = re.compile("[0-9a-zA-Z]")
 
@@ -84,8 +84,13 @@ def extract_csv(args):
         try:
             pdf_file_path = pdf_files_folder2.joinpath(f"{pdf_id}.pdf")
 
+            # Running Camelot to extract tables on each individual page at a time
             for page in range(1, total_pages + 1):
                 try:
+                    # Running Camelot to extract tables from PDFs
+                    # May need to modify parameters for your specific use-case
+                    # More info here: https://camelot-py.readthedocs.io/en/master/
+                    # And here for Advanced Usage: https://camelot-py.readthedocs.io/en/master/user/advanced.html
                     tables = camelot.read_pdf(str(pdf_file_path), pages=str(page), strip_text='\n',
                                               line_scale=40, flag_size=True, copy_text=['v'], )
                     save_tables(tables, page, "lattice-v")
@@ -94,6 +99,7 @@ def extract_csv(args):
                     print(e)
                     traceback.print_tb(e.__traceback__)
 
+            # Add extracted table to the database
             with engine2.connect() as conn:
                 statement = text("UPDATE pdfs SET csvsExtracted = :csvsExtracted WHERE pdfId = :pdfId;")
                 conn.execute(statement, {"csvsExtracted": 'true', "pdfId": pdf_id})

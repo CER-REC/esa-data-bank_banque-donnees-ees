@@ -1,0 +1,9 @@
+PyPDF2
+tika
+python-dotenv
+SQLAlchemy
+camelot-py[cv]
+fitz
+mysqlclient
+pandas
+beautifulsoup4
