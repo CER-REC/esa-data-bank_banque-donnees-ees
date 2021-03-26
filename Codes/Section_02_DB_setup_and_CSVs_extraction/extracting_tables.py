@@ -84,8 +84,13 @@ def extract_csv(args):
         try:
             pdf_file_path = pdf_files_folder2.joinpath(f"{pdf_id}.pdf")
 
+            # Running Camelot to extract tables on each individual page at a time
             for page in range(1, total_pages + 1):
                 try:
+                    # Running Camelot to extract tables from PDFs
+                    # May need to modify parameters for your specific use-case
+                    # More info here: https://camelot-py.readthedocs.io/en/master/
+                    # And here for Advanced Usage: https://camelot-py.readthedocs.io/en/master/user/advanced.html
                     tables = camelot.read_pdf(str(pdf_file_path), pages=str(page), strip_text='\n',
                                               line_scale=40, flag_size=True, copy_text=['v'], )
                     save_tables(tables, page, "lattice-v")
@@ -94,6 +99,7 @@ def extract_csv(args):
                     print(e)
                     traceback.print_tb(e.__traceback__)
 
+            # Add extracted table to the database
             with engine2.connect() as conn:
                 statement = text("UPDATE pdfs SET csvsExtracted = :csvsExtracted WHERE pdfId = :pdfId;")
                 conn.execute(statement, {"csvsExtracted": 'true', "pdfId": pdf_id})
