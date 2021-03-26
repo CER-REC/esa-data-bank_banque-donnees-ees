@@ -30,6 +30,13 @@ pdf_files_folder = Path(os.getenv("PDFS_FILEPATH"))
 
 
 def insert(pdf):
+    """
+    This function inserts the metadata of each PDF page in a table called "pages" in the database.
+    Parameters
+    ----------
+    pdf:
+        A single PDF is fed to this function and it is inserted into the database one row at a time.
+    """
     buf = StringIO()
     with redirect_stdout(buf), redirect_stderr(buf):
         try:
