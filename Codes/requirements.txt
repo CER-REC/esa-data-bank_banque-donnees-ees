@@ -5,3 +5,5 @@ SQLAlchemy
 camelot-py[cv]
 fitz
 mysqlclient
+pandas
+beautifulsoup4
