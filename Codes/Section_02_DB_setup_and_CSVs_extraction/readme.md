@@ -5,7 +5,6 @@
 The table extraction is a very CPU-intensive task and can take a long time to complete.
 The initial approach regarding table extraction (with the python package Camelot) was to attempt table extraction only for those pages where the tables are suspected to be present.
 
-
 However, since the tables detection methodology was constantly changed, the expensive table extraction code was ran over and over again. Therefore, the decision was made to extract tables from every page of every PDF while preserving the extraction metadata of every extraction yielded by the Camelot (amount of whitespace, accuracy, etc.).
 
 Then, based on the information from the previous steps about the title and location of every table, the extracted CSVs are assigned titles in the DB. The extraction metadata from Camelot allowed us to to see which tables were poorly extracted (lots of whitespace or low accuracy score) and remove what was extracted by Camelot which wasn't actually a table (e.g. GIS figures will sometimes be mistaken for a table).
