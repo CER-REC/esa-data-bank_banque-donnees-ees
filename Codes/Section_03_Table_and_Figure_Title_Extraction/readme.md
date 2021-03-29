@@ -1,6 +1,6 @@
 ## Overview
-This section is focused on extracting table and figure titles. 
-Run title_main.py to update figure and table titles in the database.
+This section is focused on extracting table and figure titles. <br>
+Run main.py to update figure and table titles in the database.
 
 Below are the steps in the method used for extracting titles.
 
