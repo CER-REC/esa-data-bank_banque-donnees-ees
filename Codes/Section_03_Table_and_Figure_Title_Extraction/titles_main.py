@@ -1,24 +1,17 @@
 import pandas as pd
 import re
-import os
 from multiprocessing import Pool
-from sqlalchemy import text, create_engine
-from dotenv import load_dotenv
+from sqlalchemy import text
 import json
 
+from Codes.Database_Connection_Files.connect_to_database import connect_to_db
 from Codes.Section_03_Table_and_Figure_Title_Extraction.external_functions import project_figure_titles, find_toc_title_table
 from Codes.Section_03_Table_and_Figure_Title_Extraction.external_functions import find_tag_title_table, project_table_titles, find_final_title_table
 from Codes.Section_03_Table_and_Figure_Title_Extraction.external_functions import find_tag_title_fig, find_final_title_fig
 import Codes.Section_03_Table_and_Figure_Title_Extraction.constants as constants
 
 
-load_dotenv(override=True)
-host = os.getenv("DB_HOST")
-database = os.getenv("DB_DATABASE")
-user = os.getenv("DB_USER")
-password = os.getenv("DB_PASS")
-engine_string = f"mysql+mysqldb://{user}:{password}@{host}/{database}?charset=utf8mb4"
-engine = create_engine(engine_string)
+engine = connect_to_db()
 
 get_toc = 0  # need to go through all docs to create lists of tables and figures in csvs
 toc_figure_titles = 1  # assign page number to TOC figure titles

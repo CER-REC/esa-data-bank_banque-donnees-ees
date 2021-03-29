@@ -6,22 +6,16 @@ from bs4 import BeautifulSoup
 from io import StringIO
 from contextlib import redirect_stdout, redirect_stderr
 import traceback
-from sqlalchemy import text, create_engine
-from dotenv import load_dotenv
-import os
+from sqlalchemy import text
 from fuzzywuzzy import fuzz
 import json
 import numpy as np
 
+from Codes.Database_Connection_Files.connect_to_database import connect_to_db
 import Codes.Section_03_Table_and_Figure_Title_Extraction.constants as constants
 
-load_dotenv(override=True)
-host = os.getenv("DB_HOST")
-database = os.getenv("DB_DATABASE")
-user = os.getenv("DB_USER")
-password = os.getenv("DB_PASS")
-engine_string = f"mysql+mysqldb://{user}:{password}@{host}/{database}?charset=utf8mb4"
-engine = create_engine(engine_string)
+
+engine = connect_to_db()
 
 
 # take a project and assign all Figure titles from toc to a pdf id and page
