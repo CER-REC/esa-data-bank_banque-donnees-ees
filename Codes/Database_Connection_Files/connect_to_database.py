@@ -22,12 +22,12 @@ def connect_to_db():
     Ref -> https://stackoverflow.com/a/42772654
     Ref -> https://docs.sqlalchemy.org/en/13/core/connections.html
     """
-    load_dotenv(override=True) # load environment variables from .env file
-    host = os.getenv("DB_HOST") # hostname
-    database = os.getenv("DB_DATABASE") # connection name
-    user = os.getenv("DB_USER") # username
+    load_dotenv(override=True)  # load environment variables from .env file
+    host = os.getenv("DB_HOST")  # hostname
+    database = os.getenv("DB_DATABASE")  # connection name
+    user = os.getenv("DB_USER")  # username
     password = os.getenv("DB_PASS")
     engine_string = f"mysql+mysqldb://{user}:{password}@{host}/{database}?charset=utf8mb4"
     # print(engine_string) # check the .env is loaded and working.
-    engine = create_engine(engine_string) # connect to server
+    engine = create_engine(engine_string)  # connect to server
     return engine

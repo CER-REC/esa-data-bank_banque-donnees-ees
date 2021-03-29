@@ -6,18 +6,17 @@ from bs4 import BeautifulSoup
 from io import StringIO
 from contextlib import redirect_stdout, redirect_stderr
 import traceback
-from sqlalchemy import text, create_engine
-from dotenv import load_dotenv
-import os
+from sqlalchemy import text
 from fuzzywuzzy import fuzz
 import json
 import numpy as np
 
+from Codes.Database_Connection_Files.connect_to_database import connect_to_db
 import Codes.Section_03_Table_and_Figure_Title_Extraction.constants as constants
 
-load_dotenv(override=True)
-engine_string = f"mysql+mysqldb://esa_user_rw:{os.getenv('DB_PASS')}@os25.neb-one.gc.ca./esa?charset=utf8"
-engine = create_engine(engine_string)
+
+engine = connect_to_db()
+
 
 # take a project and assign all Figure titles from toc to a pdf id and page
 def project_figure_titles(project):
@@ -68,7 +67,7 @@ def project_figure_titles(project):
                 docs_check.extend(before)
                 count = 0
                 for doc_id in docs_check:
-                    if (doc_id > 0):
+                    if doc_id > 0:
                         arg = (doc_id, toc_id, toc_page, title_order, word1_rex, word2_rex, s2.lower(), page_rex, title)
                         count = figure_checker(arg)
                     if count > 0:
@@ -88,6 +87,7 @@ def project_figure_titles(project):
         except Exception as e:
             traceback.print_tb(e.__traceback__)
             return False, buf.getvalue()
+
 
 # For a Figure TOC title, find a pdf id and page where that figure lives
 def figure_checker(args):
@@ -115,7 +115,7 @@ def figure_checker(args):
         extra_pages = [p for p in extra_pages_df['page'].tolist() if p not in image_pages] # list of extra pages to check
 
         # get text
-        if (len(extra_pages) > 0) and (len(image_pages) > 0):
+        if len(extra_pages) > 0 and len(image_pages) > 0:
             params = {"pdf_id": doc_id, "image_list": image_pages, "extra_list": extra_pages}
             stmt = text("SELECT page_num, clean_content FROM esa.pages_normal_txt "
                         "WHERE (pdfId = :pdf_id) and (page_num in :image_list or page_num in :extra_list);")
@@ -124,7 +124,7 @@ def figure_checker(args):
             text_df = pd.read_sql_query(stmt, conn, params=params, index_col='page_num')
             text_rotated_df = pd.read_sql_query(stmt_rotated, conn, params=params, index_col='page_num')
 
-        elif (len(image_pages) > 0):
+        elif len(image_pages) > 0:
             params = {"pdf_id": doc_id, "image_list": image_pages}
             stmt = text("SELECT page_num, clean_content FROM esa.pages_normal_txt "
                         "WHERE (pdfId = :pdf_id) and (page_num in :image_list);")
@@ -133,7 +133,7 @@ def figure_checker(args):
             text_df = pd.read_sql_query(stmt, conn, params=params, index_col='page_num')
             text_rotated_df = pd.read_sql_query(stmt_rotated, conn, params=params, index_col='page_num')
 
-        elif (len(extra_pages) > 0):
+        elif len(extra_pages) > 0:
             params = {"pdf_id": doc_id, "extra_list": extra_pages}
             stmt = text("SELECT page_num, clean_content FROM esa.pages_normal_txt "
                         "WHERE (pdfId = :pdf_id) and (page_num in :extra_list);")
@@ -152,7 +152,6 @@ def figure_checker(args):
         word2_list = []
         for check_list in [image_pages, extra_pages]:
             for page_num in check_list:
-                # print(check_list)
                 if (doc_id != toc_id) or (page_num != toc_page):  # if not toc page
                     text_ws = text_df.loc[page_num, 'clean_content']
                     text_clean = re.sub(constants.punctuation, ' ', text_ws)
@@ -173,7 +172,7 @@ def figure_checker(args):
                         else:
                             sim = 0
 
-                        if (sim >= 0.7): # check that enough words exists
+                        if sim >= 0.7: # check that enough words exists
                             l = len(s2)
                             ratio = 0
                             for i in range(len(text_clean) - l + 1):
@@ -191,12 +190,12 @@ def figure_checker(args):
                             # ratio = max(fuzz.partial_ratio(s2, text_clean),
                             #             fuzz.partial_ratio(s2, text_rotated_clean))
 
-                            if (ratio >= 60): # check that the fuzzy match is close enough
+                            if ratio >= 60:  # check that the fuzzy match is close enough
                                 p_list.append(page_num)
                                 sim_list.append(sim)
                                 ratio_list.append(ratio)
 
-            if len(sim_list) > 0: # if found in image pages don't check extra pages
+            if len(sim_list) > 0:  # if found in image pages don't check extra pages
                 break
 
         # only keep those with largest sim
@@ -215,7 +214,7 @@ def figure_checker(args):
             final_list = []
         count = len(final_list)
 
-        if (count > 0):
+        if count > 0:
             stmt = text("UPDATE esa.toc SET assigned_count = :count, loc_pdfId = :loc_id, loc_page_list = :loc_pages "
                         "WHERE (toc_pdfId = :pdf_id) and (toc_page_num = :page_num) and (toc_title_order = :title_order);")
             params = {"count": count, "loc_id": doc_id, "loc_pages": json.dumps(final_list), "pdf_id": toc_id, "page_num": toc_page, "title_order": toc_order}
@@ -230,6 +229,7 @@ def figure_checker(args):
         print('Error in', doc_id)
         print(traceback.print_tb(e.__traceback__))
         return 0
+
 
 # determine category of table tag title (if continued title --> 1, if regular title --> 2, if just text --> 0)
 def get_category(title):
@@ -252,6 +252,7 @@ def get_category(title):
         else:
             category = 0
     return category
+
 
 def find_tag_title_table(data_id):
     buf = StringIO()
@@ -346,6 +347,7 @@ def find_tag_title_table(data_id):
             traceback.print_tb(e.__traceback__)
             return False, buf.getvalue()
 
+
 def find_tag_title_fig(data_id):
     buf = StringIO()
     conn = engine.connect()
@@ -371,15 +373,10 @@ def find_tag_title_fig(data_id):
             figs_pages = df_pages['page_num'].tolist()
 
             for page_num in figs_pages:
-                # print(page_num)
                 page_figs = df[df['page_num'] == page_num].reset_index() #.set_index('Real Order')
                 page_text = pages[page_num - 1]
                 lines = [x.text for x in page_text.find_all('p')]  # list of lines
-                # for l in lines:
-                #     if len(l) > 0:
-                #         print(l)
-                num_lines = len(lines)
-                final_table_titles = [] # holds all titles found on this page
+                final_table_titles = []  # holds all titles found on this page
                 for i, line in enumerate(lines):
                     title = re.sub(constants.whitespace, ' ', line).strip()  # replace all whitespace with single space
                     # identify if this line is a figure line (took out exceptions, should not need)
@@ -395,7 +392,6 @@ def find_tag_title_fig(data_id):
                         #     else:
                         #         final_table_title = title
                         final_table_titles.append(title)
-                        # print(title)
 
                 count_figs = page_figs.shape[0]
                 for i, title in enumerate(final_table_titles):
@@ -417,6 +413,7 @@ def find_tag_title_fig(data_id):
             conn.close()
             traceback.print_tb(e.__traceback__)
             return False, buf.getvalue()
+
 
 def table_checker(args):
     conn = engine.connect()
@@ -479,6 +476,7 @@ def table_checker(args):
         print(traceback.print_tb(e.__traceback__))
         return 0
 
+
 def project_table_titles(project):
     buf = StringIO()
     with redirect_stdout(buf), redirect_stderr(buf):
@@ -533,7 +531,7 @@ def project_table_titles(project):
                 count = 0
 
                 for doc_id in docs_check:
-                    if (doc_id > 0):
+                    if doc_id > 0:
                         arg = (doc_id, toc_id, toc_page, title_order, word1_rex, word2_rex, s2_rex, page_rex, title)
                         count = table_checker(arg)
                     if count > 0:
@@ -553,6 +551,7 @@ def project_table_titles(project):
         except Exception as e:
             traceback.print_tb(e.__traceback__)
             return False, buf.getvalue()
+
 
 def find_toc_title_table(data_id):
     buf = StringIO()
@@ -574,8 +573,6 @@ def find_toc_title_table(data_id):
                 df_all_titles = pd.read_sql_query(stmt, conn, params=params)
 
                 for index, row in df.iterrows():
-                    # print(row)
-
                     page_num = int(row['page'])
                     table_num = int(row['tableNumber'])
                     order = int(row['Real Order'])
@@ -599,6 +596,7 @@ def find_toc_title_table(data_id):
             traceback.print_tb(e.__traceback__)
             return False, buf.getvalue()
 
+
 def find_toc_title_fig(data_id):
     buf = StringIO()
     conn = engine.connect()
@@ -613,7 +611,6 @@ def find_toc_title_fig(data_id):
             df_pages['imageProportion'] = df_pages['bbox_area_image'] / df_pages['bbox_area']
             df_pages = df_pages[df_pages['imageProportion'] > 0.1]
             # df['Real Order'] = df.groupby(['page'])['tableNumber'].rank()
-            # print(data_id, df.shape)
 
             df_all_titles = pd.read_csv(constants.main_path + 'Saved/final_figs.csv', header=0)
             df_all_titles['location_DataID'] = df_all_titles['location_DataID'].fillna(0)
@@ -653,8 +650,8 @@ def find_toc_title_fig(data_id):
             traceback.print_tb(e.__traceback__)
             return False, buf.getvalue()
 
+
 def find_final_title_table(data_id):
-    # print(data_id)
     buf = StringIO()
     conn = engine.connect()
     with redirect_stdout(buf), redirect_stderr(buf):
@@ -679,7 +676,6 @@ def find_final_title_table(data_id):
                     title = row['titleFinal']
                     page_num = row['page']
                     table_num = row['tableNumber']
-                    # print('try title: ', title)
                     if (title == '') or ('cont' in title.lower()):
                         # check against previous table's columns
                         cols = ', '.join(cols_list)
@@ -706,8 +702,8 @@ def find_final_title_table(data_id):
             traceback.print_tb(e.__traceback__)
             return False, buf.getvalue()
 
+
 def find_final_title_fig(data_id):
-    # print(data_id)
     buf = StringIO()
     conn = engine.connect()
     with redirect_stdout(buf), redirect_stderr(buf):
@@ -731,7 +727,6 @@ def find_final_title_fig(data_id):
                 title = row['titleFinal']
                 page_num = row['page']
                 table_num = row['tableNumber']
-                # print('try title: ', title)
                 if (title == '') or ('cont' in title.lower()):
                     # check against previous table's columns
                     cols = ', '.join(cols_list)
@@ -757,6 +752,3 @@ def find_final_title_fig(data_id):
             print('errors on title:', title)
             traceback.print_tb(e.__traceback__)
             return False, buf.getvalue()
-
-
-

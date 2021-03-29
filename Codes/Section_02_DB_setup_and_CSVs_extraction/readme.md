@@ -14,7 +14,6 @@ Then, based on the information from the previous steps about the title and locat
 The table extraction process utilizes a MySQL Database to store the results of the extraction process. The steps of the process:
 1. Create the DB (e.g. with MySQL Workbench) to store data in.
 2. Create two tables in it:
-
     * `pdfs` for storing information about the CSVs
     * `csvs` for storing information about extracted csvs
 
@@ -25,11 +24,11 @@ The table extraction process utilizes a MySQL Database to store the results of t
     * `hearingOrder`, `application_name`, `application_title_short`, `title_short`, and `commodity` are metadata taken from the input Index file regarding the hearing order number, application name, etc.
 
 4. Run the scripts in this order:
-    * 1. `DB.sql` creates some of the tables in the database
-    * 2. `pdfs_db_seeding.py` populates `pdfs` table
-    * 3. `pages_and_blocks_db_seeding.py` populates `pages` and `blocks` tables
-    * 4. `extracting_pages_content.py` populates a series of pages tables with pdf content
-    * 5. `extracting_tables.py` populates `csvs` table
+    * `DB.sql` creates some of the tables in the database
+    * `pdfs_db_seeding.py` populates `pdfs` table
+    * `pages_and_blocks_db_seeding.py` populates `pages` and `blocks` tables
+    * `extracting_pages_content.py` populates a series of pages tables with pdf content
+    * `extracting_tables.py` populates `csvs` table
 
 ## Setting up the DB
 

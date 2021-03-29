@@ -1,26 +1,21 @@
 import pandas as pd
 import re
-import os
 from multiprocessing import Pool
-from sqlalchemy import text, create_engine
-from dotenv import load_dotenv
-import time
+from sqlalchemy import text
 import json
-import pickle
-from bs4 import BeautifulSoup
 
+from Codes.Database_Connection_Files.connect_to_database import connect_to_db
 from Codes.Section_03_Table_and_Figure_Title_Extraction.external_functions import project_figure_titles, find_toc_title_table
 from Codes.Section_03_Table_and_Figure_Title_Extraction.external_functions import find_tag_title_table, project_table_titles, find_final_title_table
 from Codes.Section_03_Table_and_Figure_Title_Extraction.external_functions import find_tag_title_fig, find_final_title_fig
 import Codes.Section_03_Table_and_Figure_Title_Extraction.constants as constants
 
-load_dotenv(override=True)
-engine_string = f"mysql+mysqldb://esa_user_rw:{os.getenv('DB_PASS')}@os25.neb-one.gc.ca./esa?charset=utf8"
-engine = create_engine(engine_string)
+
+engine = connect_to_db()
 
 get_toc = 0  # need to go through all docs to create lists of tables and figures in csvs
 toc_figure_titles = 1  # assign page number to TOC figure titles
-toc_table_titles = 1 # assign page number to TOC table titles
+toc_table_titles = 1  # assign page number to TOC table titles
 
 do_tag_title_table = 1  # assign table titles to each table using text search method
 do_toc_title_table = 1  # assign table titles to each table using TOC method
@@ -47,7 +42,7 @@ if __name__ == "__main__":
         conn = engine.connect()
         for index, row in all_projects.iterrows():
             doc_id = row['pdfId']
-            # print(doc_id)
+
             # delete any existing TOC from this document
             stmt = text("DELETE FROM esa.toc WHERE toc_pdfId = :pdfId;")
             params = {"pdfId": doc_id}
@@ -72,15 +67,15 @@ if __name__ == "__main__":
                     title = re.sub(constants.whitespace, ' ', toc[0]).strip()
                     page_name = toc[1].strip()
                     type = title.split(' ', 1)[0].capitalize()
-                    if type in constants.accepted_toc: # if accepted type
+                    if type in constants.accepted_toc:  # if accepted type
                         stmt = text("INSERT INTO esa.toc (assigned_count, title_type, titleTOC, page_name, "
                                     "toc_page_num, toc_pdfId, toc_title_order) "
                                     "VALUE (null, :type, :title, :page_name, :page_num, :pdfId, :order);")
-                        params = {"type": type, "title":title, "page_name":page_name,
-                                  "page_num":page_num, "pdfId":doc_id, "order":i+1}
+                        params = {"type": type, "title": title, "page_name": page_name,
+                                  "page_num": page_num, "pdfId": doc_id, "order": i+1}
                         result = conn.execute(stmt, params)
                         if result.rowcount != 1:
-                            print('Did not go to database:',doc_id, page_num, toc)
+                            print('Did not go to database:', doc_id, page_num, toc)
         conn.close()
 
     # get page numbers for all the figures found in TOC
@@ -96,7 +91,6 @@ if __name__ == "__main__":
 
     # update tag method titles
     if do_tag_title_table:
-        # print(len(list_ids))
         with Pool() as pool:
             results = pool.map(find_tag_title_table, list_ids, chunksize=1)
         with open('tag_errors.txt', 'w', encoding='utf-8') as f:
@@ -109,8 +103,6 @@ if __name__ == "__main__":
     # update TOC method titles
     if toc_table_titles:
         print('Start assigning pages to TOC entries')
-        # for project in projects:
-        #     project_table_titles(project)
 
         with Pool() as pool:
             results = pool.map(project_table_titles, projects, chunksize=1)
@@ -124,8 +116,6 @@ if __name__ == "__main__":
 
     if do_toc_title_table:
         print('Start assigning toc titles to csvs')
-        # for doc_id in list_ids:
-        #     find_toc_title_table(doc_id)
 
         with Pool() as pool:
             results = pool.map(find_toc_title_table, list_ids, chunksize=1)
@@ -139,7 +129,6 @@ if __name__ == "__main__":
 
     # update final titles
     if do_final_title_table:
-        #print(len(list_ids))
         with Pool() as pool:
             results = pool.map(find_final_title_table, list_ids, chunksize=1)
         with open('final_errors.txt', 'w', encoding='utf-8') as f:
@@ -160,7 +149,6 @@ if __name__ == "__main__":
                     f.write(str(result[1]))
 
     if do_final_title_fig:
-        #print(len(list_ids))
         with Pool() as pool:
             results = pool.map(find_final_title_fig, list_ids, chunksize=1)
         with open('final_errors.txt', 'w', encoding='utf-8') as f:
@@ -174,7 +162,7 @@ if __name__ == "__main__":
         # write to all_tables-final.csv from esa.csvs
         with engine.connect() as conn:
             stmt = text(
-                "SELECT csvFullPath, pdfId, page, tableNumber, topRowJson, titleTag, titleTOC, titleFinal FROM esa.csvs "
+                "SELECT csvFullPath, pdfId, page, tableNumber, topRowJson, titleTag, titleTOC, titleFinal FROM esa.csvs"
                 "WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78);")
             df = pd.read_sql_query(stmt, conn)
         df.to_csv(constants.save_dir + 'all_tables-final.csv', index=False, encoding='utf-8-sig')
@@ -184,8 +172,8 @@ if __name__ == "__main__":
         with engine.connect() as conn:
             stmt = text(
                 "SELECT toc.titleTOC, toc.titleTOC_fr, toc.page_name, toc.toc_page_num, toc.toc_pdfId, toc.toc_title_order, pdfs.short_name, "
-                "toc.assigned_count, toc.loc_pdfId, toc.loc_page_list "
-                "FROM esa.toc LEFT JOIN esa.pdfs ON toc.toc_pdfId = pdfs.pdfId WHERE title_type='Figure' "
+                "toc.assigned_count, toc.loc_pdfId, toc.loc_page_list"
+                "FROM esa.toc LEFT JOIN esa.pdfs ON toc.toc_pdfId = pdfs.pdfId WHERE title_type='Figure'"
                 "ORDER BY pdfs.short_name, toc.toc_pdfId, toc.toc_page_num, toc.toc_title_order;")
             df = pd.read_sql_query(stmt, conn)
         df.rename(columns={'titleTOC': 'Name', 'titleTOC_fr': 'Name_French', 'loc_pdfId': 'location_DataID', 'loc_page': 'location_Page'}, inplace=True)

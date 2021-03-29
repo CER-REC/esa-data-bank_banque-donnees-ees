@@ -1,7 +1,13 @@
-1) Get a list of unique project names and all pdf IDs . These lists are required in later analysis. This data is retrieved form 
-the database, table esa.pdfs.
+## Overview
+This section is focused on extracting table and figure titles. 
+Run title_main.py to update figure and table titles in the database.
 
-2) Get all Table of Contents: go through all the pdfs (list from #1), identify table of comtents entries using regex expressions, 
+Below are the steps in the method used for extracting titles.
+
+1) Get a list of unique project names and all pdf IDs . These lists are required in later analysis. This data is retrieved form
+   the database, table esa.pdfs.
+
+2) Get all Table of Contents: go through all the pdfs (list from #1), identify table of contents entries using regex expressions,
    and save these Table of Contents entries to a list of all extracted TOC titles.
 
 3) Assign TOC table titles to tables (tables are represented by a csv and all are listed in csvs table in the database).
@@ -29,8 +35,7 @@ the database, table esa.pdfs.
 7) Combine the TOC title and Tag title for tables in the following way: If Tag title exists, take the Tag title, otherwise take the TOC title as Fina Title.
    Now go through the Final titles, and if a title contains "continued" or "cont'd", or "cont", replace it with the titles from the table on previous page.
 
-8)  Combine the TOC title and Tag title for figures in the following way: If TOC title exists, take that TOC title, otherwise take Tag title.
+8) Combine the TOC title and Tag title for figures in the following way: If TOC title exists, take that TOC title, otherwise take Tag title.
 
 9) Now the database contains all the Final titles for figures and tables. The dashboard can read from the database, selecting only those 
    items that contain a none-NULL title.
-
