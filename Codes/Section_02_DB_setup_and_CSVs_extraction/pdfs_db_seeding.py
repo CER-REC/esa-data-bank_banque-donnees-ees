@@ -1,31 +1,30 @@
+import sys
 from pathlib import Path
+sys.path.append(str(Path(__file__).parent.parent.absolute()))
 from dotenv import load_dotenv
-from sqlalchemy import text, create_engine
+from sqlalchemy import text
 import os
 import pandas as pd
 import PyPDF2
 
-pdf_files_folder = Path("//luxor/data/branch/Environmental Baseline Data/Version 4 - Final/PDF")
+# Load environment variables (from .env file) for the database
+engine = connect_to_db()
+
+# Load environment variables (from .env file) for the PDF folder path and Index filepath
+pdf_files_folder = Path(os.getenv("PDFS_FILEPATH"))
 # index2 = Path().resolve().parent.parent.joinpath("Input_Files").joinpath(
 #     "Index_of_PDFs_for_Major_Projects_with_ESAs.csv")
-index2 = Path(r"\\luxor\data\branch\Environmental Baseline Data\Version 4 - Final\Indices\Github_ESA_Final1.csv")
+index2 = Path(os.getenv("INDEX2_FILEPATH"))
 
 if not pdf_files_folder.exists():
     print(pdf_files_folder, "does not exist!")
 elif not index2.exists():
     print(index2, "does not exist!")
 
+# Increase max size of pandas dataframe output when using a notebook
 pd.set_option("display.max_columns", None)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.width', 1200)
-
-load_dotenv(override=True)
-host = os.getenv("DB_HOST")
-database = os.getenv("DB_DATABASE")
-user = os.getenv("DB_USER")
-password = os.getenv("DB_PASS")
-engine_string = f"mysql+mysqldb://{user}:{password}@{host}/{database}?charset=utf8mb4"
-engine = create_engine(engine_string)
 
 
 def insert_pdfs():
