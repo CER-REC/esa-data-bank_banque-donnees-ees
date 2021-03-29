@@ -148,8 +148,8 @@ for table_path in df_index_new[df_index_new['table missing'] == True]['Table Dow
             print('Missing table folder: {}'.format(table_folder))
 
 # Check if certain attributes stay the same for projects
-df = pd.read_csv('G:/ESA_downloads/download_Bingjie_Feb262021/ESA_website_ENG.csv')
-df_fra = pd.read_csv('G:/ESA_downloads/download_Bingjie_Mar042021_fra/ESA_website_FRA.csv', encoding='latin-1')
+df = pd.read_csv('G:/ESA_downloads/download_Bingjie_Mar262021/ESA_website_ENG.csv')
+df_fra = pd.read_csv('G:/ESA_downloads/download_Bingjie_Mar262021_fra/ESA_website_FRA.csv', encoding='latin-1')
 
 df_project = df.groupby(['Application Short Name'])[[
     'Application Name',
@@ -165,7 +165,7 @@ df_project = df.groupby(['Application Short Name'])[[
     'Project Download Path'
     ]].nunique()
 
-df_project_fra = df_index_new.groupby(['Nom abrégé de la demande'])[[
+df_project_fra = df_fra.groupby(['Nom abrégé de la demande'])[[
     'Nom de la demande',
     'Dépôt de la demande',
     'Nom de la société',
