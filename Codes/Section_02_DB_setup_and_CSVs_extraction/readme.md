@@ -35,7 +35,7 @@ The table extraction process utilizes a MySQL Database to store the results of t
 0. If you feel comfortable installing and configuring the DB, you can skip this section.
 
 1. Download and install the free and open source MySQL Community Edition for your platform from the official website: https://dev.mysql.com/downloads/. This is the DB engine that will run on your machine and hold the actual data.
-* Write down the password for root user that you created
+Write down the password for root user that you created.
 
 2. Download and install the Python MySQL connector - https://dev.mysql.com/downloads/connector/python/. This is used by the Python code to connect to the DB.
 
