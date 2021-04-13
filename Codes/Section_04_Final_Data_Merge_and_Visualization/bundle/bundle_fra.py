@@ -13,7 +13,7 @@ readme_project_filepath = 'G:/ESA_downloads/README-FRA-projects.txt'
 readme_table_filepath = '//luxor/data/Board/ESA_downloads/README-FRA-tables.txt'
 
 # Create a new folder as the destination for downloading files
-new_folder = os.path.join('G:/ESA_downloads/', 'download_Bingjie_Mar262021_fra')
+new_folder = os.path.join('G:/ESA_downloads/', 'download_Bingjie_Apr132021_fra')
 if not os.path.exists(new_folder):
     os.mkdir(new_folder)
 
@@ -29,7 +29,7 @@ if not os.path.exists(new_folder_tables):
 
 # =============================== Prepare index dataframe ===============================
 df_index_raw_eng = pd.read_csv(index_filepath_eng)
-df_index_raw_fra = pd.read_csv(index_filepath_fra, encoding='ISO-8859-1')
+df_index_raw_fra = pd.read_csv(index_filepath_fra, encoding='latin-1')
 
 df_eng_index_final = pd.read_csv('G:/ESA_downloads/download_Bingjie_Mar262021/ESA_website_ENG.csv')
 
@@ -69,6 +69,13 @@ df_index["Chemin d'accès pour télécharger le tableau"] = df_index['Table Name
 
 # Update ESA Download URLs
 df_index['URL du dossier de l\'ÉES'] = df_index['URL du dossier de l\'ÉES'].apply(lambda x: x.replace('LoadResult', 'View'))
+# Update Application Short Name
+df_short_name_translated = pd.read_csv('G:/ESA_downloads/application_short_name_translation.csv', encoding='latin-1')
+short_name_translation = dict()
+for item in df_short_name_translated.itertuples():
+    short_name_translation[item.English] = item.French
+
+df_index['Nom abrégé de la demande'] = df_index['Nom abrégé de la demande'].apply(lambda x: short_name_translation[x.strip()])
 
 # Prepare a list of column names for the final index files
 columns_index = [col for col in df_index.columns.to_list() if col not in (
@@ -139,15 +146,16 @@ df_index_new = pd.concat([df_figure, df_table, df_table_bad])
 # Update ESA Download URLs
 df_index_new['URL du dossier de l\'ÉES'] = df_index_new['URL du dossier de l\'ÉES'].apply(lambda x: x.replace('LoadResult', 'View'))
 # Translate 'Nom de la demande'
-
 df_index_new.loc[df_index_new['Nom de la demande'] == 'Application for the Keystone Pipeline', 'Nom de la demande'] = \
     'Demande relative au projet de Keystone Pipeline'
+# Translate 'Nom abrégé de la demande'
+df_index_new['Nom abrégé de la demande'] = df_index_new['Nom abrégé de la demande'].apply(lambda x: short_name_translation[x.strip()] if x.strip() in short_name_translation else x)
 
 # Export alpha index
-df_index_new.to_csv(os.path.join(new_folder, 'ESA_website_FRA.csv'), index=False, encoding='ISO-8859-1')
+df_index_new.to_csv(os.path.join(new_folder, 'ESA_website_FRA.csv'), index=False, encoding='latin-1')
 
 
-# ------ Check if English and French IDs match
+# ------ Check if English and French IDs match ------
 df_index_merge = pd.merge(df_eng_index_final, df_index_new, on='ID')
 
 # English to French translation
