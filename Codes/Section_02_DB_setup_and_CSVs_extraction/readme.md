@@ -1,13 +1,4 @@
-# Table Extraction and DB Population
-
-## Rationale
-
-The table extraction is a very CPU-intensive task and can take a long time to complete.
-The initial approach regarding table extraction (with the python package Camelot) was to attempt table extraction only for those pages where the tables are suspected to be present.
-
-However, since the tables detection methodology was constantly changed, the expensive table extraction code was ran over and over again. Therefore, the decision was made to extract tables from every page of every PDF while preserving the extraction metadata of every extraction yielded by the Camelot (amount of whitespace, accuracy, etc.).
-
-Then, based on the information from the previous steps about the title and location of every table, the extracted CSVs are assigned titles in the DB. The extraction metadata from Camelot allowed us to to see which tables were poorly extracted (lots of whitespace or low accuracy score) and remove what was extracted by Camelot which wasn't actually a table (e.g. GIS figures will sometimes be mistaken for a table).
+# Table Extraction
 
 ## Overview
 
@@ -32,10 +23,7 @@ The table extraction process utilizes a MySQL Database to store the results of t
 
 ## Setting up the DB
 
-0. If you feel comfortable installing and configuring the DB, you can skip this section.
-
-1. Download and install the free and open source MySQL Community Edition for your platform from the official website: https://dev.mysql.com/downloads/. This is the DB engine that will run on your machine and hold the actual data.
-Write down the password for root user that you created.
+1. Download and install the open source MySQL Community Edition for your platform from the official website: https://dev.mysql.com/downloads/.
 
 2. Download and install the Python MySQL connector - https://dev.mysql.com/downloads/connector/python/. This is used by the Python code to connect to the DB.
 
