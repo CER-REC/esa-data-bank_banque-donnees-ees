@@ -178,13 +178,3 @@ df_project_fra = df_fra.groupby(['Nom abrégé de la demande'])[[
     'URL de la demande',
     "Chemin d'accès pour télécharger le projet"
 ]].nunique()
-
-df_index = pd.read_csv('Input_Files/Index_of_PDFs_for_Major_Projects_with_ESAs.csv')
-
-df_index.columns
-
-'A82395-6_Trans_Mountain_Appendix_F_Part_6_of_12_Condition_43_-_A5K0L4.pdf'.replace('_', ' ') in df_index['File Name']
-'A5K0L4' in df_index['Document Number']
-'B8-2_-_V5C_TR_5C7_02of45_FISH_BC_-_A3S2C2.pdf'.replace('_', ' ') in df_index['File Name']
-'A3S2C2' in df_index['Document Number']
-
