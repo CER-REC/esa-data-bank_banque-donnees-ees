@@ -34,6 +34,7 @@ yarn-error.log*
 /Support files
 /Data Files/**/*.*
 /Data_Files/**/*.*
+/Data_Files/**/**/*.*
 /Error_Logs/**/*.*
 /Error Logs/**/*.*
 tag_errors.txt
@@ -41,3 +42,5 @@ toc_errors.txt
 final_errors.txt
 fig_errors.txt
 /**/tmp
+/Codes/Section_05_VEC_Labeling_for_Tables/data/
+/Codes/Section_05_VEC_Labeling_for_Tables/mydata/
