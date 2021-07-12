@@ -1,4 +1,7 @@
 import pickle
+import nltk
+from nltk.corpus import stopwords
+from nltk.stem.porter import *
 
 Physical_and_Meteorological_Environment = """Physical and Meteorological Environment
 Precipitation
@@ -1404,6 +1407,14 @@ keywords = [
 ]
 
 keywords = [x.lower().split("\n") for x in keywords]
+
+stemmer = PorterStemmer()
+
+for i, label_keywords in enumerate(keywords):
+    keywords[i] = [w for w in label_keywords if w not in stopwords.words("english")]
+    keywords[i] = [stemmer.stem(w) for w in keywords[i]]
+
+print(keywords[0])
 
 with open("keywords.pkl", "wb") as f:
     pickle.dump(keywords, f)
