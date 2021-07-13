@@ -465,6 +465,18 @@ Traditional Knowledge
 Indigenous Knowledge
 Aboriginal Knowledge
 Aboriginal
+Native
+Indian
+First Peoples
+Treaty Lands
+Indigenous Land
+Traditional Territory
+Oral Indigenous Knowledge
+IK
+OIK
+TK
+access to lands
+access to resources
 Hunt
 hunting
 fishing
@@ -640,10 +652,15 @@ Electromagnetism_and_Corona_Discharge = """Electromagnetism and Corona Discharge
 voltage
 ozone concentration
 eletric
+electricity
+magnetic
+magnetism
+current
 corona
 discharge
 magnetic
 power line
+powerline
 electromagnetic
 signals
 maximum load
@@ -699,7 +716,8 @@ municipal
 infrastructure
 rail
 navigable waterways
-local"""
+local
+TLU Impact assessment"""
 
 Heritage_Resources = """Heritage Resources
 Heritage Resources
@@ -742,7 +760,25 @@ Ontario ministry of tourism culture and sport
 Heritage resources act
 Alberta Ministry of Culture Multiculturalism and Status of Women
 British Columbia Archeology Branch
-Heritage conservation act"""
+Heritage conservation act
+Historic sites and monuments act
+Historic resources act
+Heritage property act
+Haida Gwaii Reconciliation act
+Heritage Manitoba act
+Onatario Heritage act
+Loi sur les biens culturels
+Heritage place protection act
+Archeological sites protection act
+richesse du patrimoine
+permis de recherche archéologique
+Heritage resources impact assessment
+HRIA
+Acheological impact assessment
+AIA
+Nunavut territorial lands use regulations
+Northwest territories historical advisory Board
+Yukon heritage resources Board"""
 
 Navigation_and_Navigation_Safety = """Navigation and Navigation Safety
 Navigation
@@ -855,7 +891,14 @@ discipline measures
 traffic control management
 project schedule
 Code of conduct policy
-alcohol and drug policy"""
+alcohol and drug policy
+Indigenous service providers
+regional service providers
+social service 
+cultural service
+social agency
+cultural agency
+cultrual groups"""
 
 Human_Health_and_Aesthetics = """Human Health and Aesthetics
 toxic
@@ -882,7 +925,35 @@ visual
 obstruction of view
 view points
 angle of vision
-quality of life"""
+quality of life
+environmental changes
+adverse human health effects
+human receptors
+air emissions
+noise emissions
+effluent discharge
+CCME Guidelines
+AER Directive 038
+AUC Rule 012
+risk assessment
+ambient conditions
+distance to edge of right-of-way
+distance to edge of row
+distance to schools
+susceptible groups
+elderly
+children
+recreationalists
+Indigenous Women
+visual impact assessment
+visually absorb
+landscape features 
+view obstruction
+Health canada
+human health impact assessment
+Canadian handbook on health impact assessment
+health indicator data
+statistics canada"""
 
 Infrastructure_and_Services = """Infrastructure and Services
 Hospital
@@ -994,7 +1065,16 @@ right-of-way
 ROW
 temporary workspace
 temporary work space
-TWS"""
+TWS
+sewer
+disposal
+electricity
+traffic usage
+railways
+availability of housing
+local residents
+heavy load vehicles
+construction access permits"""
 
 Employment_and_Economy = """Employment and Economy
 Employment opportunities
