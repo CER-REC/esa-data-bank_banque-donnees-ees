@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent.absolute()))
-from Database_Connection_Files.connect_to_database import connect_to_db
+from Codes.Database_Connection_Files.connect_to_database import connect_to_db
 from dotenv import load_dotenv
 import os
 import pandas as pd
@@ -10,7 +10,6 @@ from tika import parser
 import tika
 import time
 from multiprocessing import Pool
-import traceback
 import re
 from bs4 import BeautifulSoup
 
