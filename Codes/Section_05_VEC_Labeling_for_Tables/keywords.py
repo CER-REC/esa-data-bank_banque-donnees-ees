@@ -902,6 +902,8 @@ cultrual groups"""
 
 Human_Health_and_Aesthetics = """Human Health and Aesthetics
 toxic
+human health
+aesthetics
 nuisances
 health
 Aesthetics
@@ -956,6 +958,8 @@ health indicator data
 statistics canada"""
 
 Infrastructure_and_Services = """Infrastructure and Services
+Infractructure
+Services
 Hospital
 Urgent Care
 ambulance
