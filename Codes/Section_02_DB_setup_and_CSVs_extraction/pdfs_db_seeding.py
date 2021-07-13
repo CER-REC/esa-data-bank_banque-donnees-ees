@@ -1,11 +1,12 @@
 import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent.absolute()))
-from dotenv import load_dotenv
 from sqlalchemy import text
 import os
 import pandas as pd
 import PyPDF2
+from Codes.Database_Connection_Files.connect_to_database import connect_to_db
+
 
 # Load environment variables (from .env file) for the database
 engine = connect_to_db()

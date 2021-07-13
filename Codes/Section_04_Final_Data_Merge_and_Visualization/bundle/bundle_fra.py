@@ -13,7 +13,7 @@ readme_project_filepath = 'G:/ESA_downloads/README-FRA-projects.txt'
 readme_table_filepath = '//luxor/data/Board/ESA_downloads/README-FRA-tables.txt'
 
 # Create a new folder as the destination for downloading files
-new_folder = os.path.join('G:/ESA_downloads/', 'download_Bingjie_May052021_fra')
+new_folder = os.path.join('G:/ESA_downloads/', 'download_Bingjie_May062021_fra')
 if not os.path.exists(new_folder):
     os.mkdir(new_folder)
 
@@ -79,8 +79,10 @@ df_index['Nom abrégé de la demande'] = df_index['Nom abrégé de la demande'].
 df_index['Emplacement du pipeline'] = df_index['Emplacement du pipeline']\
     .apply(lambda x: ', '.join([location.replace('Colombie britannique', 'Colombie-Britannique')
                                .replace('Territoires du nord-ouest', 'Territoires du Nord-Ouest') for location in x.split(', ')]))
-# Update French ESA Folder URL
+# Update French URL
 df_index['URL du dossier de l\'ÉES'] = df_index['URL du dossier de l\'ÉES']\
+    .apply(lambda x: x.replace('https://apps.cer-rec.gc.ca/REGDOCS/Item/View/','https://apps.cer-rec.gc.ca/REGDOCS/Élément/Afficher/'))
+df_index['URL de la demande'] = df_index['URL de la demande']\
     .apply(lambda x: x.replace('https://apps.cer-rec.gc.ca/REGDOCS/Item/View/','https://apps.cer-rec.gc.ca/REGDOCS/Élément/Afficher/'))
 
 # Prepare a list of column names for the final index files
@@ -160,8 +162,10 @@ df_index_new['Nom abrégé de la demande'] = df_index_new['Nom abrégé de la de
 df_index_new['Emplacement du pipeline'] = df_index_new['Emplacement du pipeline']\
     .apply(lambda x: ', '.join([location.replace('Colombie britannique', 'Colombie-Britannique')
                                .replace('Territoires du nord-ouest', 'Territoires du Nord-Ouest') for location in x.split(', ')]))
-# Update French ESA Folder URL
+# Update French URL
 df_index_new['URL du dossier de l\'ÉES'] = df_index_new['URL du dossier de l\'ÉES']\
+    .apply(lambda x: x.replace('https://apps.cer-rec.gc.ca/REGDOCS/Item/View/','https://apps.cer-rec.gc.ca/REGDOCS/Élément/Afficher/'))
+df_index_new['URL de la demande'] = df_index_new['URL de la demande']\
     .apply(lambda x: x.replace('https://apps.cer-rec.gc.ca/REGDOCS/Item/View/','https://apps.cer-rec.gc.ca/REGDOCS/Élément/Afficher/'))
 
 # Export alpha index

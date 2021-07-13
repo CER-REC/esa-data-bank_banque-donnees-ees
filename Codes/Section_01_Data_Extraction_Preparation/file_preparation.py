@@ -51,23 +51,24 @@ def download_file(path, Index0):
     count = 0
     error_urls = []
     error_dataIDs = []
-    dataID = ""
 
     # Iterating each row in the Index0 dataframe
     for index, row in Index0.iterrows():
         try:
             dataID = row['Data ID']
-            download_url = 'http://docs2.cer-rec.gc.ca/ll-eng/llisapi.dll?func=ll&objId=' + str(
-                dataID) + '&objaction=download&viewType=1'
-            r = requests.get(download_url)  # scraping the PDF file from the URL
             full_name = os.path.join(path + '\\Data_Files\\PDFs\\', (str(dataID) + '.pdf'))
-            with open(full_name, 'wb') as file:
-                file.write(r.content)
-            count = count + 1
+            if not os.path.exists(full_name):
+                download_url = 'http://docs2.cer-rec.gc.ca/ll-eng/llisapi.dll?func=ll&objId=' + str(
+                    dataID) + '&objaction=download&viewType=1'
+                r = requests.get(download_url)  # scraping the PDF file from the URL
+                with open(full_name, 'wb') as file:
+                    file.write(r.content)
+                count = count + 1
+                print('Save file {}'.format(full_name))
         except:
             # storing the error logs
-            error_urls.append(download_url)
-            error_dataIDs.append(dataID)
+            error_urls.append(row['PDF Download URL'])
+            error_dataIDs.append(row['Data ID'])
             print("error with file {}".format(row['File Name']))
 
     # creating and and saving the error logs dataframe
@@ -119,28 +120,30 @@ def rotate_pdf(path, Index0):
     count = 0
     error_urls = []
     error_dataIDs = []
-    dataID = ""
 
     # Iterating each row in the Index0 dataframe
     for index, row in Index0.iterrows():
         try:
-            full_path = path + "\\Data_Files\\PDFs\\" + str(row['Data ID']) + ".pdf"
-            pdf_in = open(full_path, 'rb')
-            pdf_reader = PyPDF2.PdfFileReader(pdf_in, strict=False)
-            pdf_writer = PyPDF2.PdfFileWriter()
-            for pagenum in range(pdf_reader.numPages):
-                page = pdf_reader.getPage(pagenum)
-                page.rotateClockwise(90)
-                pdf_writer.addPage(page)
-            pdf_out = open(path + "\\Data_Files\\PDFs_Rotated\\" + str(row['Data ID']) + "_Rotated.pdf", 'wb')
-            pdf_writer.write(pdf_out)
-            pdf_out.close()
-            pdf_in.close()
-            count = count + 1
-
+            pdf_out_path = path + "\\Data_Files\\PDFs_Rotated\\" + str(row['Data ID']) + "_Rotated.pdf"
+            if not os.path.exists(pdf_out_path):
+                full_path = path + "\\Data_Files\\PDFs\\" + str(row['Data ID']) + ".pdf"
+                pdf_in = open(full_path, 'rb')
+                pdf_reader = PyPDF2.PdfFileReader(pdf_in, strict=False)
+                pdf_writer = PyPDF2.PdfFileWriter()
+                for pagenum in range(pdf_reader.numPages):
+                    page = pdf_reader.getPage(pagenum)
+                    page.rotateClockwise(90)
+                    pdf_writer.addPage(page)
+                pdf_out = open(pdf_out_path, 'wb')
+                pdf_writer.write(pdf_out)
+                pdf_out.close()
+                pdf_in.close()
+                count = count + 1
+                print('Rotated and saved {}'.format(pdf_out_path))
         except:
             # storing the error logs
-            error_dataIDs.append(dataID)
+            error_dataIDs.append(row['Data ID'])
+            error_urls.append(row['PDF Download URL'])
             print("error with file {}".format(row['File Name']))
 
     # creating and and saving the error logs dataframe
@@ -162,8 +165,9 @@ def pickle_pdf_xml(pdf_file_path, pickle_folder):
     try:
         xml = parser.from_file(pdf_file_path, xmlContent=True)
         file_name = os.path.split(pdf_file_path)[-1].replace('.pdf', '')
-        save_string = os.path.join(pickle_folder, file_name + '.pkl')
-        pickle.dump(xml, open(save_string, "wb"))
-        print(save_string)
+        pickle_file_path = os.path.join(pickle_folder, file_name + '.pkl')
+        if os.path.exists(pickle_file_path):
+            pickle.dump(xml, open(pickle_file_path, "wb"))
+            print(pickle_file_path)
     except:
         print('Error converting file to pickle file: {}'.format(pdf_file_path))

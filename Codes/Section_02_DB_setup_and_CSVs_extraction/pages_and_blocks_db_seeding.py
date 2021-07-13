@@ -1,8 +1,7 @@
 import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent.absolute()))
-from Database_Connection_Files.connect_to_database import connect_to_db
-from dotenv import load_dotenv
+from Codes.Database_Connection_Files.connect_to_database import connect_to_db
 from multiprocessing import Pool
 import time
 from sqlalchemy import text
