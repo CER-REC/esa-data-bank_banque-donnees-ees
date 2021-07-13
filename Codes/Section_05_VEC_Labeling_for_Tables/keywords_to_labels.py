@@ -1,6 +1,10 @@
 import pickle
 import re
 import pandas as pd
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem.porter import *
 
 with open("keywords.pkl", "rb") as f:
     keywords = pickle.load(f)        
@@ -41,14 +45,20 @@ df = pd.read_csv('./data/esa_index_with_table_text_no_labels.csv')
 
 table_texts = df['text'].tolist()[:10]
 
-i = 0
+tokenized_table_text = []
 
-for table_text in table_texts:
-    for keywords_for_label, label in zip(keywords, labels_list):
-        keywords_to_label(i, table_text, keywords_for_label, label)
-        i += 1
+for i, table_text in enumerate(table_texts):
+    tokenized_table_text.append(word_tokenize(table_text))
 
-with open("esa_index_ENG_labeled.pkl", "wb") as f:
-    pickle.dump(df, f)
+print(tokenized_table_text)    
+# i = 0
 
-print(df.head())
+# for table_text in table_texts:
+#     for keywords_for_label, label in zip(keywords, labels_list):
+#         keywords_to_label(i, table_text, keywords_for_label, label)
+#         i += 1
+
+# with open("esa_index_ENG_labeled.pkl", "wb") as f:
+#     pickle.dump(df, f)
+
+# print(df.head())
