@@ -1,14 +1,13 @@
 import sys
 from pathlib import Path
-sys.path.append(str(Path(__file__).parent.parent.absolute()))
 from sqlalchemy import text
 import os
 import pandas as pd
 import PyPDF2
 from Codes.Database_Connection_Files.connect_to_database import connect_to_db
+sys.path.append(str(Path(__file__).parent.parent.absolute()))
 
 
-# Load environment variables (from .env file) for the database
 engine = connect_to_db()
 
 # Load environment variables (from .env file) for the PDF folder path and Index filepath
@@ -19,7 +18,7 @@ index2 = Path(os.getenv("INDEX2_FILEPATH"))
 
 if not pdf_files_folder.exists():
     print(pdf_files_folder, "does not exist!")
-elif not index2.exists():
+if not index2.exists():
     print(index2, "does not exist!")
 
 # Increase max size of pandas dataframe output when using a notebook
@@ -30,8 +29,8 @@ pd.set_option('display.width', 1200)
 
 def insert_pdfs():
     df = pd.read_csv(index2)
-    df = df[["Data ID", "Application Name", "Application Short Name", "Commodity", "Hearing order"]]
-    df = df.rename(columns={"Data ID": "pdfId", "Commodity": "commodity", "Hearing order": "hearingOrder",
+    df = df[["Data ID", "Application Name", "Application Short Name", "Commodity", "Hearing Order"]]
+    df = df.rename(columns={"Data ID": "pdfId", "Commodity": "commodity", "Hearing Order": "hearingOrder",
                             "Application Short Name": "short_name", "Application Name": "application_title_short"})
 
     with engine.connect() as conn:
@@ -53,7 +52,9 @@ def insert_pdfs():
                     "short_name, commodity) VALUES (:pdfId, :totalPages, :hearingOrder," +
                     ":application_title_short, :short_name, :commodity);")
                 params = {
-                    "pdfId": row.pdfId, "totalPages": total_pages, "hearingOrder": row.hearingOrder,
+                    "pdfId": row.pdfId,
+                    "totalPages": total_pages,
+                    "hearingOrder": None if pd.isna(row.hearingOrder) else row.hearingOrder,
                     "application_title_short": row.application_title_short,
                     "short_name": row.short_name, "commodity": row.commodity}
                 result = conn.execute(stmt, params)
