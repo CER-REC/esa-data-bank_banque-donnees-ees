@@ -22,6 +22,9 @@
 .env.test.local
 .env.production.local
 
+# storage
+**/*.pkl
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -34,6 +37,7 @@ yarn-error.log*
 /Support files
 /Data Files/**/*.*
 /Data_Files/**/*.*
+/Data_Files/**/**/*.*
 /Error_Logs/**/*.*
 /Error Logs/**/*.*
 tag_errors.txt
@@ -42,5 +46,8 @@ final_errors.txt
 fig_errors.txt
 /**/tmp
 
+
 Codes/Section_02_DB_setup_and_CSVs_extraction/main.py
+/Codes/Section_05_VEC_Labeling_for_Tables/data/
+/Codes/Section_05_VEC_Labeling_for_Tables/mydata/
 
