@@ -1,6 +1,5 @@
 import sys
 from pathlib import Path
-sys.path.append(str(Path(__file__).parent.parent.absolute()))
 from Codes.Database_Connection_Files.connect_to_database import connect_to_db
 from multiprocessing import Pool
 import time
@@ -11,12 +10,15 @@ import fitz
 from contextlib import redirect_stdout, redirect_stderr
 from io import StringIO
 import traceback
+sys.path.append(str(Path(__file__).parent.parent.absolute()))
+
 
 # Load environment variables (from .env file) for the database
 engine = connect_to_db()
 
 # Load environment variables (from .env file) for the PDF folder path
 pdf_files_folder = Path(os.getenv("PDFS_FILEPATH"))
+# pdf_files_folder = Path('Data_Files/PDFs')
 
 # Careful! Deletes all pages and blocks data from the DB!
 # noinspection SqlWithoutWhere
@@ -45,6 +47,14 @@ def insert(pdf):
             for page in doc:
                 figures = page.searchFor('Figure')
                 page_num = page.number + 1
+
+                with engine.connect() as conn:
+                    cursor = conn.execute('select page_num from pages where pdfId = %s', pdf['pdfId'])
+                page_nums = [i[0] for i in cursor.fetchall()]
+
+                if page_num in page_nums:
+                    continue
+
                 rotation = page.rotation
                 try:
                     image_list = page.getImageList()  # get list of used images
@@ -133,15 +143,15 @@ def insert_pages_and_blocks():
     start_time = time.time()
 
     # Sequential mode - if using, please comment out the multiprocessing mode code
-    # for arg in args[-10:]:
-    #     result = insert_pdf(arg)
-    #     print(result, end='', flush=True)
-
-    # Multiprocessing mode - if using, please comment out the sequential mode code
-    with Pool() as pool:
-        results = pool.map(insert, args, chunksize=1)
-    for result in results:
+    for arg in args:
+        result = insert(arg)
         print(result, end='', flush=True)
+
+    # # Multiprocessing mode - if using, please comment out the sequential mode code
+    # with Pool() as pool:
+    #     results = pool.map(insert, args, chunksize=1)
+    # for result in results:
+    #     print(result, end='', flush=True)
 
     d = round(time.time() - start_time)
     print(f"Done {len(args)} in {d} seconds ({round(d / 60, 2)} min or {round(d / 3600, 2)} hours)")
