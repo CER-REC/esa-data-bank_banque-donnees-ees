@@ -32,6 +32,8 @@ CREATE TABLE `pdfs` (
   `application_title_short` text,
   `short_name` text,
   `commodity` text,
+  `pagesBlocksExtracted` int DEFAULT 0,
+  `folder_name` text,
   PRIMARY KEY (`pdfId`),
   UNIQUE KEY `pdfId_UNIQUE` (`pdfId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
