@@ -66,7 +66,8 @@ salinity
 sediments
 rocks
 minerals
-sand"""
+sand
+ground"""
 
 Vegetation = """Vegetation
 Plant
@@ -87,6 +88,8 @@ communities
 ecological community
 plant community
 Cover
+orchid
+orchard
 Weeds
 Invasive species
 invasive plants
@@ -115,7 +118,11 @@ redcedar
 hemlock
 Douglas-fir
 genus
-agricultural"""
+agricultural
+root
+seed
+mulcher
+mulch"""
 
 
 Water_Quality_and_Quantity = """Water Quality and Quantity
@@ -687,6 +694,7 @@ residential
 reserve
 crops
 orchards
+orchid
 vineyards
 agriculture
 recreation
@@ -903,7 +911,6 @@ cultrual groups"""
 Human_Health_and_Aesthetics = """Human Health and Aesthetics
 toxic
 human health
-aesthetics
 nuisances
 health
 Aesthetics
