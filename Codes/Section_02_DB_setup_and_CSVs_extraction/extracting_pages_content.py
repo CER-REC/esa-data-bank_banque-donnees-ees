@@ -1,6 +1,5 @@
 import sys
 from pathlib import Path
-sys.path.append(str(Path(__file__).parent.parent.absolute()))
 from Codes.Database_Connection_Files.connect_to_database import connect_to_db
 from dotenv import load_dotenv
 import os
@@ -12,6 +11,7 @@ import time
 from multiprocessing import Pool
 import re
 from bs4 import BeautifulSoup
+sys.path.append(str(Path(__file__).parent.parent.absolute()))
 
 # Load environment variables from .env file
 load_dotenv(override=True)
@@ -28,7 +28,7 @@ engine = connect_to_db()
 # those that need to be rotated by 270 in a PDF_rotated270 folder.
 # The rotate_pdf function will rotate those PDFs to a normal structure.
 pdf_files_folder_normal = Path(os.getenv("PDFS_FILEPATH"))
-pdf_files_folder_rotated90 = Path(os.getenv("PDFS_FILEPATH") + "_rotated90")
+pdf_files_folder_rotated90 = Path(os.getenv("PDFS_FILEPATH") + "_Rotated")
 pdf_files_folder_rotated270 = Path(os.getenv("PDFS_FILEPATH") + "_rotated270")
 
 if not pdf_files_folder_normal.exists():
@@ -80,13 +80,22 @@ def clean_tmp():
     print(f"Attempted to clean up {len(g)} files the tmp folder")
 
 
+def clean_text(txt):
+    rgx = re.compile(r'[^\w`~!@#$%^&*()_=+[{}|;:\',<.>/?\-\\\"\]]+')
+    result = re.sub(rgx, " ", txt)
+    return result.strip()
+
+
 def insert_content(row):
     pdf_id, total_pages = row["pdfId"], int(row["totalPages"])
 
     # Using PyPDF2 and Tika's parser method to extract PDF contents
     def process_pdf(pdf_folder, table_name, xml):
         # print(f"Starting {pdf_id}")
-        pdf = pdf_folder.joinpath(f"{pdf_id}.pdf")
+        if table_name == 'pages_rotated90_txt':
+            pdf = pdf_folder.joinpath(f"{pdf_id}_Rotated.pdf")
+        else:
+            pdf = pdf_folder.joinpath(f"{pdf_id}.pdf")
         if not pdf.exists():
             raise Exception(f"{pdf} does not exist! :(")
         with pdf.open(mode="rb") as infile, engine.connect() as conn:
@@ -99,7 +108,7 @@ def insert_content(row):
                 result = conn.execute(check, (pdf_id, p))
                 if result.rowcount > 0:
                     continue
-                # print(f"Working through {pdf_id} - page {p}")
+                print(f"Working through {pdf_id} - page {p}")
                 writer = PyPDF2.PdfFileWriter()
                 writer.addPage(reader.getPage(p - 1))  # Reads from 0 page
                 random_file = tmp_folder.joinpath(f"{os.urandom(24).hex()}.pdf")
@@ -119,19 +128,19 @@ def insert_content(row):
                 if result.rowcount != 1:
                     raise Exception(f"{pdf_id}-{p}: ERROR! Updated {result.rowcount} rows!")
 
-    process_pdf(pdf_folder=pdf_files_folder_normal, table_name="pages_normal_xml", xml=True)
-    process_pdf(pdf_folder=pdf_files_folder_normal, table_name="pages_normal_txt", xml=False)
-    process_pdf(pdf_folder=pdf_files_folder_rotated90, table_name="pages_rotated90_xml", xml=True)
+    # process_pdf(pdf_folder=pdf_files_folder_normal, table_name="pages_normal_xml", xml=True)
+    # process_pdf(pdf_folder=pdf_files_folder_normal, table_name="pages_normal_txt", xml=False)
+    # process_pdf(pdf_folder=pdf_files_folder_rotated90, table_name="pages_rotated90_xml", xml=True)
     process_pdf(pdf_folder=pdf_files_folder_rotated90, table_name="pages_rotated90_txt", xml=False)
-    process_pdf(pdf_folder=pdf_files_folder_rotated270, table_name="pages_rotated270_xml", xml=True)
-    process_pdf(pdf_folder=pdf_files_folder_rotated270, table_name="pages_rotated270_txt", xml=False)
+    # process_pdf(pdf_folder=pdf_files_folder_rotated270, table_name="pages_rotated270_xml", xml=True)
+    # process_pdf(pdf_folder=pdf_files_folder_rotated270, table_name="pages_rotated270_txt", xml=False)
 
 
 def insert_contents():
     t = time.time()
 
     # Reading from the MySQL Database and creating dataframe from query
-    stmt = text("SELECT pdfId, totalPages FROM pdfs ORDER BY totalPages DESC;")
+    stmt = "SELECT pdfId, totalPages FROM pdfs ORDER BY totalPages;"
     with engine.connect() as conn:
         df = pd.read_sql(stmt, conn)
     data = df.to_dict("records")
@@ -140,25 +149,25 @@ def insert_contents():
     parser.from_file(__file__)  # testing tika server
     print('Server apparently works...')
 
-    # clean_tmp()
-    # skipping = []
-    # current_id = None
-    # for row in data:
-    #     try:
-    #         current_id = row["pdfId"]
-    #         insert_content(row)
-    #         print(f"Done {current_id}")
-    #     except Exception as e:
-    #         skipping.append(current_id)
-    #         print(f"ERROR! {current_id}: {e}")
+    clean_tmp()
+    skipping = []
+    current_id = None
+    for row in data:
+        try:
+            current_id = row["pdfId"]
+            insert_content(row)
+            print(f"Done {current_id}")
+        except Exception as e:
+            skipping.append(current_id)
+            print(f"ERROR! {current_id}: {e}")
     # print(skipping)
 
     # for row in data:
     #     insert_content(row)
 
     # Running the insert_content function with multiprocessing
-    with Pool(96) as pool:
-        pool.map(insert_content, data, chunksize=1)
+    # with Pool(96) as pool:
+    #     pool.map(insert_content, data, chunksize=1)
 
     # count = 0
     # while True:
@@ -180,16 +189,10 @@ def insert_contents():
     print(f"Done {len(data)} in {sec} seconds ({round(sec / 60, 2)} min or {round(sec / 3600, 2)} hours)")
 
 
-def clean_text(txt):
-    rgx = re.compile(r'[^\w`~!@#$%^&*()_=+[{}|;:\',<.>/?\-\\\"\]]+')
-    result = re.sub(rgx, " ", txt)
-    return result.strip()
-
-
 def insert_clean_content(table):
     t = time.time()
 
-    stmt = text(f"SELECT pdfId, page_num, content FROM {table} WHERE clean_content IS NULL;")
+    stmt = f"SELECT pdfId, page_num, content FROM {table} WHERE clean_content IS NULL;"
     with engine.connect() as conn:
         df = pd.read_sql(stmt, conn)
         data = df.to_dict("records")
@@ -208,7 +211,7 @@ def insert_clean_content(table):
 def insert_clean_contents():
     insert_clean_content("pages_normal_txt")
     insert_clean_content("pages_rotated90_txt")
-    insert_clean_content("pages_rotated270_txt")
+    # insert_clean_content("pages_rotated270_txt")
 
 
 def rotate_pdf(pdf):
