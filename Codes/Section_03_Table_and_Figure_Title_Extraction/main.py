@@ -21,17 +21,17 @@ do_tag_title_table = 1  # assign table titles to each table using text search me
 do_toc_title_table = 1  # assign table titles to each table using TOC method
 do_final_title_table = 1  # replace continued tables and create final table title
 
-do_tag_title_fig = 0  # assign table titles to each table using text search method
-do_toc_title_fig = 0  # assign table titles to each table using TOC method
-do_final_title_fig = 0  # replace continued tables and create final table title
+do_tag_title_fig = 0  # assign figure titles to each table using text search method
+do_toc_title_fig = 0  # assign figure titles to each table using TOC method
+do_final_title_fig = 0  # replace continued figures and create final figure title
 
 create_tables_csv = 1
 create_figs_csv = 1
 
 if __name__ == "__main__":
-    # get list of all documents, read from esa.pdfs
+    # get list of all documents, read from pdfs
     with engine.connect() as conn:
-        stmt = text("SELECT pdfId, hearingOrder, short_name FROM esa.pdfs;")
+        stmt = text("SELECT pdfId, hearingOrder, short_name FROM pdfs;")
         all_projects = pd.read_sql_query(stmt, conn)
     projects = all_projects['short_name'].unique()
     list_ids = all_projects['pdfId'].tolist()
@@ -44,17 +44,17 @@ if __name__ == "__main__":
             doc_id = row['pdfId']
 
             # delete any existing TOC from this document
-            stmt = text("DELETE FROM esa.toc WHERE toc_pdfId = :pdfId;")
+            stmt = text("DELETE FROM toc WHERE toc_pdfId = :pdfId;")
             params = {"pdfId": doc_id}
             result = conn.execute(stmt, params)
 
             # get text of this document
             params = {"pdf_id": doc_id}
-            stmt = text("SELECT page_num, content FROM esa.pages_normal_txt "
+            stmt = text("SELECT page_num, content FROM pages_normal_txt "
                         "WHERE (pdfId = :pdf_id);")
             text_df = pd.read_sql_query(stmt, conn, params=params, index_col='page_num')
 
-            # stmt_rotated = text("SELECT page_num, content FROM esa.pages_rotated90_txt "
+            # stmt_rotated = text("SELECT page_num, content FROM pages_rotated90_txt "
             #                     "WHERE (pdfId = :pdf_id);")
             # text_rotated_df = pd.read_sql_query(stmt_rotated, conn, params=params, index_col='page_num')
 
@@ -68,7 +68,7 @@ if __name__ == "__main__":
                     page_name = toc[1].strip()
                     type = title.split(' ', 1)[0].capitalize()
                     if type in constants.accepted_toc:  # if accepted type
-                        stmt = text("INSERT INTO esa.toc (assigned_count, title_type, titleTOC, page_name, "
+                        stmt = text("INSERT INTO toc (assigned_count, title_type, titleTOC, page_name, "
                                     "toc_page_num, toc_pdfId, toc_title_order) "
                                     "VALUE (null, :type, :title, :page_name, :page_num, :pdfId, :order);")
                         params = {"type": type, "title": title, "page_name": page_name,
@@ -80,6 +80,8 @@ if __name__ == "__main__":
 
     # get page numbers for all the figures found in TOC
     if toc_figure_titles:
+        for project in projects:
+            project_figure_titles(project)
         with Pool() as pool:
             results = pool.map(project_figure_titles, projects, chunksize=1)
         with open('fig_errors.txt', 'w', encoding='utf-8') as f:
@@ -89,6 +91,7 @@ if __name__ == "__main__":
                 if result[1] != "":
                     f.write(str(result[1]))
 
+    # TODO: run table extraction and title matching
     # update tag method titles
     if do_tag_title_table:
         with Pool() as pool:
@@ -159,10 +162,10 @@ if __name__ == "__main__":
                     f.write(result[1])
 
     if create_tables_csv:
-        # write to all_tables-final.csv from esa.csvs
+        # write to all_tables-final.csv from csvs
         with engine.connect() as conn:
             stmt = text(
-                "SELECT csvFullPath, pdfId, page, tableNumber, topRowJson, titleTag, titleTOC, titleFinal FROM esa.csvs"
+                "SELECT csvFullPath, pdfId, page, tableNumber, topRowJson, titleTag, titleTOC, titleFinal FROM csvs"
                 "WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78);")
             df = pd.read_sql_query(stmt, conn)
         df.to_csv(constants.save_dir + 'all_tables-final.csv', index=False, encoding='utf-8-sig')
@@ -173,7 +176,7 @@ if __name__ == "__main__":
             stmt = text(
                 "SELECT toc.titleTOC, toc.titleTOC_fr, toc.page_name, toc.toc_page_num, toc.toc_pdfId, toc.toc_title_order, pdfs.short_name, "
                 "toc.assigned_count, toc.loc_pdfId, toc.loc_page_list"
-                "FROM esa.toc LEFT JOIN esa.pdfs ON toc.toc_pdfId = pdfs.pdfId WHERE title_type='Figure'"
+                "FROM toc LEFT JOIN pdfs ON toc.toc_pdfId = pdfs.pdfId WHERE title_type='Figure'"
                 "ORDER BY pdfs.short_name, toc.toc_pdfId, toc.toc_page_num, toc.toc_title_order;")
             df = pd.read_sql_query(stmt, conn)
         df.rename(columns={'titleTOC': 'Name', 'titleTOC_fr': 'Name_French', 'loc_pdfId': 'location_DataID', 'loc_page': 'location_Page'}, inplace=True)

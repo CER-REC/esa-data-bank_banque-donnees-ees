@@ -149,7 +149,7 @@ for table_path in df_index_new[df_index_new['table missing'] == True]['Table Dow
 
 # Check if certain attributes stay the same for projects
 df = pd.read_csv('G:/ESA_downloads/download_Bingjie_Mar262021/ESA_website_ENG.csv')
-df_fra = pd.read_csv('G:/ESA_downloads/download_Bingjie_Mar262021_fra/ESA_website_FRA.csv', encoding='latin-1')
+df_fra = pd.read_csv('G:/ESA_downloads/download_Bingjie_May062021_fra/ESA_website_FRA.csv', encoding='latin-1')
 
 df_project = df.groupby(['Application Short Name'])[[
     'Application Name',
