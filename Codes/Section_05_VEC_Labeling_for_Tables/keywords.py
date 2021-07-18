@@ -7,6 +7,7 @@ Physical_and_Meteorological_Environment = """Physical and Meteorological Environ
 Precipitation
 Snowfall
 Wind
+rain
 Mean temperatures
 Slope
 Geotechnical
@@ -17,7 +18,7 @@ Erosion
 Ice
 Permafrost
 Climate trend
-ground
+climate
 water erosion
 wind erosion
 acid-generating rock
@@ -38,7 +39,14 @@ ice jams
 acid rock
 climate variability
 ground conditions
-thaw"""
+thaw
+till
+earthquake
+avalanche
+sloping
+topography
+elevation
+"""
 
 
 Soil_and_Soil_Productivity = """Soil Productivity
@@ -67,7 +75,32 @@ sediments
 rocks
 minerals
 sand
-ground"""
+chernozem
+DVG
+Dunvargan
+calcareous
+CRW
+sand
+sandy
+Glaciofluvial
+boulders
+gravel
+silt
+clay
+stone
+stoniness"""
+
+
+# Diversity
+# Abundance
+# Ecological
+# Inventory
+# Community
+# communities
+
+# ecological community
+
+
 
 Vegetation = """Vegetation
 Plant
@@ -79,15 +112,7 @@ Prairie
 Forest
 forested
 Clearing
-Diversity
-Abundance
-Ecological
-Inventory
-Community
-communities
-ecological community
 plant community
-Cover
 orchid
 orchard
 Weeds
@@ -96,6 +121,8 @@ invasive plants
 Seed mix
 Herbicide
 Tree
+leaf
+branch
 Growth
 Old growth
 Biodiversity
@@ -122,11 +149,46 @@ agricultural
 root
 seed
 mulcher
-mulch"""
+mulch
+bentgrass
+sedge
+carex
+wood
+moss
+bulrush
+oatgrass
+mannagrass
+flower
+androgynum
+Aulacomnium
+undulatum
+Atrichum
+wheatgrass
+parviflora
+luzula
+crawfordii
+Achnatherum
+needlegrass
+eleocharis
+reedgrass
+calamagrostis
+latifolia
+Elymus
+grain
+wildrye
+meadow
+speargrass
+shrub
+chokecherry"""
 
 
 Water_Quality_and_Quantity = """Water Quality and Quantity
 Water
+waterbody
+water body
+watercourse
+evaporation
+transpiration
 Surface water
 Ground water
 Runoff
@@ -135,12 +197,15 @@ contaminant
 Water use
 Hydrologic
 hydrological
+hydro
+hydrostatic
+salinity
+blasting
 Withdrawal
-Discharge
 Flow
 Peak
 Basin
-Inter-basin transfer
+Inter-basin
 Water Quality
 Water quality testing
 Water table
@@ -148,39 +213,64 @@ Containment
 Sediment
 sewer
 waste
+wastewater
+biosolids
+sludge
+septage
 groundwater
 groundwater-related
 aquifers
 streamflow
 acquatics
 river
-hydrometric"""
+hydrometric
+watershed
+waterfall
+sea
+ocean
+lake
+pond
+fjords
+wadis
+runs
+reservoir
+lagoon
+bay
+harbor
+well
+well-water
+surface-water
+surfacewater
+hot spring
+creek"""
 
 Fish_and_Fish_Habitat = """Fish and Fish Habitat
 Fish
+fish-bearing
+fisheries
 Fisheries and Oceans Canada
 DFO
 Fisheries and Oceans
 Local fisheries
 Trout
-Authorization
 Fisheries Act
 Offsetting
-Monitoring
 Instream work
 in-stream work
-Timing window
 Restricted activity period
 Fish-bearing water body
 Riparian
 Aquatic
 Aquatic invasive species
 Spawning
-Migrating
-Eggs
 Fry
+fingerling
+alevin
+chlorine
+chlorinated
 Sport fishery
 Spawning deterrent
+spawning period
 Stream
 River
 In-stream
@@ -208,7 +298,15 @@ yellow perch
 shiner
 sucker
 whitefish
-cisco"""
+cisco
+marine
+clam
+scallop
+sea
+ocean
+lake
+pond
+bay"""
 
 Wetlands = """Wetlands
 Class (wetland class)
@@ -242,11 +340,12 @@ nocturnal
 bat trees
 hibernation
 migratory birds
+migratory bird sanctuary
 MBCA
 migratory birds convention act
 Nesting
+foraging
 Restricted activity period
-Timing window
 Mammal
 Ungulate
 Amphibian
@@ -256,7 +355,6 @@ Den
 denning
 Wintering
 overwintering
-Migration
 Hibernaculum
 hibernacula
 Riparian habitat
@@ -331,6 +429,7 @@ Bat
 special conservation status"""
 
 Air_Emissions = """Air Emissions
+Air
 CAC
 criteria air contaminant
 Emissions
@@ -364,12 +463,15 @@ Air quality
 Hydrogen sulphide
 H2S
 particulate
-so2"""
+so2
+mercaptans
+dust"""
 
 GHG_Emissions_and_Climate_Change = """GHG Emissions and Climate Change
 greenhouse
 greenhouse gas
 green house gas
+greenhouse gases
 climate change
 point source
 area source
@@ -688,6 +790,16 @@ resource use
 consultation
 livestock
 human
+male
+female
+men
+women
+boy
+girl
+father
+mother
+parent
+gender
 rural
 urban
 residential
@@ -860,7 +972,6 @@ bed
 banks
 preconstruction contours
 hydraulic characteristics
-timing windows
 erosion and sediment control
 runoff
 temporary crossing structure
@@ -962,7 +1073,8 @@ Health canada
 human health impact assessment
 Canadian handbook on health impact assessment
 health indicator data
-statistics canada"""
+statistics canada
+mortality"""
 
 Infrastructure_and_Services = """Infrastructure and Services
 Infractructure
@@ -1085,7 +1197,12 @@ railways
 availability of housing
 local residents
 heavy load vehicles
-construction access permits"""
+construction access permits
+hotel
+big box stores
+town centre
+property
+motel"""
 
 Employment_and_Economy = """Employment and Economy
 Employment opportunities
