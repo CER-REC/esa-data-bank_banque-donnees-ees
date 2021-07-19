@@ -2466,5 +2466,15 @@ def remove_every_even_item_from_list(l):
 
 species_at_risk_eng = remove_every_even_item_from_list(species_at_risk_string)
 
+def 
+
+def split_list_item_by_taking_words_in_parentheses(item):
+    """This function goes through items in a list and creates a new item with only the words inside the parentheses."""
+    binomial_nomenclature = re.findall(r'\([^()]*\)', item)
+    binomial_nomenclature = [x.strip('()') for x in binomial_nomenclature]
+    return binomial_nomenclature[0]
+
+species_at_risk_eng = [split_list_item_by_taking_words_in_parentheses(item) for item in species_at_risk_eng]
+
 for s in species_at_risk_eng:
     print(s)

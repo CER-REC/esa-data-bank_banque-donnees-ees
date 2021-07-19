@@ -429,7 +429,9 @@ insect
 bug
 weasel
 otter
-skunk"""
+skunk
+mineral lick
+minerallick"""
 
 Species_at_Risk = """Species at Risk
 Species of Special Status
@@ -767,59 +769,107 @@ Gray Ratsnake
 
 Pantherophis spiloides
 
-Sea Turtle, Leatherback (Dermochelys coriacea) Atlantic population
+Leatherback Sea Turtle
 
-Sea Turtle, Leatherback (Dermochelys coriacea) Pacific population
+Dermochelys coriacea
 
-Tortue luth population du Pacifique
+Sea Turtle
 
-Sea Turtle, Loggerhead (Caretta caretta)
+Loggerhead Sea Turtle
 
-Skink, Five-lined (Plestiodon fasciatus) Carolinian population
+Caretta caretta
 
-Snake, Sharp-tailed (Contia tenuis)
+Five-Lined Skink
 
-Softshell, Spiny (Apalone spinifera)
+Plestiodon fasciatus
 
-Turtle, Blanding’s (Emydoidea blandingii) Nova Scotia population
+Sharp-tailed Snake
 
-Turtle, Spotted (Clemmys guttata)
+Contia tenuis
 
-Turtle, Western Painted (Chrysemys picta bellii) Pacific Coast population
+Spiny Softshell
 
-Bass, Striped (Morone saxatilis) St. Lawrence River population
+Apalone spinifera
 
-Chub, Silver (Macrhybopsis storeriana) Great Lakes – Upper St. Lawrence populations
+Blanding\'s Turtle
 
-Chubsucker, Lake (Erimyzon sucetta)
+Emydoidea blandingii
 
-Cisco, Shortnose (Coregonus reighardi)
+Spotted Turtle
 
-Cisco, Spring (Coregonus sp.)
+Clemmys guttata
 
-Dace, Nooksack (Rhinichthys cataractae ssp.)
+Western Painted Turtle
 
-Dace, Redside (Clinostomus elongatus)
+Chrysemys picta bellii
 
-Dace, Speckled (Rhinichthys osculus)
+Striped Bass
 
-Darter, Channel (Percina copelandi) Lake Erie populations
+Morone saxatilis
 
-Darter, Channel (Percina copelandi) Lake Ontario populations
+Silver Chub
 
-Gar, Spotted (Lepisosteus oculatus)
+Macrhybopsis storeriana
 
-Lamprey, Western Brook (Lampetra richardsoni) Morrison Creek population
+Lake Chubsucker
 
-Madtom, Northern (Noturus stigmosus)
+Erimyzon sucetta
 
-Redhorse, Copper (Moxostoma hubbsi)
+Shortnose Cisco
 
-Salmon, Atlantic (Salmo salar) Inner Bay of Fundy population
+Coregonus reighardi
 
-Shark, Basking (Cetorhinus maximus) Pacific population
+Spring Cisco
 
-Shark, White (Carcharodon carcharias) Atlantic population
+Coregonus sp.
+
+Nooksack Dace
+
+Rhinichthys cataractae ssp.
+
+Redside Dace
+
+Clinostomus elongatus
+
+Speckled Dace
+
+Rhinichthys osculus
+
+Channel Darter
+
+Percina copelandi
+
+Channel Darter
+
+Percina copelandi
+
+Spotted Gar
+
+Lepisosteus oculatus
+
+Western Brook Lamprey
+
+Lampetra richardsoni
+
+Northern Madtom
+
+Noturus stigmosus
+
+Copper Redhorse
+
+Moxostoma hubbsi
+
+Atlantic Salmon
+
+Salmo salar
+
+Basking Shark
+
+Cetorhinus maximus
+
+White Shark
+
+Carcharodon carcharias
 
 Shiner, Carmine (Notropis percobromus)
 
@@ -1607,11 +1657,6 @@ International
 Policy
 Plan
 Framework
-Wildlife
-Vegetation
-Fish
-Species at risk
-Plant
 law
 legislation
 regulations"""
