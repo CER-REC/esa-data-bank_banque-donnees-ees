@@ -2466,15 +2466,28 @@ def remove_every_even_item_from_list(l):
 
 species_at_risk_eng = remove_every_even_item_from_list(species_at_risk_string)
 
-def 
+def rearrange_popular_species_name(item):
+    """This function takes the popular species name and rearranges the name so that there is no comma."""
+    species_pop_name = item.split('(')[0].split(',')
+    species_pop_name = species_pop_name[1][1:] + species_pop_name[0]
+    return species_pop_name
 
 def split_list_item_by_taking_words_in_parentheses(item):
     """This function goes through items in a list and creates a new item with only the words inside the parentheses."""
+    species_pop_name = item.split('(')[0].split(',')
+    if len(species_pop_name) > 1:
+        species_pop_name = species_pop_name[1][1:] + species_pop_name[0]
+    else:
+        species_pop_name = species_pop_name[0][:-1]
     binomial_nomenclature = re.findall(r'\([^()]*\)', item)
     binomial_nomenclature = [x.strip('()') for x in binomial_nomenclature]
-    return binomial_nomenclature[0]
+    return species_pop_name, binomial_nomenclature[0]
 
 species_at_risk_eng = [split_list_item_by_taking_words_in_parentheses(item) for item in species_at_risk_eng]
 
-for s in species_at_risk_eng:
+# flatten list of lists
+import itertools
+species_at_risk_eng = list(itertools.chain(*species_at_risk_eng))
+
+for s in species_at_risk_eng[1400:1500]:
     print(s)

@@ -382,7 +382,6 @@ Bat
 caribou
 bird
 goose
-amphibian
 swans
 frogs
 toads
@@ -468,1063 +467,1223 @@ Bat
 special conservation status"""
 
 all_canadian_species_at_risk = """Taxidea taxus jacksoni
-
 Taxidea taxus jeffersonii
-
 Blaireau
-
 Badger jeffersonii
-
 Taxidea taxus jeffersonii
-
 Bat
-
 Perimyotis subflavus
-
-Pipistrelle de l’Est
-
+Pipistrelle de l\'Est
 Caribou
-
 Rangifer tarandus pearyi
-
 Caribou de Peary
-
 Rangifer tarandus caribou
-
 Kangaroo Rat
-
 Dipodomys ordii
-
-Rat kangourou d’Ord
-
+Rat kangourou d\'Ord
 Marmot
-
 Marmota vancouverensis
-
 Mole
-
 Scapanus townsendii
-
 dychei
-
 Reithrodontomys megalotis dychei
-
 Myotis
-
 Myotis lucifugus
-
 Myotis septentrionalis
-
 Seal 
-
 Lacs des Loups Marins
-
 Phoca vitulina mellonae
-
 Shrew
-
 Sorex bendirii
-
 Musaraigne de Bendire
-
 Beluga
-
 Delphinapterus leucas
-
 Blue Whale
-
 Balaenoptera musculus
-
 Killer Whale
-
 Orcinus orca
-
 Whale
-
 Eubalaena glacialis
-
 Eubalaena japonica
-
 Hyperoodon ampullatus
-
 Sei Whale
-
 Balaenoptera borealis
-
-Rorqual boréal population du Pacifique
-
-Birds
-
 Bobwhite
-
 Colinus virginianus
-
 auricollis
-    
 Icteria virens auricollis
-
 virens
-
 Icteria virens virens
-
 Crane
-
 Grus americana
-
 Grue blanche
-
 Curlew
-
 Numenius borealis
-
 Flycatcher
-
 Empidonax virescens
-
 Grebe
-
 Podiceps auritus
-
 Gull
-
 Pagophila eburnea
-
 Mouette blanche
-
 rufa
-
 Calidris canutus rufa
-
 Lark
-
 Eremophila alpestris strigata
-
-Owl
-
+Barn Owl
 Tyto alba
-
-Owl
-
+Burrowing Owl
 Athene cunicularia
-
 caurina
-
+Spotted Owl
 Strix occidentalis caurina
-
 Plover
-
 Charadrius montanus
-
 circumcinctus
-
 Charadrius melodus circumcinctus
-
 melodus
-
 Charadrius melodus melodus
-
 King Rail
-
 Rallus elegans
-
 urophasianus
-
 Centrocercus urophasianus urophasianus
-
 Sapsucker
-
 Sphyrapicus thyroideus
-
 Shearwater
-
 Ardenna creatopus
-
 Puffin
-
 migrans
-
 Lanius ludovicianus migrans
-
 Coastal Vesper
-
 Pooecetes gramineus affinis
-
 Henslow
-
 Ammodramus henslowii
-
 Black Swift
-
 Cypseloides niger
-
 Roseate
-
 Sterna dougallii
-
 Sage Thrasher
-
 Oreoscoptes montanus
-
 Cerulean Warbler
-
 Setophaga cerulea
-
 warbler
-
 kirtland
-
 Dendroica kirtlandii
-
 Prothonotary
-
 Protonotaria citrea
-
 Woodpecker
-
 Melanerpes erythrocephalus
-
 Picoides albolarvatus
-
 Blanchard\'s Cricket
-
 Acris blanchardi
-
 Rainette grillon de Blanchard
-
 Northern Leopard
-
 Lithobates pipiens
-
 Oregon Spotted
-
 Rana pretiosa
-
 Salamander
-
 Allegheny Mountain Dusky
-
 Desmognathus ochrophaeus
-
 Allegheny Mountain Dusky
-
 Desmognathus ochrophaeus
-
 Eastern Tiger
-
 Ambystoma tigrinum
-
 Jefferson
-
 Ambystoma jeffersonianum
-
 Northern Dusky
-
 Desmognathus fuscus
-
 Small-mouthed
-
 Ambystoma texanum
-
 Western Tiger
-
 Ambystoma mavortium
-
 Fowler\'s Toad
-
 Anaxyrus fowleri
-
 Eastern Foxsnake
-
 Pantherophis gloydi
-
 Eastern Foxsnake
-
 Pantherophis gloydi
-
 Butler\'s Gartersnake
-
 Thamnophis butleri
-
 Greater Short-horned Lizard
-
 Phrynosoma hernandesi
-
 Massasauga
-
 Sistrurus catenatus
-
 Desert Nightsnake
-
 Hypsiglena chlorophaea
-
 Queensnake
-
 Regina septemvittata
-
 Blue Racer
-
 Coluber constrictor foxii
-
 Gray Ratsnake
-
 Pantherophis spiloides
-
 Leatherback Sea Turtle
-
 Dermochelys coriacea
-
 Sea Turtle
-
 Loggerhead Sea Turtle
-
 Caretta caretta
-
 Five-Lined Skink
-
 Plestiodon fasciatus
-
 Sharp-tailed Snake
-
 Contia tenuis
-
 Spiny Softshell
-
 Apalone spinifera
-
 Blanding\'s Turtle
-
 Emydoidea blandingii
-
 Spotted Turtle
-
 Clemmys guttata
-
 Western Painted Turtle
-
 Chrysemys picta bellii
-
 Striped Bass
-
 Morone saxatilis
-
 Silver Chub
-
 Macrhybopsis storeriana
-
 Lake Chubsucker
-
 Erimyzon sucetta
-
 Shortnose Cisco
-
 Coregonus reighardi
-
 Spring Cisco
-
 Coregonus sp.
-
 Nooksack Dace
-
 Rhinichthys cataractae ssp.
-
 Redside Dace
-
 Clinostomus elongatus
-
 Speckled Dace
-
 Rhinichthys osculus
-
 Channel Darter
-
 Percina copelandi
-
 Channel Darter
-
 Percina copelandi
-
 Spotted Gar
-
 Lepisosteus oculatus
-
 Western Brook Lamprey
-
 Lampetra richardsoni
-
 Northern Madtom
-
 Noturus stigmosus
-
 Copper Redhorse
-
 Moxostoma hubbsi
-
 Atlantic Salmon
-
 Salmo salar
-
 Basking Shark
-
 Cetorhinus maximus
-
 White Shark
-
 Carcharodon carcharias
-
-Shiner, Carmine (Notropis percobromus)
-
-Smelt, Rainbow (Osmerus mordax) Lake Utopia large-bodied population
-
-Smelt, Rainbow (Osmerus mordax) Lake Utopia small-bodied population
-
-Stickleback, Enos Lake Benthic Threespine (Gasterosteus aculeatus)
-
-Stickleback, Enos Lake Limnetic Threespine (Gasterosteus aculeatus)
-
-Stickleback, Misty Lake Lentic Threespine (Gasterosteus aculeatus)
-
-Stickleback, Misty Lake Lotic Threespine (Gasterosteus aculeatus)
-
-Stickleback, Paxton Lake Benthic Threespine (Gasterosteus aculeatus)
-
-Stickleback, Paxton Lake Limnetic Threespine (Gasterosteus aculeatus)
-
-Stickleback, Vananda Creek Benthic Threespine (Gasterosteus aculeatus)
-
-Stickleback, Vananda Creek Limnetic Threespine (Gasterosteus aculeatus)
-
-Sturgeon, White (Acipenser transmontanus) Nechako River population
-
-Sturgeon, White (Acipenser transmontanus) Upper Columbia River population
-
-Sturgeon, White (Acipenser transmontanus) Upper Fraser River population
-
-Sturgeon, White (Acipenser transmontanus) Upper Kootenay River population
-
-Trout, Rainbow (Oncorhynchus mykiss) Athabasca River populations
-
-Whitefish, Atlantic (Coregonus huntsmani)
-
-Abalone, Northern (Haliotis kamtschatkana)
-
-Bean, Rayed (Villosa fabalis)
-
-Fawnsfoot (Truncilla donaciformis)
-
-Forestsnail, Broad-banded (Allogona profunda)
-
-Forestsnail, Oregon (Allogona townsendiana)
-
-Globelet, Proud (Patera pennsylvanica)
-
-Hickorynut (Obovaria olivaria)
-
-Hickorynut, Round (Obovaria subrotunda)
-
-Kidneyshell (Ptychobranchus fasciolaris)
-
-Lilliput (Toxolasma parvum)
-
-Mussel, Salamander (Simpsonaias ambigua)
-
-Physa, Hotwater (Physella wrighti)
-
-Pigtoe, Round (Pleurobema sintoxia)
-
-Riffleshell, Northern (Epioblasma torulosa rangiana)
-
-Snail, Banff Springs (Physella johnsoni)
-
-Snuffbox (Epioblasma triquetra)
-
-Blue, Island (Plebejus saepiolus insulanus)
-
-Borer, Aweme (Papaipema aweme)
-
-Borer, Hoptree (Prays atomocella)
-
-Buckmoth, Bogbean (Hemileuca sp.)
-
-Bumble Bee, Gypsy Cuckoo (Bombus bohemicus)
-
-Bumble Bee, Rusty-patched (Bombus affinis)
-
-Checkerspot, Taylor’s (Euphydryas editha taylori)
-
-Clubtail, Olive (Stylurus olivaceus)
-
-Clubtail, Rapids (Gomphus quadricolor)
-
-Clubtail, Riverine (Stylurus amnicola) Great Lakes Plains population
-
-Clubtail, Skillet (Gomphus ventricosus)
-
-Crawling Water Beetle, Hungerford’s (Brychius hungerfordi)
-
-Cuckoo Bee, Macropis (Epeoloides pilosulus)
-
-Diving Beetle, Bert’s Predaceous (Sanfilippodytes bertae)
-
-Duskywing, Eastern Persius (Erynnis persius persius)
-
-Efferia, Okanagan (Efferia okanagana)
-
-Emerald, Hine’s (Somatochlora hineana)
-
-Flower Moth, White (Schinia bimatris)
-
-Gold-edged Gem (Schinia avemensis)
-
-Hairstreak, Behr’s (Satyrium behrii)
-
-Hairstreak, Half-moon (Satyrium semiluna)
-
-Metalmark, Mormon (Apodemia mormo) Southern Mountain population
-
-Moth, Dusky Dune (Copablepharon longipenne)
-
-Moth, Edwards’ Beach (Anarta edwardsii)
-
-Moth, Five-spotted Bogus Yucca (Prodoxus quinquepunctellus)
-
-Moth, Non-pollinating Yucca (Tegeticula corruptrix)
-
-Moth, Sand-verbena (Copablepharon fuscum)
-
-Moth, Yucca (Tegeticula yuccasella)
-
-Ringlet, Maritime (Coenonympha nipisiquit)
-
-Skipper, Dakota (Hesperia dacotae)
-
-Skipperling, Poweshiek (Oarisma poweshiek)
-
-Skipper, Ottoe (Hesperia ottoe)
-
-Sun Moth, False-foxglove (Pyrrhia aurantiago)
-
-Tiger Beetle, Cobblestone (Cicindela marginipennis)
-
-Tiger Beetle, Northern Barrens (Cicindela patruela)
-
-Tiger Beetle, Wallis’ Dark Saltflat (Cicindela parowana wallisi)
-
-Agalinis, Gattinger’s (Agalinis gattingeri)
-
-Agalinis, Rough (Agalinis aspera)
-
-Agalinis, Skinner’s (Agalinis skinneriana)
-
-Ammannia, Scarlet (Ammannia robusta)
-
-Aster, Short-rayed Alkali (Symphyotrichum frondosum)
-
-Avens, Eastern Mountain (Geum peckii)
-
-Balsamroot, Deltoid (Balsamorhiza deltoidea)
-
-Beakrush, Tall (Rhynchospora macrostachya)
-
-Birch, Cherry (Betula lenta)
-
-Bluehearts (Buchnera americana)
-
-Braya, Fernald’s (Braya fernaldii)
-
-Braya, Hairy (Braya pilosa)
-
-Braya, Long’s (Braya longii)
-
-Bugbane, Tall (Actaea elata)
-
-Bulrush, Bashful (Trichophorum planifolium)
-
-Bush-clover, Slender (Lespedeza virginica)
-
-Buttercup, California (Ranunculus californicus)
-
-Buttercup, Water-plantain (Ranunculus alismifolius)
-
-Butternut (Juglans cinerea)
-
-Cactus, Eastern Prickly Pear (Opuntia humifusa)
-
-Campion, Spalding’s (Silene spaldingii)
-
-Catchfly, Coastal Scouler’s (Silene scouleri grandis)
-
-Centaury, Muhlenberg’s (Centaurium muehlenbergii)
-
-Chestnut, American (Castanea dentata)
-
-Colicroot (Aletris farinosa)
-
-Collomia, Slender (Collomia tenella)
-
-Columbo, American (Frasera caroliniensis)
-
-Coreopsis, Pink (Coreopsis rosea)
-
-Dogwood, Eastern Flowering (Cornus florida)
-
-Evening-primrose, Contorted-pod (Camissonia contorta)
-
-Fern, Southern Maidenhair (Adiantum capillus-veneris)
-
-Fringed-orchid, Eastern Prairie (Platanthera leucophaea)
-
-Fringed-orchid, Western Prairie (Platanthera praeclara)
-
-Gentian, Plymouth (Sabatia kennedyana)
-
-Gentian, White Prairie (Gentiana alba)
-
-Ginseng, American (Panax quinquefolius)
-
-Goat’s-rue, Virginia (Tephrosia virginiana)
-
-Goldenrod, Showy (Solidago speciosa) Great Lakes Plains population
-
-Goldfields, Rayless (Lasthenia glaberrima)
-
-Grass, Forked Three-awned (Aristida basiramea)
-
-Ironweed, Fascicled (Vernonia fasciculata)
-
-Lewisia, Tweedy’s (Lewisiopsis tweedyi)
-
-Lipocarpha, Small-flowered (Lipocarpha micrantha)
-
-Lotus, Seaside Birds-foot (Lotus formosissimus)
-
-Lousewort, Furbish’s (Pedicularis furbishiae)
-
-Lupine, Dense-flowered (Lupinus densiflorus)
-
-Lupine, Prairie (Lupinus lepidus)
-
-Lupine, Streambank (Lupinus rivularis)
-
-Mallow, Virginia (Sida hermaphrodita)
-
+Carmine Shiner
+Notropis percobromus
+Rainbow Smelt
+Osmerus mordax
+Rainbow Smelt
+Osmerus mordax
+Enos Lake Benthic Threespine Stickleback
+Gasterosteus aculeatus
+Enos Lake Limnetic Threespine Stickleback
+Misty Lake Lentic Threespine Stickleback
+Misty Lake Lotic Threespine Stickleback
+Paxton Lake Benthic Threespine Stickleback
+Paxton Lake Limnetic Threespine Stickleback
+Vananda Creek Benthic Threespine Stickleback
+Vananda Creek Limnetic Threespine Stickleback
+Gasterosteus aculeatus
+White Sturgeon
+Acipenser transmontanus
+Rainbow Trout
+Oncorhynchus mykiss
+Atlantic Whitefish
+Coregonus huntsmani
+Northern Molluscs
+Abalone
+Haliotis kamtschatkana
+Rayed Bean
+Villosa fabalis
+Fawnsfoot
+Truncilla donaciformis
+Broad-banded Forestsnail
+Allogona profunda
+Oregon Forestsnail
+Allogona townsendiana
+Proud Globelet
+Patera pennsylvanica
+Hickorynut
+Obovaria olivaria
+Round Hickorynut
+Obovaria subrotunda
+Kidneyshell
+Ptychobranchus fasciolaris
+Lilliput
+Toxolasma parvum
+Salamander Mussel
+Simpsonaias ambigua
+Hotwater Physa
+Physella wrighti
+Round Pigtoe
+Pleurobema sintoxia
+Northern Riffleshell
+Epioblasma torulosa rangiana
+Banff Springs Snail
+Physella johnsoni
+Snuffbox
+Epioblasma triquetra
+Island Arthropods
+Blue
+Plebejus saepiolus insulanus
+Aweme Borer
+Papaipema aweme
+Hoptree Borer
+Prays atomocella
+Bogbean Buckmoth
+Hemileuca sp.
+Gypsy Cuckoo Bumble Bee
+Bombus bohemicus
+Rusty-patched Bumble Bee
+Bombus affinis
+Taylor\'s Checkerspot
+Euphydryas editha taylori
+Olive Clubtail
+Stylurus olivaceus
+Rapids Clubtail
+Gomphus quadricolor
+Riverine Clubtail
+Stylurus amnicola
+Skillet Clubtail
+Gomphus ventricosus
+Hungerford\'s Crawling Water Beetle
+Brychius hungerfordi
+Macropis Cuckoo Bee
+Epeoloides pilosulus
+Bert\'s Predaceous Diving Beetle
+Sanfilippodytes bertae
+Eastern Persius Duskywing
+Erynnis persius persius
+Okanagan Efferia
+Efferia okanagana
+Hine\'s Emerald
+Somatochlora hineana
+White Flower Moth
+Schinia bimatris
+Gold-edged Gem
+Schinia avemensis
+Behr\'s Hairstreak
+Satyrium behrii
+Half-moon Hairstreak
+Satyrium semiluna
+Mormon Metalmark
+Apodemia mormo
+Dusky Dune Moth
+Copablepharon longipenne
+Edwards\' Beach Moth
+Anarta edwardsii
+Five-spotted Bogus Yucca Moth
+Prodoxus quinquepunctellus
+Non-pollinating Yucca Moth
+Tegeticula corruptrix
+Sand-verbena Moth
+Copablepharon fuscum
+Yucca Moth
+Tegeticula yuccasella
+Maritime Ringlet
+Coenonympha nipisiquit
+Dakota Skipper
+Hesperia dacotae
+Poweshiek Skipperling
+Oarisma poweshiek
+Ottoe Skipper
+Hesperia ottoe
+False-foxglove Sun Moth
+Pyrrhia aurantiago
+Cobblestone Tiger Beetle
+Cicindela marginipennis
+Northern Barrens Tiger Beetle
+Cicindela patruela
+Wallis\' Dark Saltflat Tiger Beetle
+Cicindela parowana wallisi
+Gattinger\'s Plants
+Agalinis
+Agalinis gattingeri
+Rough Agalinis
+Agalinis aspera
+Skinner\'s Agalinis
+Agalinis skinneriana
+Scarlet Ammannia
+Ammannia robusta
+Short-rayed Alkali Aster
+Symphyotrichum frondosum
+Eastern Mountain Avens
+Geum peckii
+Deltoid Balsamroot
+Balsamorhiza deltoidea
+Tall Beakrush
+Rhynchospora macrostachya
+Cherry Birch
+Betula lenta
+Bluehearts
+Buchnera americana
+Fernald\'s Braya
+Braya fernaldii
+Hairy Braya
+Braya pilosa
+Long\'s Braya
+Braya longii
+Tall Bugbane
+Actaea elata
+Bashful Bulrush
+Trichophorum planifolium
+Slender Bush-clover
+Lespedeza virginica
+California Buttercup
+Ranunculus californicus
+Water-plantain Buttercup
+Ranunculus alismifolius
+Butternut
+Juglans cinerea
+Eastern Prickly Pear Cactus
+Opuntia humifusa
+Spalding\'s Campion
+Silene spaldingii
+Coastal Scouler\'s Catchfly
+Silene scouleri grandis
+Muhlenberg\'s Centaury
+Centaurium muehlenbergii
+American Chestnut
+Castanea dentata
+Colicroot
+Aletris farinosa
+Slender Collomia
+Collomia tenella
+American Columbo
+Frasera caroliniensis
+Pink Coreopsis
+Coreopsis rosea
+Eastern Flowering Dogwood
+Cornus florida
+Contorted-pod Evening-primrose
+Camissonia contorta
+Southern Maidenhair Fern
+Adiantum capillus-veneris
+Eastern Prairie Fringed-orchid
+Platanthera leucophaea
+Western Prairie Fringed-orchid
+Platanthera praeclara
+Plymouth Gentian
+Sabatia kennedyana
+White Prairie Gentian
+Gentiana alba
+American Ginseng
+Panax quinquefolius
+Virginia Goat\'s-rue
+Tephrosia virginiana
+Showy Goldenrod
+Solidago speciosa
+Rayless Goldfields
+Lasthenia glaberrima
+Forked Three-awned Grass
+Aristida basiramea
+Fascicled Ironweed
+Vernonia fasciculata
+Tweedy\'s Lewisia
+Lewisiopsis tweedyi
+Small-flowered Lipocarpha
+Lipocarpha micrantha
+Seaside Birds-foot Lotus
+Lotus formosissimus
+Furbish\'s Lousewort
+Pedicularis furbishiae
+Dense-flowered Lupine
+Lupinus densiflorus
+Prairie Lupine
+Lupinus lepidus
+Streambank Lupine
+Lupinus rivularis
+Virginia Mallow
+Sida hermaphrodita
 White Meconella
-
 Meconella oregana
-Microseris, Coast (Microseris bigelovii)
-Milkwort, Pink (Polygala incarnata)
-Mountain-mint, Hoary (Pycnanthemum incanum)
-Mulberry, Red (Morus rubra)
-Orchid, Phantom (Cephalanthera austiniae)
-Owl-clover, Bearded (Triphysaria versicolor)
-Owl-clover, Grand Coulee (Orthocarpus barbatus)
-Owl-clover, Rosy (Orthocarpus bracteosus)
-Owl-clover, Victoria’s (Castilleja victoriae)
-Paintbrush, Golden (Castilleja levisecta)
-Phacelia, Branched (Phacelia ramosissima)
-Pine, Whitebark (Pinus albicaulis)
-Plantain, Heart-leaved (Plantago cordata)
-Pogonia, Large Whorled (Isotria verticillata)
-Pogonia, Nodding (Triphora trianthophora)
-Pogonia, Small Whorled (Isotria medeoloides)
-Pondweed, Ogden’s (Potamogeton ogdenii)
-Popcornflower, Fragrant (Plagiobothrys figuratus)
-Pussytoes, Stoloniferous (Antennaria flagellaris)
-Quillwort, Engelmann’s (Isoetes engelmannii)
-Rockcress, Quebec (Boechera quebecensis)
-Rush, Kellogg’s (Juncus kelloggii)
-Sand-verbena, Pink (Abronia umbellata)
-Sand-verbena, Small-flowered (Tripterocalyx micranthus)
-Sandwort, Dwarf (Minuartia pusilla)
-Sedge, False Hop (Carex lupuliformis)
-Sedge, Foothill (Carex tumulicola)
-Sedge, Juniper (Carex juniperorum)
-Silverpuffs, Lindley’s False (Uropappus lindleyi)
-Spike-primrose, Brook (Epilobium torreyi)
-Spike-primrose, Dense (Epilobium densiflorum)
-Spike-rush, Bent (Eleocharis geniculata) Great Lakes Plains population
-Spike-rush, Bent (Eleocharis geniculata) Southern Mountain population
-Spike-rush, Horsetail (Eleocharis equisetoides)
-Sundew, Thread-leaved (Drosera filiformis)
-Tonella, Small-flowered (Tonella tenella)
-Toothcup (Rotala ramosior) Southern Mountain population
-Tree, Cucumber (Magnolia acuminata)
-Trefoil, Bog Bird’s-foot (Lotus pinnatus)
-Trillium, Drooping (Trillium flexipes)
-Triteleia, Howell’s (Triteleia howellii)
-Violet, Bird’s-foot (Viola pedata)
-Violet praemorsa subspecies, Yellow Montane (Viola praemorsa ssp. praemorsa)
-Willow, Barrens (Salix jejuna)
-Wintergreen, Spotted (Chimaphila maculata)
-Wood-poppy (Stylophorum diphyllum)
-Woolly-heads, Tall (Psilocarphus elatior)
-Woolly-heads, Dwarf (Psilocarphus brevissimus) Southern Mountain population
-Lichens
-Lichen, Batwing Vinyl (Leptogium platynum)
-Lichen, Boreal Felt (Erioderma pedicellatum) Atlantic population
-Lichen, Pale-bellied Frost (Physconia subpallida)
-Lichen, Seaside Centipede (Heterodermia sitchensis)
-Lichen, Vole Ears (Erioderma mollissimum)
-Mosses
-Cord-moss, Rusty (Entosthodon rubiginosus)
-Moss, Acuteleaf Small Limestone (Seligeria acutifolia)
-Moss, Margined Streamside (Scouleria marginata)
-Moss, Nugget (Microbryum vlassovii)
-Moss, Poor Pocket (Fissidens pauperculus)
-Moss, Rigid Apple (Bartramia stricta)
-Moss, Roell’s Brotherella (Brotherella roellii)
-Moss, Silver Hair (Fabronia pusilla)
-PART 3
-Threatened Species
-Mammals
-Bat, Pallid (Antrozous pallidus)
-Bison, Wood (Bison bison athabascae)
-Caribou, Woodland (Rangifer tarandus caribou) Boreal population
-Caribou, Woodland (Rangifer tarandus caribou) Southern Mountain population
-Ermine haidarum subspecies (Mustela erminea haidarum)
-Fox, Grey (Urocyon cinereoargenteus)
-Fox, Swift (Vulpes velox)
-Marten, American (Martes americana atrata) Newfoundland population
-Prairie Dog, Black-tailed (Cynomys ludovicianus)
-Whale, Beluga (Delphinapterus leucas) Cumberland Sound population
-Whale, Fin (Balaenoptera physalus) Pacific population
-Whale, Killer (Orcinus orca) Northeast Pacific northern resident population
-Whale, Killer (Orcinus orca) Northeast Pacific offshore population
-Whale, Killer (Orcinus orca) Northeast Pacific transient population
-Birds
-Albatross, Short-tailed (Phoebastria albatrus)
-Bittern, Least (Ixobrychus exilis)
-Bobolink (Dolichonyx oryzivorus)
-Bunting, Lark (Calamospiza melanocorys)
-Crossbill percna subspecies, Red (Loxia curvirostra percna)
-Flycatcher, Olive-sided (Contopus cooperi)
-Goshawk laingi subspecies, Northern (Accipiter gentilis laingi)
-Gull, Ross’s (Rhodostethia rosea)
-Hawk, Ferruginous (Buteo regalis)
-Knot roselaari type, Red (Calidris canutus roselaari type)
-Longspur, Chestnut-collared (Calcarius ornatus)
-Longspur, McCown’s (Rhynchophanes mccownii)
-Meadowlark, Eastern (Sturnella magna)
-Murrelet, Marbled (Brachyramphus marmoratus)
-Nighthawk, Common (Chordeiles minor)
-Owl, Barn (Tyto alba) Western population
-Owl brooksi subspecies, Northern Saw-whet (Aegolius acadicus brooksi)
-Pipit, Sprague’s (Anthus spragueii)
-Screech-owl kennicottii subspecies, Western (Megascops kennicottii kennicottii)
-Screech-owl macfarlanei subspecies, Western (Megascops kennicottii macfarlanei)
-Shrike excubitorides subspecies, Loggerhead (Lanius ludovicianus excubitorides)
-Swallow, Bank (Riparia riparia)
-Swallow, Barn (Hirundo rustica)
-Swift, Chimney (Chaetura pelagica)
-Thrush, Bicknell’s (Catharus bicknelli)
-Thrush, Wood (Hylocichla mustelina)
-Warbler, Canada (Wilsonia canadensis)
-Warbler, Golden-winged (Vermivora chrysoptera)
-Waterthrush, Louisiana (Parkesia motacilla)
-Whip-poor-will (Caprimulgus vociferus)
-Woodpecker, Lewis’s (Melanerpes lewis)
-Amphibians
-Frog, Rocky Mountain Tailed (Ascaphus montanus)
-Frog, Western Chorus (Pseudacris triseriata) Great Lakes / St. Lawrence – Canadian Shield population
-Salamander, Coastal Giant (Dicamptodon tenebrosus)
-Salamander, Spring (Gyrinophilus porphyriticus) Adirondack / Appalachian population
-Spadefoot, Great Basin (Spea intermontana)
-Reptiles
-Gophersnake, Great Basin (Pituophis catenifer deserticola)
-Massasauga (Sistrurus catenatus) Great Lakes/St. Lawrence population
-Racer, Eastern Yellow-bellied (Coluber constrictor flaviventris)
-Ratsnake, Gray (Pantherophis spiloides) Great Lakes/St. Lawrence population
-Rattlesnake, Western (Crotalus oreganos)
-Ribbonsnake, Eastern (Thamnophis sauritus) Atlantic population
-Snake, Eastern Hog-nosed (Heterodon platirhinos)
-Turtle, Blanding’s (Emydoidea blandingii) Great Lakes / St. Lawrence population
-Turtle, Wood (Glyptemys insculpta)
-Fish
-Darter, Eastern Sand (Ammocrypta pellucida) Ontario populations
-Darter, Eastern Sand (Ammocrypta pellucida) Quebec populations
-Lamprey, Vancouver (Entosphenus macrostomus)
-Minnow, Plains (Hybognathus placitus)
-Minnow, Pugnose (Opsopoeodus emiliae)
-Minnow, Western Silvery (Hybognathus argyritis)
-Redhorse, Black (Moxostoma duquesnei)
-Sculpin, Coastrange (Cottus aleuticus) Cultus population
-Sculpin, Rocky Mountain (Cottus sp.) Eastslope populations
-Shiner, Pugnose (Notropis anogenus)
-Shiner, Silver (Notropis photogenis)
-Spotted Wolffish (Anarhichas minor)
-Sucker, Mountain (Catostomus platyrhynchus) Milk River populations
-Sucker, Salish (Catostomus sp. cf. catostomus)
-Trout, Bull (Salvelinus confluentus) Saskatchewan – Nelson Rivers populations
-Trout, Westslope Cutthroat (Oncorhynchus clarkii lewisi) Alberta population
-Wolffish, Northern (Anarhichas denticulatus)
-Molluscs
-Atlantic Mud-piddock (Barnea truncata)
-Jumping-slug, Dromedary (Hemphillia dromedarius)
-Mapleleaf (Quadrula quadrula) Saskatchewan – Nelson Rivers population
-Taildropper, Blue-grey (Prophysaon coeruleum)
-Wartyback, Threehorn (Obliquaria reflexa)
-Arthropods
-Flower Moth, Verna’s (Schinia verna)
-Skipper, Dun (Euphyes vestris) Western population
-Sweat Bee, Sable Island (Lasioglossum sablense)
-Tiger Beetle, Audouin’s Night-stalking (Omus audouini)
-Tiger Beetle, Gibson’s Big Sand (Cicindela formosa gibsoni)
-Plants
-Arnica, Griscom’s (Arnica griscomii ssp. griscomii)
-Aster, Anticosti (Symphyotrichum anticostense)
-Aster, Gulf of St. Lawrence (Symphyotrichum laurentianum)
-Aster, Western Silvery (Symphyotrichum sericeum)
-Aster, White Wood (Eurybia divaricata)
-Aster, Willowleaf (Symphyotrichum praealtum)
-Baccharis, Eastern (Baccharis halimifolia)
-Bartonia, Branched (Bartonia paniculata ssp. paniculata)
-Blazing Star, Dense (Liatris spicata)
-Coffee-tree, Kentucky (Gymnocladus dioicus)
-Cryptantha, Tiny (Cryptantha minima)
-Daisy, Lakeside (Hymenoxys herbacea)
-Deerberry (Vaccinium stamineum)
-Desert-parsley, Gray’s (Lomatium grayi)
-Fern, Lemmon’s Holly (Polystichum lemmonii)
-Fern, Mountain Holly (Polystichum scopulinum)
-Gentian, Victorin’s (Gentianopsis virgata ssp. victorinii)
-Goldenrod, Showy (Solidago speciosa) Boreal population
-Goldenseal (Hydrastis canadensis)
-Goosefoot, Smooth (Chenopodium subglabrum)
-Greenbrier, Round-leaved (Smilax rotundifolia) Great Lakes Plains population
-Hackberry, Dwarf (Celtis tenuifolia)
-Hyacinth, Wild (Camassia scilloides)
-Jacob’s-ladder, Van Brunt’s (Polemonium vanbruntiae)
-Lady’s-slipper, Small White (Cypripedium candidum)
-Locoweed, Hare-footed (Oxytropis lagopus)
-Meadowfoam, Macoun’s (Limnanthes macounii)
-Mosquito-fern, Mexican (Azolla mexicana)
-Mouse-ear-cress, Slender (Halimolobos virgata)
-Paintbrush, Cliff (Castilleja rupicola)
-Pepperbush, Sweet (Clethra alnifolia)
-Phlox, Showy (Phlox speciosa ssp. occidentalis)
-Popcornflower, Slender (Plagiobothrys tenellus)
-Quillwort, Bolander’s (Isoetes bolanderi)
-Rue-anemone, False (Enemion biternatum)
-Sanicle, Bear’s-foot (Sanicula arctopoides)
-Sanicle, Purple (Sanicula bipinnatifida)
-Soapweed (Yucca glauca)
-Spiderwort, Western (Tradescantia occidentalis)
-Thistle, Hill’s (Cirsium hillii)
-Toothcup (Rotala ramosior) Great Lakes Plains population
-Twayblade, Purple (Liparis liliifolia)
-Water-willow, American (Justicia americana)
-Willow, Green-scaled (Salix chlorolepis)
-Woodsia, Blunt-lobed (Woodsia obtusa)
-Lichens
-Bone, Seaside (Hypogymnia heterophylla)
-Lichen, Black-foam (Anzia colpodes)
-Lichen, Crumpled Tarpaper (Collema coniophilum)
-Lichen, Wrinkled Shingle (Pannaria lurida)
-Waterfan, Eastern (Peltigera hydrothyria)
-Mosses
-Bryum, Porsild’s (Mielichhoferia macrocarpa)
-Moss, Alkaline Wing-nerved (Pterygoneurum kozlovii)
-Moss, Haller’s Apple (Bartramia halleriana)
-Moss, Spoon-leaved (Bryoandersonia illecebra)
-PART 4
-Special Concern
-Mammals
-Badger taxus subspecies, American (Taxidea taxus taxus)
-Bat, Spotted (Euderma maculatum)
-Bear, Grizzly (Ursus arctos) Western population
-Bear, Polar (Ursus maritimus)
-Beaver, Mountain (Aplodontia rufa)
-Caribou, Barren-ground (Rangifer tarandus groenlandicus) Dolphin and Union population
-Caribou, Woodland (Rangifer tarandus caribou) Northern Mountain population
-Cottontail nuttallii subspecies, Nuttall’s (Sylvilagus nuttallii nuttallii)
-Mole, Eastern (Scalopus aquaticus)
-Mouse megalotis subspecies, Western Harvest (Reithrodontomys megalotis megalotis)
-Otter, Sea (Enhydra lutris)
-Pika, Collared (Ochotona collaris)
-Porpoise, Harbour (Phocoena phocoena) Pacific Ocean population
-Sea Lion, Steller (Eumetopias jubatus)
-Vole, Woodland (Microtus pinetorum)
-Whale, Bowhead (Balaena mysticetus) Bering-Chukchi-Beaufort population
-Whale, Fin (Balaenoptera physalus) Atlantic population
-Whale, Grey (Eschrichtius robustus) Eastern North Pacific population
-Whale, Humpback (Megaptera novaeangliae) North Pacific population
-Whale, Sowerby’s Beaked (Mesoplodon bidens)
-Wolf, Eastern (Canis lupus lycaon)
-Wolverine (Gulo gulo)
-Birds
-Albatross, Black-footed (Phoebastria nigripes)
-Auklet, Cassin’s (Ptychoramphus aleuticus)
-Blackbird, Rusty (Euphagus carolinus)
-Curlew, Long-billed (Numenius americanus)
-Duck, Harlequin (Histrionicus histrionicus) Eastern population
-Falcon anatum/tundrius, Peregrine (Falco peregrinus anatum/tundrius)
-Falcon pealei subspecies, Peregrine (Falco peregrinus pealei)
-Goldeneye, Barrow’s (Bucephala islandica) Eastern population
-Grebe, Horned (Podiceps auritus) Western population
-Grebe, Western (Aechmophorus occidentalis)
-Grosbeak, Evening (Coccothraustes vespertinus)
-Heron fannini subspecies, Great Blue (Ardea herodias fannini)
-Knot islandica subspecies, Red (Calidris canutus islandica)
-Murrelet, Ancient (Synthliboramphus antiquus)
-Owl, Flammulated (Otus flammeolus)
-Owl, Short-eared (Asio flammeus)
-Phalarope, Red-necked (Phalaropus lobatus)
-Pigeon, Band-tailed (Patagioenas fasciata)
-Rail, Yellow (Coturnicops noveboracensis)
-Sandpiper, Buff-breasted (Tryngites subruficollis)
-Sparrow, Baird’s (Ammodramus bairdii)
-Sparrow pratensis subspecies, Grasshopper (Ammodramus savannarum pratensis)
-Sparrow princeps subspecies, Savannah (Passerculus sandwichensis princeps)
-Wood-pewee, Eastern (Contopus virens)
-Amphibians
-Frog, Coastal Tailed (Ascaphus truei)
-Frog, Northern Leopard (Lithobates pipiens) Western Boreal/Prairie populations
-Frog, Red-legged (Rana aurora)
-Salamander, Coeur d’Alene (Plethodon idahoensis)
-Salamander, Wandering (Aneides vagrans)
-Salamander, Western Tiger (Ambystoma mavortium) Prairie/Boreal population
-Toad, Great Plains (Anaxyrus cognatus)
-Toad, Western (Anaxyrus boreas) Calling population
-Toad, Western (Anaxyrus boreas) Non-calling population
-Reptiles
-Boa, Rubber (Charina bottae)
-Milksnake (Lampropeltis triangulum)
-Racer, Western Yellow-bellied (Coluber constrictor mormon)
-Rattlesnake, Prairie (Crotalus viridis)
-Ribbonsnake, Eastern (Thamnophis sauritus) Great Lakes population
-Skink, Five-lined (Plestiodon fasciatus) Great Lakes/St. Lawrence population
-Skink, Prairie (Plestiodon septentrionalis)
-Skink, Western (Plestiodon skiltonianus)
-Turtle, Eastern Musk (Sternotherus odoratus)
-Turtle, Eastern Painted (Chrysemys picta picta)
-Turtle, Midland Painted (Chrysemys picta marginata)
-Turtle, Northern Map (Graptemys geographica)
-Turtle, Snapping (Chelydra serpentina)
-Turtle, Western Painted (Chrysemys picta bellii) Intermountain - Rocky Mountain population
-Watersnake, Lake Erie (Nerodia sipedon insularum)
-Fish
-Buffalo, Bigmouth (Ictiobus cyprinellus) Saskatchewan – Nelson River populations
-Darter, Channel (Percina copelandi) St. Lawrence populations
-Dolly Varden (Salvelinus malma malma) Western Arctic populations
-Killifish, Banded (Fundulus diaphanus) Newfoundland populations
-Kiyi, Upper Great Lakes (Coregonus kiyi kiyi)
-Lamprey, Northern Brook (Ichthyomyzon fossor) Great Lakes – Upper St. Lawrence populations
-Lamprey, Silver (Ichthyomyzon unicuspis) Great Lakes – Upper St. Lawrence populations
-Minnow, Cutlip (Exoglossum maxillingua)
-Pickerel, Grass (Esox americanus vermiculatus)
-Redhorse, River (Moxostoma carinatum)
-Rockfish type I, Rougheye (Sebastes sp. type I)
-Rockfish type II, Rougheye (Sebastes sp. type II)
-Rockfish, Yelloweye (Sebastes ruberrimus) Pacific Ocean inside waters population
-Rockfish, Yelloweye (Sebastes ruberrimus) Pacific Ocean outside waters population
-Sculpin, Columbia (Cottus hubbsi)
-Sculpin, Deepwater (Myoxocephalus thompsonii) Great Lakes - Western St. Lawrence populations
-Sculpin, Rocky Mountain (Cottus sp.) Westslope populations
-Sculpin, Shorthead (Cottus confusus)
-Shark, Bluntnose Sixgill (Hexanchus griseus)
-Shiner, Bridle (Notropis bifrenatus)
-Stickleback, Giant Threespine (Gasterosteus aculeatus)
-Stickleback, Unarmoured Threespine (Gasterosteus aculeatus)
-Sturgeon, Green (Acipenser medirostris)
-Sturgeon, Lake (Acipenser fulvescens) Southern Hudson Bay – James Bay populations
-Sturgeon, Shortnose (Acipenser brevirostrum)
-Sucker, Mountain (Catostomus platyrhynchus) Pacific populations
-Sucker, Spotted (Minytrema melanops)
-Sunfish, Northern (Lepomis peltastes) Great Lakes – Upper St. Lawrence populations
-Thornyhead, Longspine (Sebastolobus altivelis)
-Tope (Galeorhinus galeus)
-Topminnow, Blackstripe (Fundulus notatus)
-Trout, Bull (Salvelinus confluentus) South Coast British Columbia populations
-Trout, Bull (Salvelinus confluentus) Western Arctic populations
-Trout, Westslope Cutthroat (Oncorhynchus clarkii lewisi) British Columbia population
-Warmouth (Lepomis gulosus)
-Wolffish, Atlantic (Anarhichas lupus)
-Molluscs
-Floater, Brook (Alasmidonta varicosa)
-Jumping-slug, Warty (Hemphillia glandulosa)
-Lampmussel, Wavy-rayed (Lampsilis fasciola)
-Lampmussel, Yellow (Lampsilis cariosa)
-Mantleslug, Magnum (Magnipelta mycophaga)
-Mapleleaf (Quadrula quadrula) Great Lakes – Upper St. Lawrence population
-Mussel, Rocky Mountain Ridged (Gonidea angulata)
-Oyster, Olympia (Ostrea lurida)
-Pondmussel, Eastern (Ligumia nasuta)
-Rainbow (Villosa iris)
-Slug, Haida Gwaii (Staala gwaii)
-Slug, Pygmy (Kootenaia burkei)
-Slug, Sheathed (Zacoleus idahoensis)
-Vertigo, Threaded (Nearctula sp.)
-Arthropods
-Bumble Bee, Yellow-banded (Bombus terricola)
-Dancer, Vivid (Argia vivida)
-Grasshopper, Greenish-white (Hypochlora alba)
-Leafhopper, Red-tailed (Aflexia rubranura) Great Lakes Plains population
-Leafhopper, Red-tailed (Aflexia rubranura) Prairie population
-Metalmark, Mormon (Apodemia mormo) Prairie population
-Monarch (Danaus plexippus)
-Moth, Pale Yellow Dune (Copablepharon grandis)
-Skipper, Sonora (Polites sonora)
-Snaketail, Pygmy (Ophiogomphus howei)
-Spider, Georgia Basin Bog (Gnaphosa snohomish)
-Tachinid Fly, Dune (Germaria angustata)
-Weidemeyer’s Admiral (Limenitis weidemeyerii)
-Plants
-Ash, Blue (Fraxinus quadrangulata)
-Aster, Crooked-stem (Symphyotrichum prenanthoides)
-Aster, Nahanni (Symphyotrichum nahanniense)
-Aster, White-top (Sericocarpus rigidus)
-Beggarticks, Vancouver Island (Bidens amplissima)
-Blue Flag, Western (Iris missouriensis)
-Buffalograss (Bouteloua dactyloides)
-Fern, American Hart’s-tongue (Asplenium scolopendrium)
-Fern, Coastal Wood (Dryopteris arguta)
-Goldencrest (Lophiola aurea)
-Goldenrod, Houghton’s (Solidago houghtonii)
-Goldenrod, Riddell’s (Solidago riddellii)
-Hairgrass, Mackenzie (Deschampsia mackenzieana)
-Hoptree, Common (Ptelea trifoliata)
-Indian-plantain, Tuberous (Arnoglossum plantagineum)
-Iris, Dwarf Lake (Iris lacustris)
-Lilaeopsis, Eastern (Lilaeopsis chinensis)
-Lily, Lyall’s Mariposa (Calochortus lyallii)
-Milk-vetch, Fernald’s (Astragalus robbinsii var. fernaldii)
-Pennywort, Water (Hydrocotyle umbellata)
-Pinweed, Beach (Lechea maritima)
-Podistera, Yukon (Podistera yukonensis)
-Pondweed, Hill’s (Potamogeton hillii)
-Prairie-clover, Hairy (Dalea villosa)
-Quillwort, Prototype (Isoetes prototypus)
-Redroot (Lachnanthes caroliniana)
-Rose, Climbing Prairie (Rosa setigera)
-Rose-mallow, Swamp (Hibiscus moscheutos)
-Rush, New Jersey (Juncus caesariensis)
-Saxifrage, Spiked (Micranthes spicata)
-Sedge, Baikal (Carex sabulosa)
-Spike-rush, Tubercled (Eleocharis tuberculosa)
-Tansy, Floccose (Tanacetum huronense var. floccosum)
-Thistle, Pitcher’s (Cirsium pitcheri)
-Thrift, Athabasca (Armeria maritima interior)
-Water-hemlock, Victorin’s (Cicuta maculata var. victorinii)
-Wild Buckwheat, Yukon (Eriogonum flavum var. aquilinum)
-Willow, Felt-leaf (Salix silicicola)
-Willow, Sand-dune Short-capsuled (Salix brachycarpa var. psammophila)
-Willow, Turnor’s (Salix turnorii)
-Woolly-heads, Dwarf (Psilocarphus brevissimus) Prairie population
-Yarrow, Large-headed Woolly (Achillea millefolium var. megacephalum)
-Mosses
-Cord-moss, Banded (Entosthodon fascicularis)
-Moss, Columbian Carpet (Bryoerythrophyllum columbianum)
-Moss, Twisted Oak (Syntrichia laevipila)
-Tassel, Tiny (Crossidium seriatum)
-Lichens
-Glass-whiskers, Frosted (Sclerophora peronella) Nova Scotia population
-Jellyskin, Flooded (Leptogium rivulare)
-Lichen, Blue Felt (Degelia plumbea)
-Lichen, Boreal Felt (Erioderma pedicallatum) Boreal population
-Lichen, Cryptic Paw (Nephroma occultum)
-Lichen, Oldgrowth Specklebelly (Pseudocyphellaria rainierensis)
-Lichen, Peacock Vinyl (Leptogium polycarpum)
-Mountain Crab-eye (Acroscyphus sphaerophoroides)
-Waterfan, Western (Peltigera gowardii)""".split('\n\n')
+Coast Microseris
+Microseris bigelovii
+Pink Milkwort
+Polygala incarnata
+Hoary Mountain-mint
+Pycnanthemum incanum
+Red Mulberry
+Morus rubra
+Phantom Orchid
+Cephalanthera austiniae
+Bearded Owl-clover
+Triphysaria versicolor
+Grand Coulee Owl-clover
+Orthocarpus barbatus
+Rosy Owl-clover
+Orthocarpus bracteosus
+Victoria\'s Owl-clover
+Castilleja victoriae
+Golden Paintbrush
+Castilleja levisecta
+Branched Phacelia
+Phacelia ramosissima
+Whitebark Pine
+Pinus albicaulis
+Heart-leaved Plantain
+Plantago cordata
+Large Whorled Pogonia
+Isotria verticillata
+Nodding Pogonia
+Triphora trianthophora
+Small Whorled Pogonia
+Isotria medeoloides
+Ogden\'s Pondweed
+Potamogeton ogdenii
+Fragrant Popcornflower
+Plagiobothrys figuratus
+Stoloniferous Pussytoes
+Antennaria flagellaris
+Engelmann\'s Quillwort
+Isoetes engelmannii
+Quebec Rockcress
+Boechera quebecensis
+Kellogg\'s Rush
+Juncus kelloggii
+Pink Sand-verbena
+Abronia umbellata
+Small-flowered Sand-verbena
+Tripterocalyx micranthus
+Dwarf Sandwort
+Minuartia pusilla
+False Hop Sedge
+Carex lupuliformis
+Foothill Sedge
+Carex tumulicola
+Juniper Sedge
+Carex juniperorum
+Lindley\'s False Silverpuffs
+Uropappus lindleyi
+Brook Spike-primrose
+Epilobium torreyi
+Dense Spike-primrose
+Epilobium densiflorum
+Bent Spike-rush
+Eleocharis geniculata
+Bent Spike-rush
+Eleocharis geniculata
+Horsetail Spike-rush
+Eleocharis equisetoides
+Thread-leaved Sundew
+Drosera filiformis
+Small-flowered Tonella
+Tonella tenella
+Toothcup
+Rotala ramosior
+Cucumber Tree
+Magnolia acuminata
+Bog Bird\'s-foot Trefoil
+Lotus pinnatus
+Drooping Trillium
+Trillium flexipes
+Howell\'s Triteleia
+Triteleia howellii
+Bird’s-foot Violet
+Viola pedata
+Yellow Montane Violet praemorsa subspecies
+Viola praemorsa ssp. praemorsa
+Barrens Willow
+Salix jejuna
+Spotted Wintergreen
+Chimaphila maculata
+Wood-poppy
+Stylophorum diphyllum
+Tall Woolly-heads
+Psilocarphus elatior
+Dwarf Woolly-heads
+Psilocarphus brevissimus
+Batwing Vinyl Lichens
+Lichen
+Leptogium platynum
+Boreal Felt Lichen
+Erioderma pedicellatum
+Pale-bellied Frost Lichen
+Physconia subpallida
+Seaside Centipede Lichen
+Heterodermia sitchensis
+Vole Ears Lichen
+Erioderma mollissimum
+Rusty Mosses
+Cord-moss
+Entosthodon rubiginosus
+Acuteleaf Small Limestone Moss
+Seligeria acutifolia
+Margined Streamside Moss
+Scouleria marginata
+Nugget Moss
+Microbryum vlassovii
+Poor Pocket Moss
+Fissidens pauperculus
+Rigid Apple Moss
+Bartramia stricta
+Roell\'s Brotherella Moss
+Brotherella roellii
+Silver Hair Moss
+Fabronia pusilla
+Bat
+Antrozous pallidus
+Wood Bison
+Bison bison athabascae
+Woodland Caribou
+Rangifer tarandus caribou
+Ermine haidarum subspecies
+Mustela erminea haidarum
+Grey Fox
+Urocyon cinereoargenteus
+Swift Fox
+Vulpes velox
+American Marten
+Martes americana atrata
+Black-tailed Prairie Dog
+Cynomys ludovicianus
+Beluga Whale
+Delphinapterus leucas
+Fin Whale
+Balaenoptera physalus
+Killer Whale
+Orcinus orca
+Short-tailed Birds
+Albatross
+Phoebastria albatrus
+Least Bittern
+Ixobrychus exilis
+Bobolink
+Dolichonyx oryzivorus
+Lark Bunting
+Calamospiza melanocorys
+Red Crossbill percna subspecies
+Loxia curvirostra percna
+Olive-sided Flycatcher
+Contopus cooperi
+Northern Goshawk laingi subspecies
+Accipiter gentilis laingi
+Ross\'s Gull
+Rhodostethia rosea
+Ferruginous Hawk
+Buteo regalis
+Red Knot roselaari type
+Calidris canutus roselaari type
+Chestnut-collared Longspur
+Calcarius ornatus
+McCown\'s Longspur
+Rhynchophanes mccownii
+Eastern Meadowlark
+Sturnella magna
+Marbled Murrelet
+Brachyramphus marmoratus
+Common Nighthawk
+Chordeiles minor
+Barn Owl
+Tyto alba
+Northern Saw-whet Owl brooksi subspecies
+Aegolius acadicus brooksi
+Sprague\'s Pipit
+Anthus spragueii
+Western Screech-owl kennicottii subspecies
+Megascops kennicottii kennicottii
+Megascops kennicottii macfarlanei
+Loggerhead Shrike excubitorides subspecies
+Lanius ludovicianus excubitorides
+Bank Swallow
+Riparia riparia
+Barn Swallow
+Hirundo rustica
+Chimney Swift
+Chaetura pelagica
+Bicknell\'s Thrush
+Catharus bicknelli
+Wood Thrush
+Hylocichla mustelina
+Canada Warbler
+Wilsonia canadensis
+Golden-winged Warbler
+Vermivora chrysoptera
+Louisiana Waterthrush
+Parkesia motacilla
+Whip-poor-will
+Caprimulgus vociferus
+Lewis\'s Woodpecker
+Melanerpes lewis
+Rocky Mountain Tailed Amphibians
+Frog
+Ascaphus montanus
+Western Chorus Frog
+Pseudacris triseriata
+Coastal Giant Salamander
+Dicamptodon tenebrosus
+Spring Salamander
+Gyrinophilus porphyriticus
+Great Basin Spadefoot
+Spea intermontana
+Great Basin Reptiles
+Gophersnake
+Pituophis catenifer deserticola
+Massasauga
+Sistrurus catenatus
+Eastern Yellow-bellied Racer
+Coluber constrictor flaviventris
+Gray Ratsnake
+Pantherophis spiloides
+Western Rattlesnake
+Crotalus oreganos
+Eastern Ribbonsnake
+Thamnophis sauritus
+Eastern Hog-nosed Snake
+Heterodon platirhinos
+Blanding\'s Turtle
+Emydoidea blandingii
+Wood Turtle
+Glyptemys insculpta
+Eastern Sand Fish
+Darter
+Ammocrypta pellucida
+Eastern Sand Darter
+Ammocrypta pellucida
+Vancouver Lamprey
+Entosphenus macrostomus
+Plains Minnow
+Hybognathus placitus
+Pugnose Minnow
+Opsopoeodus emiliae
+Western Silvery Minnow
+Hybognathus argyritis
+Black Redhorse
+Moxostoma duquesnei
+Coastrange Sculpin
+Cottus aleuticus
+Rocky Mountain Sculpin
+Cottus sp.
+Pugnose Shiner
+Notropis anogenus
+Silver Shiner
+Notropis photogenis
+Spotted Wolffish
+Anarhichas minor
+Mountain Sucker
+Catostomus platyrhynchus
+Salish Sucker
+Catostomus sp. cf. catostomus
+Bull Trout
+Salvelinus confluentus
+Westslope Cutthroat Trout
+Oncorhynchus clarkii lewisi
+Northern Wolffish
+Anarhichas denticulatus
+Atlantic Mud-piddock
+Barnea truncata
+Dromedary Jumping-slug
+Hemphillia dromedarius
+Mapleleaf
+Quadrula quadrula
+Blue-grey Taildropper
+Prophysaon coeruleum
+Threehorn Wartyback
+Obliquaria reflexa
+Verna\'s Arthropods
+Flower Moth
+Schinia verna
+Dun Skipper
+Euphyes vestris
+Sable Island Sweat Bee
+Lasioglossum sablense
+Audouin\'s Night-stalking Tiger Beetle
+Omus audouini
+Gibson\'s Big Sand Tiger Beetle
+Cicindela formosa gibsoni
+Griscom’s Plants
+Arnica
+Arnica griscomii ssp. griscomii
+Anticosti Aster
+Symphyotrichum anticostense
+Gulf of St. Lawrence Aster
+Symphyotrichum laurentianum
+Western Silvery Aster
+Symphyotrichum sericeum
+White Wood Aster
+Eurybia divaricata
+Willowleaf Aster
+Symphyotrichum praealtum
+Eastern Baccharis
+Baccharis halimifolia
+Branched Bartonia
+Bartonia paniculata ssp. paniculata
+Dense Blazing Star
+Liatris spicata
+Kentucky Coffee-tree
+Gymnocladus dioicus
+Tiny Cryptantha
+Cryptantha minima
+Lakeside Daisy
+Hymenoxys herbacea
+Deerberry
+Vaccinium stamineum
+Gray\'s Desert-parsley
+Lomatium grayi
+Lemmon\'s Holly Fern
+Polystichum lemmonii
+Mountain Holly Fern
+Polystichum scopulinum
+Victorin\'s Gentian
+Gentianopsis virgata ssp. victorinii
+Showy Goldenrod
+Solidago speciosa
+Goldenseal
+Hydrastis canadensis
+Smooth Goosefoot
+Chenopodium subglabrum
+Round-leaved Greenbrier
+Smilax rotundifolia
+Dwarf Hackberry
+Celtis tenuifolia
+Wild Hyacinth
+Camassia scilloides
+Van Brunt\'s Jacob’s-ladder
+Polemonium vanbruntiae
+Small White Lady\'s-slipper
+Cypripedium candidum
+Hare-footed Locoweed
+Oxytropis lagopus
+Macoun\'s Meadowfoam
+Limnanthes macounii
+Mexican Mosquito-fern
+Azolla mexicana
+Slender Mouse-ear-cress
+Halimolobos virgata
+Cliff Paintbrush
+Castilleja rupicola
+Sweet Pepperbush
+Clethra alnifolia
+Showy Phlox
+Phlox speciosa ssp. occidentalis
+Slender Popcornflower
+Plagiobothrys tenellus
+Bolander\'s Quillwort
+Isoetes bolanderi
+False Rue-anemone
+Enemion biternatum
+Bear\'s-foot Sanicle
+Sanicula arctopoides
+Purple Sanicle
+Sanicula bipinnatifida
+Soapweed
+Yucca glauca
+Western Spiderwort
+Tradescantia occidentalis
+Hill\'s Thistle
+Cirsium hillii
+Toothcup
+Rotala ramosior
+Purple Twayblade
+Liparis liliifolia
+American Water-willow
+Justicia americana
+Green-scaled Willow
+Salix chlorolepis
+Blunt-lobed Woodsia
+Woodsia obtusa
+Seaside Lichens
+Bone
+Hypogymnia heterophylla
+Black-foam Lichen
+Anzia colpodes
+Crumpled Tarpaper Lichen
+Collema coniophilum
+Wrinkled Shingle Lichen
+Pannaria lurida
+Eastern Waterfan
+Peltigera hydrothyria
+Porsild\'s Mosses
+Bryum
+Mielichhoferia macrocarpa
+Alkaline Wing-nerved Moss
+Pterygoneurum kozlovii
+Haller\'s Apple Moss
+Bartramia halleriana
+Spoon-leaved Moss
+Bryoandersonia illecebra
+Badger taxus subspecies
+Taxidea taxus taxus
+Spotted Bat
+Euderma maculatum
+Grizzly Bear
+Ursus arctos
+Polar Bear
+Ursus maritimus
+Mountain Beaver
+Aplodontia rufa
+Barren-ground Caribou
+Rangifer tarandus groenlandicus
+Woodland Caribou
+Rangifer tarandus caribou
+Nuttall\'s Cottontail nuttallii subspecies
+Sylvilagus nuttallii nuttallii
+Eastern Mole
+Scalopus aquaticus
+Western Harvest Mouse megalotis subspecies
+Reithrodontomys megalotis megalotis
+Sea Otter
+Enhydra lutris
+Collared Pika
+Ochotona collaris
+Harbour Porpoise
+Phocoena phocoena
+Steller Sea Lion
+Eumetopias jubatus
+Woodland Vole
+Microtus pinetorum
+Bowhead Whale
+Balaena mysticetus
+Fin Whale
+Balaenoptera physalus
+Grey Whale
+Eschrichtius robustus
+Humpback Whale
+Megaptera novaeangliae
+Sowerby\'s Beaked Whale
+Mesoplodon bidens
+Eastern Wolf
+Canis lupus lycaon
+Wolverine
+Gulo gulo
+Black-footed Birds
+Albatross
+Phoebastria nigripes
+Cassin\'s Auklet
+Ptychoramphus aleuticus
+Rusty Blackbird
+Euphagus carolinus
+Long-billed Curlew
+Numenius americanus
+Harlequin Duck
+Histrionicus histrionicus
+Peregrine Falcon anatum/tundrius
+Falco peregrinus anatum/tundrius
+Peregrine Falcon pealei subspecies
+Falco peregrinus pealei
+Barrow\'s Goldeneye
+Bucephala islandica
+Horned Grebe
+Podiceps auritus
+Western Grebe
+Aechmophorus occidentalis
+Evening Grosbeak
+Coccothraustes vespertinus
+Great Blue Heron fannini subspecies
+Ardea herodias fannini
+Red Knot islandica subspecies
+Calidris canutus islandica
+Ancient Murrelet
+Synthliboramphus antiquus
+Flammulated Owl
+Otus flammeolus
+Short-eared Owl
+Asio flammeus
+Red-necked Phalarope
+Phalaropus lobatus
+Band-tailed Pigeon
+Patagioenas fasciata
+Yellow Rail
+Coturnicops noveboracensis
+Buff-breasted Sandpiper
+Tryngites subruficollis
+Baird\'s Sparrow
+Ammodramus bairdii
+Grasshopper Sparrow pratensis subspecies
+Ammodramus savannarum pratensis
+Savannah Sparrow princeps subspecies
+Passerculus sandwichensis princeps
+Eastern Wood-pewee
+Contopus virens
+Coastal Tailed Amphibians
+Ascaphus truei
+Northern Leopard Frog
+Lithobates pipiens
+Red-legged Frog
+Rana aurora
+Coeur d\'Alene Salamander
+Plethodon idahoensis
+Wandering Salamander
+Aneides vagrans
+Western Tiger Salamander
+Ambystoma mavortium
+Great Plains Toad
+Anaxyrus cognatus
+Western Toad
+Anaxyrus boreas
+Western Toad
+Anaxyrus boreas
+Rubber Reptiles
+Boa
+Charina bottae
+Milksnake
+Lampropeltis triangulum
+Western Yellow-bellied Racer
+Coluber constrictor mormon
+Prairie Rattlesnake
+Crotalus viridis
+Eastern Ribbonsnake
+Thamnophis sauritus
+Five-lined Skink
+Plestiodon fasciatus
+Prairie Skink
+Plestiodon septentrionalis
+Western Skink
+Plestiodon skiltonianus
+Eastern Musk Turtle
+Sternotherus odoratus
+Eastern Painted Turtle
+Chrysemys picta picta
+Midland Painted Turtle
+Chrysemys picta marginata
+Northern Map Turtle
+Graptemys geographica
+Snapping Turtle
+Chelydra serpentina
+Western Painted Turtle
+Chrysemys picta bellii
+Lake Erie Watersnake
+Nerodia sipedon insularum
+Bigmouth Fish
+Buffalo
+Ictiobus cyprinellus
+Channel Darter
+Percina copelandi
+Dolly Varden
+Salvelinus malma malma
+Banded Killifish
+Fundulus diaphanus
+Upper Great Lakes Kiyi
+Coregonus kiyi kiyi
+Northern Brook Lamprey
+Ichthyomyzon fossor
+Silver Lamprey
+Ichthyomyzon unicuspis
+Cutlip Minnow
+Exoglossum maxillingua
+Grass Pickerel
+Esox americanus vermiculatus
+River Redhorse
+Moxostoma carinatum
+Rougheye Rockfish type I
+Sebastes sp. type I
+Rougheye Rockfish type II
+Sebastes sp. type II
+Yelloweye Rockfish
+Sebastes ruberrimus
+Yelloweye Rockfish
+Sebastes ruberrimus
+Columbia Sculpin
+Cottus hubbsi
+Deepwater Sculpin
+Myoxocephalus thompsonii
+Rocky Mountain Sculpin
+Cottus sp.
+Shorthead Sculpin
+Cottus confusus
+Bluntnose Sixgill Shark
+Hexanchus griseus
+Bridle Shiner
+Notropis bifrenatus
+Giant Threespine Stickleback
+Gasterosteus aculeatus
+Unarmoured Threespine Stickleback
+Gasterosteus aculeatus
+Green Sturgeon
+Acipenser medirostris
+Lake Sturgeon
+Acipenser fulvescens
+Shortnose Sturgeon
+Acipenser brevirostrum
+Mountain Sucker
+Catostomus platyrhynchus
+Spotted Sucker
+Minytrema melanops
+Northern Sunfish
+Lepomis peltastes
+Longspine Thornyhead
+Sebastolobus altivelis
+Tope
+Galeorhinus galeus
+Blackstripe Topminnow
+Fundulus notatus
+Bull Trout
+Salvelinus confluentus
+Bull Trout
+Salvelinus confluentus
+Westslope Cutthroat Trout
+Oncorhynchus clarkii lewisi
+Warmouth
+Lepomis gulosus
+Atlantic Wolffish
+Anarhichas lupus
+Brook Molluscs
+Floater
+Alasmidonta varicosa
+Warty Jumping-slug
+Hemphillia glandulosa
+Wavy-rayed Lampmussel
+Lampsilis fasciola
+Yellow Lampmussel
+Lampsilis cariosa
+Magnum Mantleslug
+Magnipelta mycophaga
+Mapleleaf
+Quadrula quadrula
+Rocky Mountain Ridged Mussel
+Gonidea angulata
+Olympia Oyster
+Ostrea lurida
+Eastern Pondmussel
+Ligumia nasuta
+Rainbow
+Villosa iris
+Haida Gwaii Slug
+Staala gwaii
+Pygmy Slug
+Kootenaia burkei
+Sheathed Slug
+Zacoleus idahoensis
+Threaded Vertigo
+Nearctula sp.
+Yellow-banded Arthropods
+Bumble Bee
+Bombus terricola
+Vivid Dancer
+Argia vivida
+Greenish-white Grasshopper
+Hypochlora alba
+Red-tailed Leafhopper
+Aflexia rubranura
+Red-tailed Leafhopper
+Aflexia rubranura
+Mormon Metalmark
+Apodemia mormo
+Monarch
+Danaus plexippus
+Pale Yellow Dune Moth
+Copablepharon grandis
+Sonora Skipper
+Polites sonora
+Pygmy Snaketail
+Ophiogomphus howei
+Georgia Basin Bog Spider
+Gnaphosa snohomish
+Dune Tachinid Fly
+Germaria angustata
+Weidemeyer\'s Admiral
+Limenitis weidemeyerii
+Blue Ash
+Fraxinus quadrangulata
+Crooked-stem Aster
+Symphyotrichum prenanthoides
+Nahanni Aster
+Symphyotrichum nahanniense
+White-top Aster
+Sericocarpus rigidus
+Vancouver Island Beggarticks
+Bidens amplissima
+Western Blue Flag
+Iris missouriensis
+Buffalograss
+Bouteloua dactyloides
+American Hart\'s-tongue Fern
+Asplenium scolopendrium
+Coastal Wood Fern
+Dryopteris arguta
+Goldencrest
+Lophiola aurea
+Houghton\'s Goldenrod
+Solidago houghtonii
+Riddell\'s Goldenrod
+Solidago riddellii
+Mackenzie Hairgrass
+Deschampsia mackenzieana
+Common Hoptree
+Ptelea trifoliata
+Tuberous Indian-plantain
+Arnoglossum plantagineum
+Dwarf Lake Iris
+Iris lacustris
+Eastern Lilaeopsis
+Lilaeopsis chinensis
+Lyall\'s Mariposa Lily
+Calochortus lyallii
+Fernald’s Milk-vetch
+Astragalus robbinsii var. fernaldii
+Water Pennywort
+Hydrocotyle umbellata
+Beach Pinweed
+Lechea maritima
+Yukon Podistera
+Podistera yukonensis
+Hill\'s Pondweed
+Potamogeton hillii
+Hairy Prairie-clover
+Dalea villosa
+Prototype Quillwort
+Isoetes prototypus
+Redroot
+Lachnanthes caroliniana
+Climbing Prairie Rose
+Rosa setigera
+Swamp Rose-mallow
+Hibiscus moscheutos
+New Jersey Rush
+Juncus caesariensis
+Spiked Saxifrage
+Micranthes spicata
+Baikal Sedge
+Carex sabulosa
+Tubercled Spike-rush
+Eleocharis tuberculosa
+Floccose Tansy
+Tanacetum huronense var. floccosum
+Pitcher\'s Thistle
+Cirsium pitcheri
+Athabasca Thrift
+Armeria maritima interior
+Victorin\'s Water-hemlock
+Cicuta maculata var. victorinii
+Yukon Wild Buckwheat
+Eriogonum flavum var. aquilinum
+Felt-leaf Willow
+Salix silicicola
+Sand-dune Short-capsuled Willow
+Salix brachycarpa var. psammophila
+Turnor\'s Willow
+Salix turnorii
+Dwarf Woolly-heads
+Psilocarphus brevissimus
+Large-headed Woolly Yarrow
+Achillea millefolium var. megacephalum
+Banded Mosses
+Cord-moss
+Entosthodon fascicularis
+Columbian Carpet Moss
+Bryoerythrophyllum columbianum
+Twisted Oak Moss
+Syntrichia laevipila
+Tiny Tassel
+Crossidium seriatum
+Frosted Lichens
+Glass-whiskers
+Sclerophora peronella
+Flooded Jellyskin
+Leptogium rivulare
+Blue Felt Lichen
+Degelia plumbea
+Boreal Felt Lichen
+Erioderma pedicallatum
+Cryptic Paw Lichen
+Nephroma occultum
+Oldgrowth Specklebelly Lichen
+Pseudocyphellaria rainierensis
+Peacock Vinyl Lichen
+Leptogium polycarpum
+Mountain Crab-eye
+Acroscyphus sphaerophoroides
+Western Waterfan
+Peltigera gowardii""".split('\n')
 
 Species_at_Risk.append(all_canadian_species_at_risk)
 
