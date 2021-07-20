@@ -2489,5 +2489,5 @@ species_at_risk_eng = [split_list_item_by_taking_words_in_parentheses(item) for 
 import itertools
 species_at_risk_eng = list(itertools.chain(*species_at_risk_eng))
 
-for s in species_at_risk_eng[1400:1500]:
+for s in species_at_risk_eng[0:300]:
     print(s)

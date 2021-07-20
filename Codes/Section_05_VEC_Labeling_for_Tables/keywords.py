@@ -464,141 +464,153 @@ offsetting
 Compensation
 Caribou
 Bat
-special conservation status"""
-
-all_canadian_species_at_risk = """Taxidea taxus jacksoni
+special conservation status
+American Badger jacksoni
+jaksoni
+Badger
+Taxidea taxus jacksoni
+American Badger jeffersonii
 Taxidea taxus jeffersonii
-Blaireau
-Badger jeffersonii
+American Badger jeffersonii
+jeffersonii
 Taxidea taxus jeffersonii
-Bat
+Tri-coloured Bat
 Perimyotis subflavus
-Pipistrelle de l\'Est
+Peary Caribou
 Caribou
 Rangifer tarandus pearyi
-Caribou de Peary
+Woodland Caribou
 Rangifer tarandus caribou
-Kangaroo Rat
+Ord\'s Kangaroo Rat
 Dipodomys ordii
-Rat kangourou d\'Ord
-Marmot
+Vancouver Island Marmot
 Marmota vancouverensis
-Mole
+Townsend\'s Mole
 Scapanus townsendii
+Western Harvest Mouse dychei
 dychei
 Reithrodontomys megalotis dychei
+Little Brown Myotis
 Myotis
 Myotis lucifugus
+Northern Myotis
 Myotis septentrionalis
-Seal 
-Lacs des Loups Marins
+Harbour Seal Lacs des Loups Marins
+Seal
 Phoca vitulina mellonae
-Shrew
+Pacific Water Shrew
 Sorex bendirii
-Musaraigne de Bendire
-Beluga
+Whale
+Beluga Whale
 Delphinapterus leucas
+Blue Whale
+Balaenoptera musculus
 Blue Whale
 Balaenoptera musculus
 Killer Whale
 Orcinus orca
-Whale
+North Atlantic Right Whale
 Eubalaena glacialis
+North Pacific Right Whale
 Eubalaena japonica
+Northern Bottlenose Whale
 Hyperoodon ampullatus
 Sei Whale
 Balaenoptera borealis
+Northern Birds
 Bobwhite
 Colinus virginianus
+Yellow-breasted Chat auricollis
 auricollis
 Icteria virens auricollis
+Yellow-breasted Chat virens
 virens
 Icteria virens virens
-Crane
+Whooping Crane
 Grus americana
-Grue blanche
-Curlew
+Eskimo Curlew
 Numenius borealis
-Flycatcher
+Acadian Flycatcher
 Empidonax virescens
-Grebe
+Horned Grebe
 Podiceps auritus
-Gull
+Ivory Gull
 Pagophila eburnea
-Mouette blanche
+Red Knot rufa
 rufa
 Calidris canutus rufa
-Lark
+Streaked Horned Lark
 Eremophila alpestris strigata
 Barn Owl
 Tyto alba
 Burrowing Owl
 Athene cunicularia
+Spotted Owl caurina
 caurina
-Spotted Owl
 Strix occidentalis caurina
-Plover
+Mountain Plover
 Charadrius montanus
-circumcinctus
+Piping Plover circumcinctus
+circuinctus
 Charadrius melodus circumcinctus
+Piping Plover melodus
 melodus
 Charadrius melodus melodus
 King Rail
 Rallus elegans
-urophasianus
+Greater Sage-Grouse urophasianus subspecies
 Centrocercus urophasianus urophasianus
-Sapsucker
+Williamson\'s Sapsucker
 Sphyrapicus thyroideus
-Shearwater
+Pink-footed Shearwater
 Ardenna creatopus
-Puffin
+Loggerhead Shrike migrans
 migrans
 Lanius ludovicianus migrans
-Coastal Vesper
+Coastal Vesper Sparrow
 Pooecetes gramineus affinis
-Henslow
+Henslow\'s Sparrow
 Ammodramus henslowii
 Black Swift
 Cypseloides niger
-Roseate
+Roseate Tern
 Sterna dougallii
 Sage Thrasher
 Oreoscoptes montanus
 Cerulean Warbler
 Setophaga cerulea
-warbler
-kirtland
+Kirtland\'s Warbler
 Dendroica kirtlandii
-Prothonotary
+Prothonotary Warbler
 Protonotaria citrea
-Woodpecker
+Red-headed Woodpecker
 Melanerpes erythrocephalus
+White-headed Woodpecker
 Picoides albolarvatus
-Blanchard\'s Cricket
+Cricket Frog
 Acris blanchardi
-Rainette grillon de Blanchard
-Northern Leopard
+Northern Leopard Frog
 Lithobates pipiens
-Oregon Spotted
+Oregon Spotted Frog
 Rana pretiosa
-Salamander
-Allegheny Mountain Dusky
+Allegheny Mountain Dusky Salamander
 Desmognathus ochrophaeus
-Allegheny Mountain Dusky
+Allegheny Mountain Dusky Salamander
 Desmognathus ochrophaeus
-Eastern Tiger
+Eastern Tiger Salamander
 Ambystoma tigrinum
-Jefferson
+Jefferson Salamander
 Ambystoma jeffersonianum
-Northern Dusky
+Northern Dusky Salamander
 Desmognathus fuscus
-Small-mouthed
+Small-mouthed Salamander
 Ambystoma texanum
-Western Tiger
+Western Tiger Salamander
 Ambystoma mavortium
 Fowler\'s Toad
 Anaxyrus fowleri
-Eastern Foxsnake
+Eastern Reptiles
+Foxsnake
 Pantherophis gloydi
 Eastern Foxsnake
 Pantherophis gloydi
@@ -618,10 +630,11 @@ Gray Ratsnake
 Pantherophis spiloides
 Leatherback Sea Turtle
 Dermochelys coriacea
-Sea Turtle
+Leatherback Sea Turtle
+Dermochelys coriacea
 Loggerhead Sea Turtle
 Caretta caretta
-Five-Lined Skink
+Five-lined Skink
 Plestiodon fasciatus
 Sharp-tailed Snake
 Contia tenuis
@@ -633,7 +646,8 @@ Spotted Turtle
 Clemmys guttata
 Western Painted Turtle
 Chrysemys picta bellii
-Striped Bass
+Striped Fish
+Bass
 Morone saxatilis
 Silver Chub
 Macrhybopsis storeriana
@@ -676,13 +690,25 @@ Osmerus mordax
 Enos Lake Benthic Threespine Stickleback
 Gasterosteus aculeatus
 Enos Lake Limnetic Threespine Stickleback
+Gasterosteus aculeatus
 Misty Lake Lentic Threespine Stickleback
+Gasterosteus aculeatus
 Misty Lake Lotic Threespine Stickleback
+Gasterosteus aculeatus
 Paxton Lake Benthic Threespine Stickleback
+Gasterosteus aculeatus
 Paxton Lake Limnetic Threespine Stickleback
+Gasterosteus aculeatus
 Vananda Creek Benthic Threespine Stickleback
+Gasterosteus aculeatus
 Vananda Creek Limnetic Threespine Stickleback
 Gasterosteus aculeatus
+White Sturgeon
+Acipenser transmontanus
+White Sturgeon
+Acipenser transmontanus
+White Sturgeon
+Acipenser transmontanus
 White Sturgeon
 Acipenser transmontanus
 Rainbow Trout
@@ -795,8 +821,7 @@ Northern Barrens Tiger Beetle
 Cicindela patruela
 Wallis\' Dark Saltflat Tiger Beetle
 Cicindela parowana wallisi
-Gattinger\'s Plants
-Agalinis
+Gattinger\'s Agalinis
 Agalinis gattingeri
 Rough Agalinis
 Agalinis aspera
@@ -978,9 +1003,10 @@ Drooping Trillium
 Trillium flexipes
 Howell\'s Triteleia
 Triteleia howellii
-Bird’s-foot Violet
+Bird\'s-foot Violet
 Viola pedata
-Yellow Montane Violet praemorsa subspecies
+Yellow Montane Violet praemorsa
+praemorsa
 Viola praemorsa ssp. praemorsa
 Barrens Willow
 Salix jejuna
@@ -1003,8 +1029,7 @@ Seaside Centipede Lichen
 Heterodermia sitchensis
 Vole Ears Lichen
 Erioderma mollissimum
-Rusty Mosses
-Cord-moss
+Rusty Cord-moss
 Entosthodon rubiginosus
 Acuteleaf Small Limestone Moss
 Seligeria acutifolia
@@ -1051,18 +1076,21 @@ Bobolink
 Dolichonyx oryzivorus
 Lark Bunting
 Calamospiza melanocorys
-Red Crossbill percna subspecies
+Red Crossbill percna
+percna
 Loxia curvirostra percna
 Olive-sided Flycatcher
 Contopus cooperi
-Northern Goshawk laingi subspecies
+Northern Goshawk laingi
+laingi
 Accipiter gentilis laingi
 Ross\'s Gull
 Rhodostethia rosea
 Ferruginous Hawk
 Buteo regalis
 Red Knot roselaari type
-Calidris canutus roselaari type
+Calidris canutus roselaari
+roselaari
 Chestnut-collared Longspur
 Calcarius ornatus
 McCown\'s Longspur
@@ -1075,14 +1103,17 @@ Common Nighthawk
 Chordeiles minor
 Barn Owl
 Tyto alba
-Northern Saw-whet Owl brooksi subspecies
+Northern Saw-whet Owl brooksi
+brooksi
 Aegolius acadicus brooksi
 Sprague\'s Pipit
 Anthus spragueii
-Western Screech-owl kennicottii subspecies
+Western Screech-owl kennicottii
+kennicottii
 Megascops kennicottii kennicottii
 Megascops kennicottii macfarlanei
-Loggerhead Shrike excubitorides subspecies
+Loggerhead Shrike excubitorides
+excubitorides
 Lanius ludovicianus excubitorides
 Bank Swallow
 Riparia riparia
@@ -1104,8 +1135,7 @@ Whip-poor-will
 Caprimulgus vociferus
 Lewis\'s Woodpecker
 Melanerpes lewis
-Rocky Mountain Tailed Amphibians
-Frog
+Rocky Mountain Tailed Frog
 Ascaphus montanus
 Western Chorus Frog
 Pseudacris triseriata
@@ -1301,7 +1331,8 @@ Haller\'s Apple Moss
 Bartramia halleriana
 Spoon-leaved Moss
 Bryoandersonia illecebra
-Badger taxus subspecies
+Badger taxus
+taxus
 Taxidea taxus taxus
 Spotted Bat
 Euderma maculatum
@@ -1315,7 +1346,8 @@ Barren-ground Caribou
 Rangifer tarandus groenlandicus
 Woodland Caribou
 Rangifer tarandus caribou
-Nuttall\'s Cottontail nuttallii subspecies
+Nuttall\'s Cottontail nuttallii
+nuttallii
 Sylvilagus nuttallii nuttallii
 Eastern Mole
 Scalopus aquaticus
@@ -1368,7 +1400,8 @@ Western Grebe
 Aechmophorus occidentalis
 Evening Grosbeak
 Coccothraustes vespertinus
-Great Blue Heron fannini subspecies
+Great Blue Heron fannini
+fannini
 Ardea herodias fannini
 Red Knot islandica subspecies
 Calidris canutus islandica
@@ -1412,8 +1445,7 @@ Western Toad
 Anaxyrus boreas
 Western Toad
 Anaxyrus boreas
-Rubber Reptiles
-Boa
+Rubber Boa
 Charina bottae
 Milksnake
 Lampropeltis triangulum
@@ -1443,8 +1475,7 @@ Western Painted Turtle
 Chrysemys picta bellii
 Lake Erie Watersnake
 Nerodia sipedon insularum
-Bigmouth Fish
-Buffalo
+Bigmouth Buffalo
 Ictiobus cyprinellus
 Channel Darter
 Percina copelandi
@@ -1608,7 +1639,7 @@ Eastern Lilaeopsis
 Lilaeopsis chinensis
 Lyall\'s Mariposa Lily
 Calochortus lyallii
-Fernald’s Milk-vetch
+Fernald\'s Milk-vetch
 Astragalus robbinsii var. fernaldii
 Water Pennywort
 Hydrocotyle umbellata
@@ -1683,9 +1714,7 @@ Leptogium polycarpum
 Mountain Crab-eye
 Acroscyphus sphaerophoroides
 Western Waterfan
-Peltigera gowardii""".split('\n')
-
-Species_at_Risk.append(all_canadian_species_at_risk)
+Peltigera gowardii"""
 
 Air_Emissions = """Air Emissions
 Air
