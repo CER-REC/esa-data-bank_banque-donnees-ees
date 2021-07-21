@@ -46,10 +46,9 @@ def is_empty(lines):
 def extract_csv(args):
     buf = StringIO()
     with redirect_stdout(buf), redirect_stderr(buf):
-        pdf_id, total_pages, engine_string2, pdf_files_folder_string, csv_tables_folder_string = args
+        pdf_id, total_pages, pdf_files_folder_string, csv_tables_folder_string = args
         pdf_files_folder2 = Path(pdf_files_folder_string)
         csv_tables_folder2 = Path(csv_tables_folder_string)
-        engine2 = create_engine(engine_string2)
         start_time = time.time()
 
         def save_tables(csv_tables, csv_page, method):
@@ -66,7 +65,7 @@ def extract_csv(args):
                 table.to_csv(csv_full_path, index=False, header=False, encoding="utf-8-sig")
                 has_content = 0 if is_empty(json.dumps(csv_text)) else 1
 
-                with engine2.connect() as conn2:
+                with engine.connect() as conn2:
                     statement2 = text(
                         "INSERT INTO csvs (csvId, csvFileName, csvFullPath, pdfId, page, tableNumber," +
                         "topRowJson, csvRows, csvColumns, method, accuracy, whitespace, csvText, hasContent) " +
@@ -91,7 +90,7 @@ def extract_csv(args):
                     # More info here: https://camelot-py.readthedocs.io/en/master/
                     # And here for Advanced Usage: https://camelot-py.readthedocs.io/en/master/user/advanced.html
                     tables = camelot.read_pdf(str(pdf_file_path), pages=str(page), strip_text='\n',
-                                              line_scale=40, flag_size=True, copy_text=['v'], )
+                                              line_scale=40, flag_size=True, copy_text=['v'])
                     save_tables(tables, page, "lattice-v")
                 except Exception as e:
                     print(f'Error processing {pdf_id} on page {page}:')
@@ -99,7 +98,7 @@ def extract_csv(args):
                     traceback.print_tb(e.__traceback__)
 
             # Add extracted table to the database
-            with engine2.connect() as conn:
+            with engine.connect() as conn:
                 statement = text("UPDATE pdfs SET csvsExtracted = :csvsExtracted WHERE pdfId = :pdfId;")
                 conn.execute(statement, {"csvsExtracted": 'true', "pdfId": pdf_id})
             duration = round(time.time() - start_time)
@@ -139,7 +138,6 @@ def extract_tables():
         files.append(
             (pdf["pdfId"],
              int(pdf["totalPages"]),
-             engine_string,
              str(pdf_files_folder),
              str(csv_tables_folder)))
 
@@ -148,15 +146,15 @@ def extract_tables():
     print(f"Items to process: {len(files)} at {time_stamp}\n")
 
     # Sequential mode - if using, please comment out the multiprocessing mode code  
-    # for file in files[-12:]:
-    #     result = extract_csv(file)
-    #     print(result, end='', flush=True)
+    for file in files[:]:
+        result = extract_csv(file)
+        print(result, end='', flush=True)
 
     # Multiprocessing mode - if using, please comment out the sequential mode code
-    with Pool() as pool:
-        results = pool.map(extract_csv, files, chunksize=1)
-    for result in results:
-        print(result, end='', flush=True)
+    # with Pool() as pool:
+    #     results = pool.map(extract_csv, files, chunksize=1)
+    # for result in results:
+    #     print(result, end='', flush=True)
 
     duration = round(time.time() - start_time)
     mins = round(duration / 60, 2)
