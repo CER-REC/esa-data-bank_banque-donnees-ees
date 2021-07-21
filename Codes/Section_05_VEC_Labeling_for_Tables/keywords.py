@@ -7,6 +7,7 @@ Physical_and_Meteorological_Environment = """Physical and Meteorological Environ
 Precipitation
 Snowfall
 Wind
+rain
 Mean temperatures
 Slope
 Geotechnical
@@ -17,7 +18,7 @@ Erosion
 Ice
 Permafrost
 Climate trend
-ground
+climate
 water erosion
 wind erosion
 acid-generating rock
@@ -38,7 +39,13 @@ ice jams
 acid rock
 climate variability
 ground conditions
-thaw"""
+thaw
+till
+earthquake
+avalanche
+sloping
+topography
+elevation"""
 
 
 Soil_and_Soil_Productivity = """Soil Productivity
@@ -67,7 +74,32 @@ sediments
 rocks
 minerals
 sand
-ground"""
+chernozem
+DVG
+Dunvargan
+calcareous
+CRW
+sand
+sandy
+Glaciofluvial
+boulders
+gravel
+silt
+clay
+stone
+stoniness"""
+
+
+# Diversity
+# Abundance
+# Ecological
+# Inventory
+# Community
+# communities
+
+# ecological community
+
+
 
 Vegetation = """Vegetation
 Plant
@@ -79,15 +111,7 @@ Prairie
 Forest
 forested
 Clearing
-Diversity
-Abundance
-Ecological
-Inventory
-Community
-communities
-ecological community
 plant community
-Cover
 orchid
 orchard
 Weeds
@@ -96,6 +120,8 @@ invasive plants
 Seed mix
 Herbicide
 Tree
+leaf
+branch
 Growth
 Old growth
 Biodiversity
@@ -122,11 +148,46 @@ agricultural
 root
 seed
 mulcher
-mulch"""
+mulch
+bentgrass
+sedge
+carex
+wood
+moss
+bulrush
+oatgrass
+mannagrass
+flower
+androgynum
+Aulacomnium
+undulatum
+Atrichum
+wheatgrass
+parviflora
+luzula
+crawfordii
+Achnatherum
+needlegrass
+eleocharis
+reedgrass
+calamagrostis
+latifolia
+Elymus
+grain
+wildrye
+meadow
+speargrass
+shrub
+chokecherry"""
 
 
 Water_Quality_and_Quantity = """Water Quality and Quantity
 Water
+waterbody
+water body
+watercourse
+evaporation
+transpiration
 Surface water
 Ground water
 Runoff
@@ -135,12 +196,15 @@ contaminant
 Water use
 Hydrologic
 hydrological
+hydro
+hydrostatic
+salinity
+blasting
 Withdrawal
-Discharge
 Flow
 Peak
 Basin
-Inter-basin transfer
+Inter-basin
 Water Quality
 Water quality testing
 Water table
@@ -148,39 +212,64 @@ Containment
 Sediment
 sewer
 waste
+wastewater
+biosolids
+sludge
+septage
 groundwater
 groundwater-related
 aquifers
 streamflow
 acquatics
 river
-hydrometric"""
+hydrometric
+watershed
+waterfall
+sea
+ocean
+lake
+pond
+fjords
+wadis
+runs
+reservoir
+lagoon
+bay
+harbor
+well
+well-water
+surface-water
+surfacewater
+hot spring
+creek"""
 
 Fish_and_Fish_Habitat = """Fish and Fish Habitat
 Fish
+fish-bearing
+fisheries
 Fisheries and Oceans Canada
 DFO
 Fisheries and Oceans
 Local fisheries
 Trout
-Authorization
 Fisheries Act
 Offsetting
-Monitoring
 Instream work
 in-stream work
-Timing window
 Restricted activity period
 Fish-bearing water body
 Riparian
 Aquatic
 Aquatic invasive species
 Spawning
-Migrating
-Eggs
 Fry
+fingerling
+alevin
+chlorine
+chlorinated
 Sport fishery
 Spawning deterrent
+spawning period
 Stream
 River
 In-stream
@@ -208,7 +297,16 @@ yellow perch
 shiner
 sucker
 whitefish
-cisco"""
+cisco
+marine
+clam
+scallop
+sea
+ocean
+lake
+pond
+bay
+orca"""
 
 Wetlands = """Wetlands
 Class (wetland class)
@@ -235,18 +333,25 @@ water recharge
 potholes
 ponds
 peatbogs
-mires"""
+mires
+mangrove forest
+carr
+pocosin
+floodplains
+vernal pool
+baygall"""
 
 Wildlife_and_Wildlife_Habitat = """Wildlife and Wildlife Habitat
 nocturnal
 bat trees
 hibernation
 migratory birds
+migratory bird sanctuary
 MBCA
 migratory birds convention act
 Nesting
+foraging
 Restricted activity period
-Timing window
 Mammal
 Ungulate
 Amphibian
@@ -256,7 +361,6 @@ Den
 denning
 Wintering
 overwintering
-Migration
 Hibernaculum
 hibernacula
 Riparian habitat
@@ -278,7 +382,6 @@ Bat
 caribou
 bird
 goose
-amphibian
 swans
 frogs
 toads
@@ -294,7 +397,40 @@ waterbird
 bear
 moose
 bat
-owl"""
+owl
+beaver
+moose
+polar bear
+bison
+puffin
+lynx
+deer
+wolf
+reindeer
+bear
+cougar
+goose
+coyote
+wolverine
+raccoon
+elk
+crane
+porcupine
+fox
+hare
+loon
+marmot
+rabbit
+bobcat
+owl
+rattlesnake
+insect
+bug
+weasel
+otter
+skunk
+mineral lick
+minerallick"""
 
 Species_at_Risk = """Species at Risk
 Species of Special Status
@@ -328,9 +464,1260 @@ offsetting
 Compensation
 Caribou
 Bat
-special conservation status"""
+special conservation status
+American Badger jacksoni
+jaksoni
+Badger
+Taxidea taxus jacksoni
+American Badger jeffersonii
+Taxidea taxus jeffersonii
+American Badger jeffersonii
+jeffersonii
+Taxidea taxus jeffersonii
+Tri-coloured Bat
+Perimyotis subflavus
+Peary Caribou
+Caribou
+Rangifer tarandus pearyi
+Woodland Caribou
+Rangifer tarandus caribou
+Ord\'s Kangaroo Rat
+Dipodomys ordii
+Vancouver Island Marmot
+Marmota vancouverensis
+Townsend\'s Mole
+Scapanus townsendii
+Western Harvest Mouse dychei
+dychei
+Reithrodontomys megalotis dychei
+Little Brown Myotis
+Myotis
+Myotis lucifugus
+Northern Myotis
+Myotis septentrionalis
+Harbour Seal Lacs des Loups Marins
+Seal
+Phoca vitulina mellonae
+Pacific Water Shrew
+Sorex bendirii
+Whale
+Beluga Whale
+Delphinapterus leucas
+Blue Whale
+Balaenoptera musculus
+Blue Whale
+Balaenoptera musculus
+Killer Whale
+Orcinus orca
+North Atlantic Right Whale
+Eubalaena glacialis
+North Pacific Right Whale
+Eubalaena japonica
+Northern Bottlenose Whale
+Hyperoodon ampullatus
+Sei Whale
+Balaenoptera borealis
+Northern Birds
+Bobwhite
+Colinus virginianus
+Yellow-breasted Chat auricollis
+auricollis
+Icteria virens auricollis
+Yellow-breasted Chat virens
+virens
+Icteria virens virens
+Whooping Crane
+Grus americana
+Eskimo Curlew
+Numenius borealis
+Acadian Flycatcher
+Empidonax virescens
+Horned Grebe
+Podiceps auritus
+Ivory Gull
+Pagophila eburnea
+Red Knot rufa
+rufa
+Calidris canutus rufa
+Streaked Horned Lark
+Eremophila alpestris strigata
+Barn Owl
+Tyto alba
+Burrowing Owl
+Athene cunicularia
+Spotted Owl caurina
+caurina
+Strix occidentalis caurina
+Mountain Plover
+Charadrius montanus
+Piping Plover circumcinctus
+circuinctus
+Charadrius melodus circumcinctus
+Piping Plover melodus
+melodus
+Charadrius melodus melodus
+King Rail
+Rallus elegans
+Greater Sage-Grouse urophasianus subspecies
+Centrocercus urophasianus urophasianus
+Williamson\'s Sapsucker
+Sphyrapicus thyroideus
+Pink-footed Shearwater
+Ardenna creatopus
+Loggerhead Shrike migrans
+migrans
+Lanius ludovicianus migrans
+Coastal Vesper Sparrow
+Pooecetes gramineus affinis
+Henslow\'s Sparrow
+Ammodramus henslowii
+Black Swift
+Cypseloides niger
+Roseate Tern
+Sterna dougallii
+Sage Thrasher
+Oreoscoptes montanus
+Cerulean Warbler
+Setophaga cerulea
+Kirtland\'s Warbler
+Dendroica kirtlandii
+Prothonotary Warbler
+Protonotaria citrea
+Red-headed Woodpecker
+Melanerpes erythrocephalus
+White-headed Woodpecker
+Picoides albolarvatus
+Cricket Frog
+Acris blanchardi
+Northern Leopard Frog
+Lithobates pipiens
+Oregon Spotted Frog
+Rana pretiosa
+Allegheny Mountain Dusky Salamander
+Desmognathus ochrophaeus
+Allegheny Mountain Dusky Salamander
+Desmognathus ochrophaeus
+Eastern Tiger Salamander
+Ambystoma tigrinum
+Jefferson Salamander
+Ambystoma jeffersonianum
+Northern Dusky Salamander
+Desmognathus fuscus
+Small-mouthed Salamander
+Ambystoma texanum
+Western Tiger Salamander
+Ambystoma mavortium
+Fowler\'s Toad
+Anaxyrus fowleri
+Eastern Reptiles
+Foxsnake
+Pantherophis gloydi
+Eastern Foxsnake
+Pantherophis gloydi
+Butler\'s Gartersnake
+Thamnophis butleri
+Greater Short-horned Lizard
+Phrynosoma hernandesi
+Massasauga
+Sistrurus catenatus
+Desert Nightsnake
+Hypsiglena chlorophaea
+Queensnake
+Regina septemvittata
+Blue Racer
+Coluber constrictor foxii
+Gray Ratsnake
+Pantherophis spiloides
+Leatherback Sea Turtle
+Dermochelys coriacea
+Leatherback Sea Turtle
+Dermochelys coriacea
+Loggerhead Sea Turtle
+Caretta caretta
+Five-lined Skink
+Plestiodon fasciatus
+Sharp-tailed Snake
+Contia tenuis
+Spiny Softshell
+Apalone spinifera
+Blanding\'s Turtle
+Emydoidea blandingii
+Spotted Turtle
+Clemmys guttata
+Western Painted Turtle
+Chrysemys picta bellii
+Striped Fish
+Bass
+Morone saxatilis
+Silver Chub
+Macrhybopsis storeriana
+Lake Chubsucker
+Erimyzon sucetta
+Shortnose Cisco
+Coregonus reighardi
+Spring Cisco
+Coregonus sp.
+Nooksack Dace
+Rhinichthys cataractae ssp.
+Redside Dace
+Clinostomus elongatus
+Speckled Dace
+Rhinichthys osculus
+Channel Darter
+Percina copelandi
+Channel Darter
+Percina copelandi
+Spotted Gar
+Lepisosteus oculatus
+Western Brook Lamprey
+Lampetra richardsoni
+Northern Madtom
+Noturus stigmosus
+Copper Redhorse
+Moxostoma hubbsi
+Atlantic Salmon
+Salmo salar
+Basking Shark
+Cetorhinus maximus
+White Shark
+Carcharodon carcharias
+Carmine Shiner
+Notropis percobromus
+Rainbow Smelt
+Osmerus mordax
+Rainbow Smelt
+Osmerus mordax
+Enos Lake Benthic Threespine Stickleback
+Gasterosteus aculeatus
+Enos Lake Limnetic Threespine Stickleback
+Gasterosteus aculeatus
+Misty Lake Lentic Threespine Stickleback
+Gasterosteus aculeatus
+Misty Lake Lotic Threespine Stickleback
+Gasterosteus aculeatus
+Paxton Lake Benthic Threespine Stickleback
+Gasterosteus aculeatus
+Paxton Lake Limnetic Threespine Stickleback
+Gasterosteus aculeatus
+Vananda Creek Benthic Threespine Stickleback
+Gasterosteus aculeatus
+Vananda Creek Limnetic Threespine Stickleback
+Gasterosteus aculeatus
+White Sturgeon
+Acipenser transmontanus
+White Sturgeon
+Acipenser transmontanus
+White Sturgeon
+Acipenser transmontanus
+White Sturgeon
+Acipenser transmontanus
+Rainbow Trout
+Oncorhynchus mykiss
+Atlantic Whitefish
+Coregonus huntsmani
+Northern Molluscs
+Abalone
+Haliotis kamtschatkana
+Rayed Bean
+Villosa fabalis
+Fawnsfoot
+Truncilla donaciformis
+Broad-banded Forestsnail
+Allogona profunda
+Oregon Forestsnail
+Allogona townsendiana
+Proud Globelet
+Patera pennsylvanica
+Hickorynut
+Obovaria olivaria
+Round Hickorynut
+Obovaria subrotunda
+Kidneyshell
+Ptychobranchus fasciolaris
+Lilliput
+Toxolasma parvum
+Salamander Mussel
+Simpsonaias ambigua
+Hotwater Physa
+Physella wrighti
+Round Pigtoe
+Pleurobema sintoxia
+Northern Riffleshell
+Epioblasma torulosa rangiana
+Banff Springs Snail
+Physella johnsoni
+Snuffbox
+Epioblasma triquetra
+Island Arthropods
+Blue
+Plebejus saepiolus insulanus
+Aweme Borer
+Papaipema aweme
+Hoptree Borer
+Prays atomocella
+Bogbean Buckmoth
+Hemileuca sp.
+Gypsy Cuckoo Bumble Bee
+Bombus bohemicus
+Rusty-patched Bumble Bee
+Bombus affinis
+Taylor\'s Checkerspot
+Euphydryas editha taylori
+Olive Clubtail
+Stylurus olivaceus
+Rapids Clubtail
+Gomphus quadricolor
+Riverine Clubtail
+Stylurus amnicola
+Skillet Clubtail
+Gomphus ventricosus
+Hungerford\'s Crawling Water Beetle
+Brychius hungerfordi
+Macropis Cuckoo Bee
+Epeoloides pilosulus
+Bert\'s Predaceous Diving Beetle
+Sanfilippodytes bertae
+Eastern Persius Duskywing
+Erynnis persius persius
+Okanagan Efferia
+Efferia okanagana
+Hine\'s Emerald
+Somatochlora hineana
+White Flower Moth
+Schinia bimatris
+Gold-edged Gem
+Schinia avemensis
+Behr\'s Hairstreak
+Satyrium behrii
+Half-moon Hairstreak
+Satyrium semiluna
+Mormon Metalmark
+Apodemia mormo
+Dusky Dune Moth
+Copablepharon longipenne
+Edwards\' Beach Moth
+Anarta edwardsii
+Five-spotted Bogus Yucca Moth
+Prodoxus quinquepunctellus
+Non-pollinating Yucca Moth
+Tegeticula corruptrix
+Sand-verbena Moth
+Copablepharon fuscum
+Yucca Moth
+Tegeticula yuccasella
+Maritime Ringlet
+Coenonympha nipisiquit
+Dakota Skipper
+Hesperia dacotae
+Poweshiek Skipperling
+Oarisma poweshiek
+Ottoe Skipper
+Hesperia ottoe
+False-foxglove Sun Moth
+Pyrrhia aurantiago
+Cobblestone Tiger Beetle
+Cicindela marginipennis
+Northern Barrens Tiger Beetle
+Cicindela patruela
+Wallis\' Dark Saltflat Tiger Beetle
+Cicindela parowana wallisi
+Gattinger\'s Agalinis
+Agalinis gattingeri
+Rough Agalinis
+Agalinis aspera
+Skinner\'s Agalinis
+Agalinis skinneriana
+Scarlet Ammannia
+Ammannia robusta
+Short-rayed Alkali Aster
+Symphyotrichum frondosum
+Eastern Mountain Avens
+Geum peckii
+Deltoid Balsamroot
+Balsamorhiza deltoidea
+Tall Beakrush
+Rhynchospora macrostachya
+Cherry Birch
+Betula lenta
+Bluehearts
+Buchnera americana
+Fernald\'s Braya
+Braya fernaldii
+Hairy Braya
+Braya pilosa
+Long\'s Braya
+Braya longii
+Tall Bugbane
+Actaea elata
+Bashful Bulrush
+Trichophorum planifolium
+Slender Bush-clover
+Lespedeza virginica
+California Buttercup
+Ranunculus californicus
+Water-plantain Buttercup
+Ranunculus alismifolius
+Butternut
+Juglans cinerea
+Eastern Prickly Pear Cactus
+Opuntia humifusa
+Spalding\'s Campion
+Silene spaldingii
+Coastal Scouler\'s Catchfly
+Silene scouleri grandis
+Muhlenberg\'s Centaury
+Centaurium muehlenbergii
+American Chestnut
+Castanea dentata
+Colicroot
+Aletris farinosa
+Slender Collomia
+Collomia tenella
+American Columbo
+Frasera caroliniensis
+Pink Coreopsis
+Coreopsis rosea
+Eastern Flowering Dogwood
+Cornus florida
+Contorted-pod Evening-primrose
+Camissonia contorta
+Southern Maidenhair Fern
+Adiantum capillus-veneris
+Eastern Prairie Fringed-orchid
+Platanthera leucophaea
+Western Prairie Fringed-orchid
+Platanthera praeclara
+Plymouth Gentian
+Sabatia kennedyana
+White Prairie Gentian
+Gentiana alba
+American Ginseng
+Panax quinquefolius
+Virginia Goat\'s-rue
+Tephrosia virginiana
+Showy Goldenrod
+Solidago speciosa
+Rayless Goldfields
+Lasthenia glaberrima
+Forked Three-awned Grass
+Aristida basiramea
+Fascicled Ironweed
+Vernonia fasciculata
+Tweedy\'s Lewisia
+Lewisiopsis tweedyi
+Small-flowered Lipocarpha
+Lipocarpha micrantha
+Seaside Birds-foot Lotus
+Lotus formosissimus
+Furbish\'s Lousewort
+Pedicularis furbishiae
+Dense-flowered Lupine
+Lupinus densiflorus
+Prairie Lupine
+Lupinus lepidus
+Streambank Lupine
+Lupinus rivularis
+Virginia Mallow
+Sida hermaphrodita
+White Meconella
+Meconella oregana
+Coast Microseris
+Microseris bigelovii
+Pink Milkwort
+Polygala incarnata
+Hoary Mountain-mint
+Pycnanthemum incanum
+Red Mulberry
+Morus rubra
+Phantom Orchid
+Cephalanthera austiniae
+Bearded Owl-clover
+Triphysaria versicolor
+Grand Coulee Owl-clover
+Orthocarpus barbatus
+Rosy Owl-clover
+Orthocarpus bracteosus
+Victoria\'s Owl-clover
+Castilleja victoriae
+Golden Paintbrush
+Castilleja levisecta
+Branched Phacelia
+Phacelia ramosissima
+Whitebark Pine
+Pinus albicaulis
+Heart-leaved Plantain
+Plantago cordata
+Large Whorled Pogonia
+Isotria verticillata
+Nodding Pogonia
+Triphora trianthophora
+Small Whorled Pogonia
+Isotria medeoloides
+Ogden\'s Pondweed
+Potamogeton ogdenii
+Fragrant Popcornflower
+Plagiobothrys figuratus
+Stoloniferous Pussytoes
+Antennaria flagellaris
+Engelmann\'s Quillwort
+Isoetes engelmannii
+Quebec Rockcress
+Boechera quebecensis
+Kellogg\'s Rush
+Juncus kelloggii
+Pink Sand-verbena
+Abronia umbellata
+Small-flowered Sand-verbena
+Tripterocalyx micranthus
+Dwarf Sandwort
+Minuartia pusilla
+False Hop Sedge
+Carex lupuliformis
+Foothill Sedge
+Carex tumulicola
+Juniper Sedge
+Carex juniperorum
+Lindley\'s False Silverpuffs
+Uropappus lindleyi
+Brook Spike-primrose
+Epilobium torreyi
+Dense Spike-primrose
+Epilobium densiflorum
+Bent Spike-rush
+Eleocharis geniculata
+Bent Spike-rush
+Eleocharis geniculata
+Horsetail Spike-rush
+Eleocharis equisetoides
+Thread-leaved Sundew
+Drosera filiformis
+Small-flowered Tonella
+Tonella tenella
+Toothcup
+Rotala ramosior
+Cucumber Tree
+Magnolia acuminata
+Bog Bird\'s-foot Trefoil
+Lotus pinnatus
+Drooping Trillium
+Trillium flexipes
+Howell\'s Triteleia
+Triteleia howellii
+Bird\'s-foot Violet
+Viola pedata
+Yellow Montane Violet praemorsa
+praemorsa
+Viola praemorsa ssp. praemorsa
+Barrens Willow
+Salix jejuna
+Spotted Wintergreen
+Chimaphila maculata
+Wood-poppy
+Stylophorum diphyllum
+Tall Woolly-heads
+Psilocarphus elatior
+Dwarf Woolly-heads
+Psilocarphus brevissimus
+Batwing Vinyl Lichens
+Lichen
+Leptogium platynum
+Boreal Felt Lichen
+Erioderma pedicellatum
+Pale-bellied Frost Lichen
+Physconia subpallida
+Seaside Centipede Lichen
+Heterodermia sitchensis
+Vole Ears Lichen
+Erioderma mollissimum
+Rusty Cord-moss
+Entosthodon rubiginosus
+Acuteleaf Small Limestone Moss
+Seligeria acutifolia
+Margined Streamside Moss
+Scouleria marginata
+Nugget Moss
+Microbryum vlassovii
+Poor Pocket Moss
+Fissidens pauperculus
+Rigid Apple Moss
+Bartramia stricta
+Roell\'s Brotherella Moss
+Brotherella roellii
+Silver Hair Moss
+Fabronia pusilla
+Bat
+Antrozous pallidus
+Wood Bison
+Bison bison athabascae
+Woodland Caribou
+Rangifer tarandus caribou
+Ermine haidarum subspecies
+Mustela erminea haidarum
+Grey Fox
+Urocyon cinereoargenteus
+Swift Fox
+Vulpes velox
+American Marten
+Martes americana atrata
+Black-tailed Prairie Dog
+Cynomys ludovicianus
+Beluga Whale
+Delphinapterus leucas
+Fin Whale
+Balaenoptera physalus
+Killer Whale
+Orcinus orca
+Short-tailed Birds
+Albatross
+Phoebastria albatrus
+Least Bittern
+Ixobrychus exilis
+Bobolink
+Dolichonyx oryzivorus
+Lark Bunting
+Calamospiza melanocorys
+Red Crossbill percna
+percna
+Loxia curvirostra percna
+Olive-sided Flycatcher
+Contopus cooperi
+Northern Goshawk laingi
+laingi
+Accipiter gentilis laingi
+Ross\'s Gull
+Rhodostethia rosea
+Ferruginous Hawk
+Buteo regalis
+Red Knot roselaari type
+Calidris canutus roselaari
+roselaari
+Chestnut-collared Longspur
+Calcarius ornatus
+McCown\'s Longspur
+Rhynchophanes mccownii
+Eastern Meadowlark
+Sturnella magna
+Marbled Murrelet
+Brachyramphus marmoratus
+Common Nighthawk
+Chordeiles minor
+Barn Owl
+Tyto alba
+Northern Saw-whet Owl brooksi
+brooksi
+Aegolius acadicus brooksi
+Sprague\'s Pipit
+Anthus spragueii
+Western Screech-owl kennicottii
+kennicottii
+Megascops kennicottii kennicottii
+Megascops kennicottii macfarlanei
+Loggerhead Shrike excubitorides
+excubitorides
+Lanius ludovicianus excubitorides
+Bank Swallow
+Riparia riparia
+Barn Swallow
+Hirundo rustica
+Chimney Swift
+Chaetura pelagica
+Bicknell\'s Thrush
+Catharus bicknelli
+Wood Thrush
+Hylocichla mustelina
+Canada Warbler
+Wilsonia canadensis
+Golden-winged Warbler
+Vermivora chrysoptera
+Louisiana Waterthrush
+Parkesia motacilla
+Whip-poor-will
+Caprimulgus vociferus
+Lewis\'s Woodpecker
+Melanerpes lewis
+Rocky Mountain Tailed Frog
+Ascaphus montanus
+Western Chorus Frog
+Pseudacris triseriata
+Coastal Giant Salamander
+Dicamptodon tenebrosus
+Spring Salamander
+Gyrinophilus porphyriticus
+Great Basin Spadefoot
+Spea intermontana
+Great Basin Reptiles
+Gophersnake
+Pituophis catenifer deserticola
+Massasauga
+Sistrurus catenatus
+Eastern Yellow-bellied Racer
+Coluber constrictor flaviventris
+Gray Ratsnake
+Pantherophis spiloides
+Western Rattlesnake
+Crotalus oreganos
+Eastern Ribbonsnake
+Thamnophis sauritus
+Eastern Hog-nosed Snake
+Heterodon platirhinos
+Blanding\'s Turtle
+Emydoidea blandingii
+Wood Turtle
+Glyptemys insculpta
+Eastern Sand Fish
+Darter
+Ammocrypta pellucida
+Eastern Sand Darter
+Ammocrypta pellucida
+Vancouver Lamprey
+Entosphenus macrostomus
+Plains Minnow
+Hybognathus placitus
+Pugnose Minnow
+Opsopoeodus emiliae
+Western Silvery Minnow
+Hybognathus argyritis
+Black Redhorse
+Moxostoma duquesnei
+Coastrange Sculpin
+Cottus aleuticus
+Rocky Mountain Sculpin
+Cottus sp.
+Pugnose Shiner
+Notropis anogenus
+Silver Shiner
+Notropis photogenis
+Spotted Wolffish
+Anarhichas minor
+Mountain Sucker
+Catostomus platyrhynchus
+Salish Sucker
+Catostomus sp. cf. catostomus
+Bull Trout
+Salvelinus confluentus
+Westslope Cutthroat Trout
+Oncorhynchus clarkii lewisi
+Northern Wolffish
+Anarhichas denticulatus
+Atlantic Mud-piddock
+Barnea truncata
+Dromedary Jumping-slug
+Hemphillia dromedarius
+Mapleleaf
+Quadrula quadrula
+Blue-grey Taildropper
+Prophysaon coeruleum
+Threehorn Wartyback
+Obliquaria reflexa
+Verna\'s Arthropods
+Flower Moth
+Schinia verna
+Dun Skipper
+Euphyes vestris
+Sable Island Sweat Bee
+Lasioglossum sablense
+Audouin\'s Night-stalking Tiger Beetle
+Omus audouini
+Gibson\'s Big Sand Tiger Beetle
+Cicindela formosa gibsoni
+Griscom’s Plants
+Arnica
+Arnica griscomii ssp. griscomii
+Anticosti Aster
+Symphyotrichum anticostense
+Gulf of St. Lawrence Aster
+Symphyotrichum laurentianum
+Western Silvery Aster
+Symphyotrichum sericeum
+White Wood Aster
+Eurybia divaricata
+Willowleaf Aster
+Symphyotrichum praealtum
+Eastern Baccharis
+Baccharis halimifolia
+Branched Bartonia
+Bartonia paniculata ssp. paniculata
+Dense Blazing Star
+Liatris spicata
+Kentucky Coffee-tree
+Gymnocladus dioicus
+Tiny Cryptantha
+Cryptantha minima
+Lakeside Daisy
+Hymenoxys herbacea
+Deerberry
+Vaccinium stamineum
+Gray\'s Desert-parsley
+Lomatium grayi
+Lemmon\'s Holly Fern
+Polystichum lemmonii
+Mountain Holly Fern
+Polystichum scopulinum
+Victorin\'s Gentian
+Gentianopsis virgata ssp. victorinii
+Showy Goldenrod
+Solidago speciosa
+Goldenseal
+Hydrastis canadensis
+Smooth Goosefoot
+Chenopodium subglabrum
+Round-leaved Greenbrier
+Smilax rotundifolia
+Dwarf Hackberry
+Celtis tenuifolia
+Wild Hyacinth
+Camassia scilloides
+Van Brunt\'s Jacob’s-ladder
+Polemonium vanbruntiae
+Small White Lady\'s-slipper
+Cypripedium candidum
+Hare-footed Locoweed
+Oxytropis lagopus
+Macoun\'s Meadowfoam
+Limnanthes macounii
+Mexican Mosquito-fern
+Azolla mexicana
+Slender Mouse-ear-cress
+Halimolobos virgata
+Cliff Paintbrush
+Castilleja rupicola
+Sweet Pepperbush
+Clethra alnifolia
+Showy Phlox
+Phlox speciosa ssp. occidentalis
+Slender Popcornflower
+Plagiobothrys tenellus
+Bolander\'s Quillwort
+Isoetes bolanderi
+False Rue-anemone
+Enemion biternatum
+Bear\'s-foot Sanicle
+Sanicula arctopoides
+Purple Sanicle
+Sanicula bipinnatifida
+Soapweed
+Yucca glauca
+Western Spiderwort
+Tradescantia occidentalis
+Hill\'s Thistle
+Cirsium hillii
+Toothcup
+Rotala ramosior
+Purple Twayblade
+Liparis liliifolia
+American Water-willow
+Justicia americana
+Green-scaled Willow
+Salix chlorolepis
+Blunt-lobed Woodsia
+Woodsia obtusa
+Seaside Lichens
+Bone
+Hypogymnia heterophylla
+Black-foam Lichen
+Anzia colpodes
+Crumpled Tarpaper Lichen
+Collema coniophilum
+Wrinkled Shingle Lichen
+Pannaria lurida
+Eastern Waterfan
+Peltigera hydrothyria
+Porsild\'s Mosses
+Bryum
+Mielichhoferia macrocarpa
+Alkaline Wing-nerved Moss
+Pterygoneurum kozlovii
+Haller\'s Apple Moss
+Bartramia halleriana
+Spoon-leaved Moss
+Bryoandersonia illecebra
+Badger taxus
+taxus
+Taxidea taxus taxus
+Spotted Bat
+Euderma maculatum
+Grizzly Bear
+Ursus arctos
+Polar Bear
+Ursus maritimus
+Mountain Beaver
+Aplodontia rufa
+Barren-ground Caribou
+Rangifer tarandus groenlandicus
+Woodland Caribou
+Rangifer tarandus caribou
+Nuttall\'s Cottontail nuttallii
+nuttallii
+Sylvilagus nuttallii nuttallii
+Eastern Mole
+Scalopus aquaticus
+Western Harvest Mouse megalotis subspecies
+Reithrodontomys megalotis megalotis
+Sea Otter
+Enhydra lutris
+Collared Pika
+Ochotona collaris
+Harbour Porpoise
+Phocoena phocoena
+Steller Sea Lion
+Eumetopias jubatus
+Woodland Vole
+Microtus pinetorum
+Bowhead Whale
+Balaena mysticetus
+Fin Whale
+Balaenoptera physalus
+Grey Whale
+Eschrichtius robustus
+Humpback Whale
+Megaptera novaeangliae
+Sowerby\'s Beaked Whale
+Mesoplodon bidens
+Eastern Wolf
+Canis lupus lycaon
+Wolverine
+Gulo gulo
+Black-footed Birds
+Albatross
+Phoebastria nigripes
+Cassin\'s Auklet
+Ptychoramphus aleuticus
+Rusty Blackbird
+Euphagus carolinus
+Long-billed Curlew
+Numenius americanus
+Harlequin Duck
+Histrionicus histrionicus
+Peregrine Falcon anatum/tundrius
+Falco peregrinus anatum/tundrius
+Peregrine Falcon pealei subspecies
+Falco peregrinus pealei
+Barrow\'s Goldeneye
+Bucephala islandica
+Horned Grebe
+Podiceps auritus
+Western Grebe
+Aechmophorus occidentalis
+Evening Grosbeak
+Coccothraustes vespertinus
+Great Blue Heron fannini
+fannini
+Ardea herodias fannini
+Red Knot islandica subspecies
+Calidris canutus islandica
+Ancient Murrelet
+Synthliboramphus antiquus
+Flammulated Owl
+Otus flammeolus
+Short-eared Owl
+Asio flammeus
+Red-necked Phalarope
+Phalaropus lobatus
+Band-tailed Pigeon
+Patagioenas fasciata
+Yellow Rail
+Coturnicops noveboracensis
+Buff-breasted Sandpiper
+Tryngites subruficollis
+Baird\'s Sparrow
+Ammodramus bairdii
+Grasshopper Sparrow pratensis subspecies
+Ammodramus savannarum pratensis
+Savannah Sparrow princeps subspecies
+Passerculus sandwichensis princeps
+Eastern Wood-pewee
+Contopus virens
+Coastal Tailed Amphibians
+Ascaphus truei
+Northern Leopard Frog
+Lithobates pipiens
+Red-legged Frog
+Rana aurora
+Coeur d\'Alene Salamander
+Plethodon idahoensis
+Wandering Salamander
+Aneides vagrans
+Western Tiger Salamander
+Ambystoma mavortium
+Great Plains Toad
+Anaxyrus cognatus
+Western Toad
+Anaxyrus boreas
+Western Toad
+Anaxyrus boreas
+Rubber Boa
+Charina bottae
+Milksnake
+Lampropeltis triangulum
+Western Yellow-bellied Racer
+Coluber constrictor mormon
+Prairie Rattlesnake
+Crotalus viridis
+Eastern Ribbonsnake
+Thamnophis sauritus
+Five-lined Skink
+Plestiodon fasciatus
+Prairie Skink
+Plestiodon septentrionalis
+Western Skink
+Plestiodon skiltonianus
+Eastern Musk Turtle
+Sternotherus odoratus
+Eastern Painted Turtle
+Chrysemys picta picta
+Midland Painted Turtle
+Chrysemys picta marginata
+Northern Map Turtle
+Graptemys geographica
+Snapping Turtle
+Chelydra serpentina
+Western Painted Turtle
+Chrysemys picta bellii
+Lake Erie Watersnake
+Nerodia sipedon insularum
+Bigmouth Buffalo
+Ictiobus cyprinellus
+Channel Darter
+Percina copelandi
+Dolly Varden
+Salvelinus malma malma
+Banded Killifish
+Fundulus diaphanus
+Upper Great Lakes Kiyi
+Coregonus kiyi kiyi
+Northern Brook Lamprey
+Ichthyomyzon fossor
+Silver Lamprey
+Ichthyomyzon unicuspis
+Cutlip Minnow
+Exoglossum maxillingua
+Grass Pickerel
+Esox americanus vermiculatus
+River Redhorse
+Moxostoma carinatum
+Rougheye Rockfish type I
+Sebastes sp. type I
+Rougheye Rockfish type II
+Sebastes sp. type II
+Yelloweye Rockfish
+Sebastes ruberrimus
+Yelloweye Rockfish
+Sebastes ruberrimus
+Columbia Sculpin
+Cottus hubbsi
+Deepwater Sculpin
+Myoxocephalus thompsonii
+Rocky Mountain Sculpin
+Cottus sp.
+Shorthead Sculpin
+Cottus confusus
+Bluntnose Sixgill Shark
+Hexanchus griseus
+Bridle Shiner
+Notropis bifrenatus
+Giant Threespine Stickleback
+Gasterosteus aculeatus
+Unarmoured Threespine Stickleback
+Gasterosteus aculeatus
+Green Sturgeon
+Acipenser medirostris
+Lake Sturgeon
+Acipenser fulvescens
+Shortnose Sturgeon
+Acipenser brevirostrum
+Mountain Sucker
+Catostomus platyrhynchus
+Spotted Sucker
+Minytrema melanops
+Northern Sunfish
+Lepomis peltastes
+Longspine Thornyhead
+Sebastolobus altivelis
+Tope
+Galeorhinus galeus
+Blackstripe Topminnow
+Fundulus notatus
+Bull Trout
+Salvelinus confluentus
+Bull Trout
+Salvelinus confluentus
+Westslope Cutthroat Trout
+Oncorhynchus clarkii lewisi
+Warmouth
+Lepomis gulosus
+Atlantic Wolffish
+Anarhichas lupus
+Brook Molluscs
+Floater
+Alasmidonta varicosa
+Warty Jumping-slug
+Hemphillia glandulosa
+Wavy-rayed Lampmussel
+Lampsilis fasciola
+Yellow Lampmussel
+Lampsilis cariosa
+Magnum Mantleslug
+Magnipelta mycophaga
+Mapleleaf
+Quadrula quadrula
+Rocky Mountain Ridged Mussel
+Gonidea angulata
+Olympia Oyster
+Ostrea lurida
+Eastern Pondmussel
+Ligumia nasuta
+Rainbow
+Villosa iris
+Haida Gwaii Slug
+Staala gwaii
+Pygmy Slug
+Kootenaia burkei
+Sheathed Slug
+Zacoleus idahoensis
+Threaded Vertigo
+Nearctula sp.
+Yellow-banded Arthropods
+Bumble Bee
+Bombus terricola
+Vivid Dancer
+Argia vivida
+Greenish-white Grasshopper
+Hypochlora alba
+Red-tailed Leafhopper
+Aflexia rubranura
+Red-tailed Leafhopper
+Aflexia rubranura
+Mormon Metalmark
+Apodemia mormo
+Monarch
+Danaus plexippus
+Pale Yellow Dune Moth
+Copablepharon grandis
+Sonora Skipper
+Polites sonora
+Pygmy Snaketail
+Ophiogomphus howei
+Georgia Basin Bog Spider
+Gnaphosa snohomish
+Dune Tachinid Fly
+Germaria angustata
+Weidemeyer\'s Admiral
+Limenitis weidemeyerii
+Blue Ash
+Fraxinus quadrangulata
+Crooked-stem Aster
+Symphyotrichum prenanthoides
+Nahanni Aster
+Symphyotrichum nahanniense
+White-top Aster
+Sericocarpus rigidus
+Vancouver Island Beggarticks
+Bidens amplissima
+Western Blue Flag
+Iris missouriensis
+Buffalograss
+Bouteloua dactyloides
+American Hart\'s-tongue Fern
+Asplenium scolopendrium
+Coastal Wood Fern
+Dryopteris arguta
+Goldencrest
+Lophiola aurea
+Houghton\'s Goldenrod
+Solidago houghtonii
+Riddell\'s Goldenrod
+Solidago riddellii
+Mackenzie Hairgrass
+Deschampsia mackenzieana
+Common Hoptree
+Ptelea trifoliata
+Tuberous Indian-plantain
+Arnoglossum plantagineum
+Dwarf Lake Iris
+Iris lacustris
+Eastern Lilaeopsis
+Lilaeopsis chinensis
+Lyall\'s Mariposa Lily
+Calochortus lyallii
+Fernald\'s Milk-vetch
+Astragalus robbinsii var. fernaldii
+Water Pennywort
+Hydrocotyle umbellata
+Beach Pinweed
+Lechea maritima
+Yukon Podistera
+Podistera yukonensis
+Hill\'s Pondweed
+Potamogeton hillii
+Hairy Prairie-clover
+Dalea villosa
+Prototype Quillwort
+Isoetes prototypus
+Redroot
+Lachnanthes caroliniana
+Climbing Prairie Rose
+Rosa setigera
+Swamp Rose-mallow
+Hibiscus moscheutos
+New Jersey Rush
+Juncus caesariensis
+Spiked Saxifrage
+Micranthes spicata
+Baikal Sedge
+Carex sabulosa
+Tubercled Spike-rush
+Eleocharis tuberculosa
+Floccose Tansy
+Tanacetum huronense var. floccosum
+Pitcher\'s Thistle
+Cirsium pitcheri
+Athabasca Thrift
+Armeria maritima interior
+Victorin\'s Water-hemlock
+Cicuta maculata var. victorinii
+Yukon Wild Buckwheat
+Eriogonum flavum var. aquilinum
+Felt-leaf Willow
+Salix silicicola
+Sand-dune Short-capsuled Willow
+Salix brachycarpa var. psammophila
+Turnor\'s Willow
+Salix turnorii
+Dwarf Woolly-heads
+Psilocarphus brevissimus
+Large-headed Woolly Yarrow
+Achillea millefolium var. megacephalum
+Banded Mosses
+Cord-moss
+Entosthodon fascicularis
+Columbian Carpet Moss
+Bryoerythrophyllum columbianum
+Twisted Oak Moss
+Syntrichia laevipila
+Tiny Tassel
+Crossidium seriatum
+Frosted Lichens
+Glass-whiskers
+Sclerophora peronella
+Flooded Jellyskin
+Leptogium rivulare
+Blue Felt Lichen
+Degelia plumbea
+Boreal Felt Lichen
+Erioderma pedicallatum
+Cryptic Paw Lichen
+Nephroma occultum
+Oldgrowth Specklebelly Lichen
+Pseudocyphellaria rainierensis
+Peacock Vinyl Lichen
+Leptogium polycarpum
+Mountain Crab-eye
+Acroscyphus sphaerophoroides
+Western Waterfan
+Peltigera gowardii"""
 
 Air_Emissions = """Air Emissions
+Air
 CAC
 criteria air contaminant
 Emissions
@@ -364,12 +1751,15 @@ Air quality
 Hydrogen sulphide
 H2S
 particulate
-so2"""
+so2
+mercaptans
+dust"""
 
 GHG_Emissions_and_Climate_Change = """GHG Emissions and Climate Change
 greenhouse
 greenhouse gas
 green house gas
+greenhouse gases
 climate change
 point source
 area source
@@ -455,11 +1845,6 @@ International
 Policy
 Plan
 Framework
-Wildlife
-Vegetation
-Fish
-Species at risk
-Plant
 law
 legislation
 regulations"""
@@ -688,6 +2073,16 @@ resource use
 consultation
 livestock
 human
+male
+female
+men
+women
+boy
+girl
+father
+mother
+parent
+gender
 rural
 urban
 residential
@@ -860,7 +2255,6 @@ bed
 banks
 preconstruction contours
 hydraulic characteristics
-timing windows
 erosion and sediment control
 runoff
 temporary crossing structure
@@ -962,7 +2356,8 @@ Health canada
 human health impact assessment
 Canadian handbook on health impact assessment
 health indicator data
-statistics canada"""
+statistics canada
+mortality"""
 
 Infrastructure_and_Services = """Infrastructure and Services
 Infractructure
@@ -1085,7 +2480,12 @@ railways
 availability of housing
 local residents
 heavy load vehicles
-construction access permits"""
+construction access permits
+hotel
+big box stores
+town centre
+property
+motel"""
 
 Employment_and_Economy = """Employment and Economy
 Employment opportunities
