@@ -150,6 +150,7 @@ def extract_tables():
         result = extract_csv(file)
         print(result, end='', flush=True)
 
+
     # Multiprocessing mode - if using, please comment out the sequential mode code
     # with Pool() as pool:
     #     results = pool.map(extract_csv, files, chunksize=1)

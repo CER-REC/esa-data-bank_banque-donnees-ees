@@ -21,8 +21,8 @@ do_tag_title_table = 1  # assign table titles to each table using text search me
 do_toc_title_table = 1  # assign table titles to each table using TOC method
 do_final_title_table = 1  # replace continued tables and create final table title
 
-do_tag_title_fig = 0  # assign figure titles to each table using text search method
-do_toc_title_fig = 0  # assign figure titles to each table using TOC method
+do_tag_title_fig = 0  # assign figure titles to each figure using text search method
+do_toc_title_fig = 0  # assign figure titles to each figure using TOC method
 do_final_title_fig = 0  # replace continued figures and create final figure title
 
 create_tables_csv = 1
@@ -80,8 +80,8 @@ if __name__ == "__main__":
 
     # get page numbers for all the figures found in TOC
     if toc_figure_titles:
-        for project in projects:
-            project_figure_titles(project)
+        # for project in projects:
+        #     project_figure_titles(project)
         with Pool() as pool:
             results = pool.map(project_figure_titles, projects, chunksize=1)
         with open('fig_errors.txt', 'w', encoding='utf-8') as f:
@@ -91,9 +91,10 @@ if __name__ == "__main__":
                 if result[1] != "":
                     f.write(str(result[1]))
 
-    # TODO: run table extraction and title matching
     # update tag method titles
     if do_tag_title_table:
+        # for list_id in list_ids:
+        #     find_tag_title_table(list_id)
         with Pool() as pool:
             results = pool.map(find_tag_title_table, list_ids, chunksize=1)
         with open('tag_errors.txt', 'w', encoding='utf-8') as f:
@@ -106,7 +107,8 @@ if __name__ == "__main__":
     # update TOC method titles
     if toc_table_titles:
         print('Start assigning pages to TOC entries')
-
+        # for project in projects:
+        #     project_table_titles(project)
         with Pool() as pool:
             results = pool.map(project_table_titles, projects, chunksize=1)
         with open('toc_errors.txt', 'w', encoding='utf-8') as f:
@@ -119,7 +121,8 @@ if __name__ == "__main__":
 
     if do_toc_title_table:
         print('Start assigning toc titles to csvs')
-
+        # for list_id in list_ids:
+        #     find_toc_title_table(list_id)
         with Pool() as pool:
             results = pool.map(find_toc_title_table, list_ids, chunksize=1)
         with open('toc2_errors.txt', 'w', encoding='utf-8') as f:
@@ -132,6 +135,8 @@ if __name__ == "__main__":
 
     # update final titles
     if do_final_title_table:
+        # for list_id in list_ids:
+        #     find_final_title_table(list_id)
         with Pool() as pool:
             results = pool.map(find_final_title_table, list_ids, chunksize=1)
         with open('final_errors.txt', 'w', encoding='utf-8') as f:
@@ -142,6 +147,8 @@ if __name__ == "__main__":
                     f.write(result[1])
 
     if do_tag_title_fig:
+        # for list_id in list_ids:
+        #     find_tag_title_fig(list_id)
         with Pool() as pool:
             results = pool.map(find_tag_title_fig, list_ids, chunksize=1)
         with open('../tag_errors.txt', 'w', encoding='utf-8') as f:
@@ -152,6 +159,8 @@ if __name__ == "__main__":
                     f.write(str(result[1]))
 
     if do_final_title_fig:
+        # for list_id in list_ids:
+        #     find_final_title_fig(list_id)
         with Pool() as pool:
             results = pool.map(find_final_title_fig, list_ids, chunksize=1)
         with open('final_errors.txt', 'w', encoding='utf-8') as f:
@@ -165,47 +174,55 @@ if __name__ == "__main__":
         # write to all_tables-final.csv from csvs
         with engine.connect() as conn:
             stmt = text(
-                "SELECT csvFullPath, pdfId, page, tableNumber, topRowJson, titleTag, titleTOC, titleFinal FROM csvs"
-                "WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78);")
+                '''SELECT csvFullPath, pdfId, page, tableNumber, topRowJson, titleTag, titleTOC, titleFinal FROM csvs 
+                WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78);''')
             df = pd.read_sql_query(stmt, conn)
         df.to_csv(constants.save_dir + 'all_tables-final.csv', index=False, encoding='utf-8-sig')
+        # df.to_csv('Data_Files/all_tables-final.csv', index=False, encoding='utf-8-sig')
 
     if create_figs_csv:
         # get final figs csv files
         with engine.connect() as conn:
             stmt = text(
-                "SELECT toc.titleTOC, toc.titleTOC_fr, toc.page_name, toc.toc_page_num, toc.toc_pdfId, toc.toc_title_order, pdfs.short_name, "
-                "toc.assigned_count, toc.loc_pdfId, toc.loc_page_list"
-                "FROM toc LEFT JOIN pdfs ON toc.toc_pdfId = pdfs.pdfId WHERE title_type='Figure'"
-                "ORDER BY pdfs.short_name, toc.toc_pdfId, toc.toc_page_num, toc.toc_title_order;")
+                '''SELECT toc.titleTOC, toc.page_name, toc.toc_page_num, toc.toc_pdfId, toc.toc_title_order, pdfs.short_name
+                FROM toc LEFT JOIN pdfs ON toc.toc_pdfId = pdfs.pdfId WHERE title_type='Figure'
+                ORDER BY pdfs.short_name, toc.toc_pdfId, toc.toc_page_num, toc.toc_title_order;''')
             df = pd.read_sql_query(stmt, conn)
-        df.rename(columns={'titleTOC': 'Name', 'titleTOC_fr': 'Name_French', 'loc_pdfId': 'location_DataID', 'loc_page': 'location_Page'}, inplace=True)
+        df.rename(columns={'titleTOC': 'Name', 'loc_pdfId': 'location_DataID', 'loc_page': 'location_Page'}, inplace=True)
 
-        new_list = []
+        # new_list = []
+        #
+        # df['loc_page'] = None
+        # df['sim'] = None
+        # df['ratio'] = None
+        # for index, row in df.iterrows():
+        #     p = row['loc_page_list']
+        #     if p:
+        #         pages = json.loads(p)
+        #         df.loc[index, 'loc_page'] = pages[0]['page_num']
+        #         df.loc[index, 'sim'] = pages[0]['sim']
+        #         df.loc[index, 'ratio'] = pages[0]['ratio']
+        #
+        #         for page in pages:
+        #             new_row = {'Name': row['Name'],  # 'Name_French': row['Name_French'],
+        #                        'page_name': row['page_name'],
+        #                        'toc_page_num': row['toc_page_num'],
+        #                        'toc_pdfId': row['toc_pdfId'],
+        #                        'toc_title_order': row['toc_title_order'],
+        #                        'short_name': row['short_name'],
+        #                        # 'location_DataID': row['location_DataID'],
+        #                        # 'assigned_count': row['assigned_count'],
+        #                        # 'loc_page_list': row['loc_page_list'],
+        #                        'sim': page['sim'], 'ratio': page['ratio'],
+        #                        # 'location_Page': page['page_num']
+        #                        }
+        #             new_list.append(new_row)
+        #     else:
+        #         new_list.append(row)
+        # df_pivoted = pd.DataFrame(new_list)
 
-        df['loc_page'] = None
-        df['sim'] = None
-        df['ratio'] = None
-        for index, row in df.iterrows():
-            p = row['loc_page_list']
-            if p:
-                pages = json.loads(p)
-                df.loc[index, 'loc_page'] = pages[0]['page_num']
-                df.loc[index, 'sim'] = pages[0]['sim']
-                df.loc[index, 'ratio'] = pages[0]['ratio']
-
-                for page in pages:
-                    new_row = {'Name': row['Name'], 'Name_French':row['Name_French'], 'page_name': row['page_name'],
-                               'toc_page_num': row['toc_page_num'],
-                               'toc_pdfId': row['toc_pdfId'], 'toc_title_order': row['toc_title_order'],
-                               'short_name': row['short_name'], 'location_DataID': row['location_DataID'],
-                               'assigned_count': row['assigned_count'],
-                               'loc_page_list': row['loc_page_list'], 'sim': page['sim'], 'ratio': page['ratio'],
-                               'location_Page': page['page_num']}
-                    new_list.append(new_row)
-            else:
-                new_list.append(row)
-        df_pivoted = pd.DataFrame(new_list)
+        # df.to_csv('Data_Files/final_figs_new.csv', index=False, encoding='utf-8-sig')
+        # df_pivoted.to_csv('Data_Files/final_figs_pivoted_new.csv', index=False, encoding='utf-8-sig')
 
         df.to_csv(constants.save_dir + 'final_figs_new.csv', index=False, encoding='utf-8-sig')
-        df_pivoted.to_csv(constants.save_dir + 'final_figs_pivoted_new.csv', index=False, encoding='utf-8-sig')
+        # df_pivoted.to_csv(constants.save_dir + 'final_figs_pivoted_new.csv', index=False, encoding='utf-8-sig')
