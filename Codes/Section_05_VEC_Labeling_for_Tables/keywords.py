@@ -2,6 +2,7 @@ import pickle
 import nltk
 from nltk.corpus import stopwords
 from nltk.stem.porter import *
+from nltk.tokenize import word_tokenize
 
 Physical_and_Meteorological_Environment = """Physical and Meteorological Environment
 Precipitation
@@ -2902,10 +2903,14 @@ keywords = [x.lower().split("\n") for x in keywords]
 stemmer = PorterStemmer()
 
 for i, label_keywords in enumerate(keywords):
-    keywords[i] = [w for w in label_keywords if w not in stopwords.words("english")]
-    keywords[i] = [stemmer.stem(w) for w in keywords[i]]
+    stemmed_words = []
+    for word in label_keywords:
+        token_words = word_tokenize(word)
+        stemmed_tokens = [stemmer.stem(t) for t in token_words if t not in stopwords.words("english")]
+        stemmed_words.append(" ".join(stemmed_tokens))
+    keywords[i] = stemmed_words
 
-print(keywords[0])
+print(keywords[0], keywords[1], keywords[2])
 
 with open("keywords.pkl", "wb") as f:
     pickle.dump(keywords, f)
