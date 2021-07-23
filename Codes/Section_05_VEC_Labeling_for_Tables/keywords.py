@@ -5,6 +5,8 @@ from nltk.stem.porter import *
 from nltk.tokenize import word_tokenize
 
 Physical_and_Meteorological_Environment = """Physical and Meteorological Environment
+Physical Environment
+Meteorological Environment
 Precipitation
 Snowfall
 Wind
