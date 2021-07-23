@@ -223,6 +223,7 @@ groundwater
 groundwater-related
 aquifers
 streamflow
+aquatics
 acquatics
 river
 hydrometric
@@ -2912,7 +2913,7 @@ for i, label_keywords in enumerate(keywords):
         stemmed_words.append(" ".join(stemmed_tokens))
     keywords[i] = stemmed_words
 
-print(keywords[0], keywords[1], keywords[2])
+print(keywords[0], keywords[1], keywords[2], keywords[3], keywords[4], keywords[5], keywords[6], keywords[7], keywords[8])
 
 with open("keywords.pkl", "wb") as f:
     pickle.dump(keywords, f)
