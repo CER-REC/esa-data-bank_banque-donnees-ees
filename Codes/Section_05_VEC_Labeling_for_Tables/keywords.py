@@ -48,7 +48,8 @@ earthquake
 avalanche
 sloping
 topography
-elevation"""
+elevation
+terrain"""
 
 
 Soil_and_Soil_Productivity = """Soil Productivity
@@ -245,7 +246,9 @@ well-water
 surface-water
 surfacewater
 hot spring
-creek"""
+creek
+tidal
+subtidal"""
 
 Fish_and_Fish_Habitat = """Fish and Fish Habitat
 Fish
@@ -282,6 +285,7 @@ Wetted width
 substrate
 whale
 marine mammal
+marine organisms
 salmon
 oncorhynchus
 walleye
@@ -310,7 +314,8 @@ ocean
 lake
 pond
 bay
-orca"""
+orca
+subtidal"""
 
 Wetlands = """Wetlands
 Class (wetland class)
@@ -438,7 +443,7 @@ minerallick"""
 
 Species_at_Risk = """Species at Risk
 Species of Special Status
-Rare
+Rare Species
 Sensitive
 SARA
 Species At Risk Act
