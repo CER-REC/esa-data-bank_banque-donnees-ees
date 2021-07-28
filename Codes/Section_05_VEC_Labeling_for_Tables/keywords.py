@@ -512,7 +512,119 @@ Pterygoneurum kozlovii
 Haller\'s Apple Moss
 Bartramia halleriana
 Spoon-leaved Moss
-Bryoandersonia illecebra"""
+Bryoandersonia illecebra
+Blue Ash
+Fraxinus quadrangulata
+Crooked-stem Aster
+Symphyotrichum prenanthoides
+Nahanni Aster
+Symphyotrichum nahanniense
+White-top Aster
+Sericocarpus rigidus
+Vancouver Island Beggarticks
+Bidens amplissima
+Western Blue Flag
+Iris missouriensis
+Buffalograss
+Bouteloua dactyloides
+American Hart\'s-tongue Fern
+Asplenium scolopendrium
+Coastal Wood Fern
+Dryopteris arguta
+Goldencrest
+Lophiola aurea
+Houghton\'s Goldenrod
+Solidago houghtonii
+Riddell\'s Goldenrod
+Solidago riddellii
+Mackenzie Hairgrass
+Deschampsia mackenzieana
+Common Hoptree
+Ptelea trifoliata
+Tuberous Indian-plantain
+Arnoglossum plantagineum
+Dwarf Lake Iris
+Iris lacustris
+Eastern Lilaeopsis
+Lilaeopsis chinensis
+Lyall\'s Mariposa Lily
+Calochortus lyallii
+Fernald\'s Milk-vetch
+Astragalus robbinsii var. fernaldii
+Water Pennywort
+Hydrocotyle umbellata
+Beach Pinweed
+Lechea maritima
+Yukon Podistera
+Podistera yukonensis
+Hill\'s Pondweed
+Potamogeton hillii
+Hairy Prairie-clover
+Dalea villosa
+Prototype Quillwort
+Isoetes prototypus
+Redroot
+Lachnanthes caroliniana
+Climbing Prairie Rose
+Rosa setigera
+Swamp Rose-mallow
+Hibiscus moscheutos
+New Jersey Rush
+Juncus caesariensis
+Spiked Saxifrage
+Micranthes spicata
+Baikal Sedge
+Carex sabulosa
+Tubercled Spike-rush
+Eleocharis tuberculosa
+Floccose Tansy
+Tanacetum huronense var. floccosum
+Pitcher\'s Thistle
+Cirsium pitcheri
+Athabasca Thrift
+Armeria maritima interior
+Victorin\'s Water-hemlock
+Cicuta maculata var. victorinii
+Yukon Wild Buckwheat
+Eriogonum flavum var. aquilinum
+Felt-leaf Willow
+Salix silicicola
+Sand-dune Short-capsuled Willow
+Salix brachycarpa var. psammophila
+Turnor\'s Willow
+Salix turnorii
+Dwarf Woolly-heads
+Psilocarphus brevissimus
+Large-headed Woolly Yarrow
+Achillea millefolium var. megacephalum
+Banded Mosses
+Cord-moss
+Entosthodon fascicularis
+Columbian Carpet Moss
+Bryoerythrophyllum columbianum
+Twisted Oak Moss
+Syntrichia laevipila
+Tiny Tassel
+Crossidium seriatum
+Frosted Lichens
+Glass-whiskers
+Sclerophora peronella
+Flooded Jellyskin
+Leptogium rivulare
+Blue Felt Lichen
+Degelia plumbea
+Boreal Felt Lichen
+Erioderma pedicallatum
+Cryptic Paw Lichen
+Nephroma occultum
+Oldgrowth Specklebelly Lichen
+Pseudocyphellaria rainierensis
+Peacock Vinyl Lichen
+Leptogium polycarpum
+Mountain Crab-eye
+Acroscyphus sphaerophoroides
+Western Waterfan
+Peltigera gowardii"""
 
 Water_Quality_and_Quantity = """Water Quality and Quantity
 Water
@@ -863,7 +975,35 @@ Ostrea lurida
 Eastern Pondmussel
 Ligumia nasuta
 Rainbow
-Villosa iris"""
+Villosa iris
+Harbour Seal Lacs des Loups Marins
+Seal
+Phoca vitulina mellonae
+Pacific Water Shrew
+Sorex bendirii
+Whale
+Beluga Whale
+Delphinapterus leucas
+Blue Whale
+Balaenoptera musculus
+Blue Whale
+Balaenoptera musculus
+Killer Whale
+Orcinus orca
+North Atlantic Right Whale
+Eubalaena glacialis
+North Pacific Right Whale
+Eubalaena japonica
+Northern Bottlenose Whale
+Hyperoodon ampullatus
+Sei Whale
+Balaenoptera borealis
+Beluga Whale
+Delphinapterus leucas
+Fin Whale
+Balaenoptera physalus
+Killer Whale
+Orcinus orca"""
 
 Wetlands = """Wetlands
 Class (wetland class)
@@ -1020,28 +1160,6 @@ Myotis
 Myotis lucifugus
 Northern Myotis
 Myotis septentrionalis
-Harbour Seal Lacs des Loups Marins
-Seal
-Phoca vitulina mellonae
-Pacific Water Shrew
-Sorex bendirii
-Whale
-Beluga Whale
-Delphinapterus leucas
-Blue Whale
-Balaenoptera musculus
-Blue Whale
-Balaenoptera musculus
-Killer Whale
-Orcinus orca
-North Atlantic Right Whale
-Eubalaena glacialis
-North Pacific Right Whale
-Eubalaena japonica
-Northern Bottlenose Whale
-Hyperoodon ampullatus
-Sei Whale
-Balaenoptera borealis
 Northern Bobwhite
 Colinus virginianus
 Yellow-breasted Chat auricollis
@@ -1266,12 +1384,6 @@ American Marten
 Martes americana atrata
 Black-tailed Prairie Dog
 Cynomys ludovicianus
-Beluga Whale
-Delphinapterus leucas
-Fin Whale
-Balaenoptera physalus
-Killer Whale
-Orcinus orca
 Short-tailed Birds
 Albatross
 Phoebastria albatrus
@@ -1524,7 +1636,33 @@ Zacoleus idahoensis
 Threaded Vertigo
 Nearctula sp.
 Magnum Mantleslug
-Magnipelta mycophaga"""
+Magnipelta mycophaga
+Yellow-banded Bumble Bee
+Bombus terricola
+Vivid Dancer
+Argia vivida
+Greenish-white Grasshopper
+Hypochlora alba
+Red-tailed Leafhopper
+Aflexia rubranura
+Red-tailed Leafhopper
+Aflexia rubranura
+Mormon Metalmark
+Apodemia mormo
+Monarch
+Danaus plexippus
+Pale Yellow Dune Moth
+Copablepharon grandis
+Sonora Skipper
+Polites sonora
+Pygmy Snaketail
+Ophiogomphus howei
+Georgia Basin Bog Spider
+Gnaphosa snohomish
+Dune Tachinid Fly
+Germaria angustata
+Weidemeyer\'s Admiral
+Limenitis weidemeyerii"""
 
 Species_at_Risk = """Species at Risk
 Species of Special Status
