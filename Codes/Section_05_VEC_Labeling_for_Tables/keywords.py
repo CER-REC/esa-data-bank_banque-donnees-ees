@@ -775,7 +775,95 @@ Eschrichtius robustus
 Humpback Whale
 Megaptera novaeangliae
 Sowerby\'s Beaked Whale
-Mesoplodon bidens"""
+Mesoplodon bidens
+Bigmouth Buffalo
+Ictiobus cyprinellus
+Channel Darter
+Percina copelandi
+Dolly Varden
+Salvelinus malma malma
+Banded Killifish
+Fundulus diaphanus
+Upper Great Lakes Kiyi
+Coregonus kiyi kiyi
+Northern Brook Lamprey
+Ichthyomyzon fossor
+Silver Lamprey
+Ichthyomyzon unicuspis
+Cutlip Minnow
+Exoglossum maxillingua
+Grass Pickerel
+Esox americanus vermiculatus
+River Redhorse
+Moxostoma carinatum
+Rougheye Rockfish type I
+Sebastes sp. type I
+Rougheye Rockfish type II
+Sebastes sp. type II
+Yelloweye Rockfish
+Sebastes ruberrimus
+Yelloweye Rockfish
+Sebastes ruberrimus
+Columbia Sculpin
+Cottus hubbsi
+Deepwater Sculpin
+Myoxocephalus thompsonii
+Rocky Mountain Sculpin
+Cottus sp.
+Shorthead Sculpin
+Cottus confusus
+Bluntnose Sixgill Shark
+Hexanchus griseus
+Bridle Shiner
+Notropis bifrenatus
+Giant Threespine Stickleback
+Gasterosteus aculeatus
+Unarmoured Threespine Stickleback
+Gasterosteus aculeatus
+Green Sturgeon
+Acipenser medirostris
+Lake Sturgeon
+Acipenser fulvescens
+Shortnose Sturgeon
+Acipenser brevirostrum
+Mountain Sucker
+Catostomus platyrhynchus
+Spotted Sucker
+Minytrema melanops
+Northern Sunfish
+Lepomis peltastes
+Longspine Thornyhead
+Sebastolobus altivelis
+Tope
+Galeorhinus galeus
+Blackstripe Topminnow
+Fundulus notatus
+Bull Trout
+Salvelinus confluentus
+Bull Trout
+Salvelinus confluentus
+Westslope Cutthroat Trout
+Oncorhynchus clarkii lewisi
+Warmouth
+Lepomis gulosus
+Atlantic Wolffish
+Anarhichas lupus
+Brook Floater
+Alasmidonta varicosa
+Wavy-rayed Lampmussel
+Lampsilis fasciola
+Yellow Lampmussel
+Lampsilis cariosa
+Mapleleaf
+Quadrula quadrula
+Rocky Mountain Ridged Mussel
+Gonidea angulata
+Olympia Oyster
+Ostrea lurida
+Eastern Pondmussel
+Ligumia nasuta
+Rainbow
+Villosa iris"""
 
 Wetlands = """Wetlands
 Class (wetland class)
@@ -1422,7 +1510,21 @@ Chelydra serpentina
 Western Painted Turtle
 Chrysemys picta bellii
 Lake Erie Watersnake
-Nerodia sipedon insularum"""
+Nerodia sipedon insularum
+Brook Floater
+Alasmidonta varicosa
+Warty Jumping-slug
+Hemphillia glandulosa
+Haida Gwaii Slug
+Staala gwaii
+Pygmy Slug
+Kootenaia burkei
+Sheathed Slug
+Zacoleus idahoensis
+Threaded Vertigo
+Nearctula sp.
+Magnum Mantleslug
+Magnipelta mycophaga"""
 
 Species_at_Risk = """Species at Risk
 Species of Special Status
@@ -2516,17 +2618,24 @@ Warmouth
 Lepomis gulosus
 Atlantic Wolffish
 Anarhichas lupus
-Brook Molluscs
-Floater
+Brook Floater
 Alasmidonta varicosa
 Warty Jumping-slug
 Hemphillia glandulosa
+Haida Gwaii Slug
+Staala gwaii
+Pygmy Slug
+Kootenaia burkei
+Sheathed Slug
+Zacoleus idahoensis
+Threaded Vertigo
+Nearctula sp.
+Magnum Mantleslug
+Magnipelta mycophaga
 Wavy-rayed Lampmussel
 Lampsilis fasciola
 Yellow Lampmussel
 Lampsilis cariosa
-Magnum Mantleslug
-Magnipelta mycophaga
 Mapleleaf
 Quadrula quadrula
 Rocky Mountain Ridged Mussel
@@ -2537,16 +2646,7 @@ Eastern Pondmussel
 Ligumia nasuta
 Rainbow
 Villosa iris
-Haida Gwaii Slug
-Staala gwaii
-Pygmy Slug
-Kootenaia burkei
-Sheathed Slug
-Zacoleus idahoensis
-Threaded Vertigo
-Nearctula sp.
-Yellow-banded Arthropods
-Bumble Bee
+Yellow-banded Bumble Bee
 Bombus terricola
 Vivid Dancer
 Argia vivida
