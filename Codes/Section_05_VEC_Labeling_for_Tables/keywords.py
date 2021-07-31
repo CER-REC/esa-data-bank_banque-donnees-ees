@@ -1650,6 +1650,7 @@ Species of Special Status
 Rare Species
 SARA
 s. 73
+section 73
 Species At Risk Act
 Endangered Species
 Threatened Species
@@ -2915,6 +2916,7 @@ Leak
 Fugitive emissions
 Flaring
 Incinerating
+Averaging Period
 incineration
 Smoke
 Venting
@@ -2940,6 +2942,7 @@ Clean Air Act
 concentration
 groundlevel
 ground-level
+gm3
 receptor"""
 
 GHG_Emissions_and_Climate_Change = """GHG Emissions and Climate Change
@@ -3014,6 +3017,7 @@ Plan
 Framework
 law
 legislation
+regulatory
 regulations"""
 
 Traditional_Land_and_Resource_Use = """Traditional Land and Resource Use
@@ -3248,7 +3252,6 @@ boy
 girl
 father
 mother
-parent
 gender
 rural
 urban
@@ -3677,11 +3680,29 @@ employment rate
 educational level
 post-secondary
 high school
+high-school
+college
+cegep
+diploma
+degree
+university
+non-university
+bachelor
 certificate
 diploma
 degree
 Economy
+wage
+tips
+commission
+dividend
+pension
+child support payment
+spousal support payment
 jobs
+monetary
+salary
+cash
 personnel
 cotractors
 workers
@@ -3691,8 +3712,7 @@ labour force
 labor force
 economic well-being
 procurement
-tax revenue
-taxes
+tax
 revenue
 Major industries
 Primary industries
@@ -3715,7 +3735,9 @@ permanent part-time Employment
 permanent full-time Employment
 temporary part-time Employment
 temporary full-time Employment
-employment
+self-employment
+retirement
+investment
 contracting
 contract
 procurement
@@ -3724,7 +3746,6 @@ training
 training programs
 education
 opportunity
-capacity
 labor
 labour
 development plan
@@ -3738,8 +3759,7 @@ workforce
 work force
 revenue
 tax levee
-employment level
-unemployment level
+employment
 unemployment
 education level
 skill level
@@ -3752,26 +3772,18 @@ economic benefits plan
 cooperation agreement
 bid
 qualification
+income
+compensation
 partnership
 collaboration
 distribution
-agreement
 outreach
 commitment
 financial
-community investment
-investment
 development
-benefits
-monitor
-Indigenous monitoring"""
+benefits"""
 
 Rights_of_Indigenous_Peoples = """Rights of Indigenous Peoples
-Indigenous and Treaty Rights
-Aboriginal and Treaty Rights
-Treaty Rights
-Indigenous Rights
-Aboriginal Rights
 potential rights
 established rights
 asserted rights
@@ -3782,8 +3794,6 @@ Constitution Act, 1982
 Constitution Act
 section 35
 s. 35
-Constitution
-constitutionally
 Indigenous
 Aboriginal
 Native
@@ -3792,21 +3802,16 @@ Métis
 Metis
 Inuit
 Inuk
-Peoples
 Communities
 Nation
 Band
 Tribe
 Settlement
 Treaty
-Treaty Lands
 Crown Land
-Indigenous Land
 Traditional Land
 territory
 Traditional Territory
-Indigenous Knowledge
-Oral Indigenous Knowledge
 Traditional Knowledge
 IK
 OIK
@@ -3819,7 +3824,6 @@ engagement
 Indigenous engagement
 Aboriginal engagement
 Crown
-Crown Consultation
 duty to consult
 agent of the Crown
 early engagement
@@ -3830,27 +3834,18 @@ Crown-Indigenous Relations and Northern Affairs Canada
 CIRNAC
 Indigenous Services Canada
 ISC
-confidential
-confidentiality
 infringe
-infringement
 exercise rights
 practice rights
-values
 customs
 traditions
 practices
-access
 access to lands
 access to resources
 travel ways
 land availability
 resource availability
-Indigenous protcols
-Indigenous laws
 governancy system
-Indigenous participation
-Indigenous monitoring
 Reconciliation
 Truth and Reconciliation
 TRC
@@ -3862,21 +3857,15 @@ residential school
 United Nations Declaration on the Rights of Indigenous Peoples
 UNDRIP
 Traditional Knowledge
-Indigenous Knowledge
-Aboriginal Knowledge
-Aboriginal
 Hunt
-hunting
 fishing
 Harvest
-harvesting
 Culturally significant
 Culturally modified tree
 Gather
 Berries
 Medicine
 Berry picking
-Indigenous
 Elder
 Trapping
 engagement
@@ -3886,21 +3875,12 @@ ceremonies
 Medicinal
 Cultural
 First Peoples
-indian act
-treaty
 rights-bearing
-indigenous rights
 reserves
-aboriginal
-indigenous
-metis
-Métis
 first nations
 shxw’ōwhámel
 lheidlit’enneh
 whispering pines first nation
-inuit
-elders
 kumik elder lodge
 tribal
 Abenaki
@@ -4025,7 +4005,6 @@ Iglulik Inuit
 Odawa
 Wetal
 Tsetsaut
-Inuit
 Ojibwa
 Yellowknives
 popkum first nation
@@ -4035,7 +4014,6 @@ samson cree first nation
 o’chiese first nation
 ermineskin cree nation
 enoch cree nation
-indian
 eskimo"""
 
 keywords = [
