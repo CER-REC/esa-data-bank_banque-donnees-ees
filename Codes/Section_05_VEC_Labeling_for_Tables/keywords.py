@@ -2913,11 +2913,6 @@ Air
 CAC
 criteria air contaminant
 Emissions
-Ground-level
-Receptor
-Model
-modelled
-modelling
 Construction equipment
 vehicular emissions
 CCME
@@ -2925,7 +2920,6 @@ Volatile organic compounds
 Combustion
 Leak
 Fugitive emissions
-Detection
 Flaring
 Incinerating
 incineration
@@ -2935,14 +2929,13 @@ Pollute
 pollutant
 National Pollutant Release Inventory
 Exceedance
-Permit
 Release
 Ambient
-Air quality
 Hydrogen sulphide
 H2S
 particulate
 so2
+sulfur dioxide
 mercaptans
 dust
 NO2
