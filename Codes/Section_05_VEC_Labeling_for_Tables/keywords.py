@@ -1667,33 +1667,27 @@ Limenitis weidemeyerii"""
 Species_at_Risk = """Species at Risk
 Species of Special Status
 Rare Species
-Sensitive
 SARA
+s. 73
 Species At Risk Act
+Endangered Species
+Threatened Species
+Endangered Wildlife
+Critical Habitat
 COSEWIC
 Committee on the Status of Endangered Wildlife in Canada
-ECCC
-Environment and Climate Change Canada
 Critical habitat
 Designation
-Threshold
 Schedule 1
 At Risk
 Endangered
 Critical timing window
 Restricted activity period
-DFO
-Fisheries and Oceans Canada
 Canadian Wildlife Service
 CWS
 Recovery Strategy
 Action Plan
-Status
-Listed
 Permit
-Offset
-offsetting
-Compensation
 Caribou
 Bat
 special conservation status
