@@ -1649,7 +1649,8 @@ Balaenoptera physalus
 Killer Whale
 Orcinus orcaesoplodon bidens
 clam
-scallop"""
+scallop
+butterfly"""
 
 Species_at_Risk = """Species at Risk
 Species of Special Status
@@ -2255,6 +2256,9 @@ Vulpes velox
 American Marten
 Martes americana atrata
 Black-tailed Prairie Dog
+blacktailed prairie dog
+dog
+cat
 Cynomys ludovicianus
 Beluga Whale
 Delphinapterus leucas
@@ -2915,7 +2919,6 @@ Model
 modelled
 modelling
 Construction equipment
-Vehicle
 vehicular emissions
 CCME
 Volatile organic compounds
@@ -2941,7 +2944,14 @@ H2S
 particulate
 so2
 mercaptans
-dust"""
+dust
+NO2
+ozone
+nitrogen dioxide
+oxides of nitrogen
+NOX
+Clean Air Act
+concentration"""
 
 GHG_Emissions_and_Climate_Change = """GHG Emissions and Climate Change
 greenhouse
@@ -2961,10 +2971,6 @@ offset
 carbon dioxide
 CO2
 CO2 equivalent
-Target
-Reduction
-Percentage
-Hinders
 Net zero
 net-zero
 Reduce
@@ -2974,9 +2980,8 @@ ISO
 methane
 ghg
 ozone
-global warming"""
-
-Assessment_of_Upstream_GHG_Emissions = """Assessment of Upstream GHG Emissions
+global warming
+Assessment of Upstream GHG Emissions
 upstream
 quantitative
 throughput
@@ -2989,7 +2994,7 @@ CO2
 Carbon dioxide
 CO2 equivalent
 Methane
-emissions
+ch4
 steam
 hydrogen
 combustion
@@ -3000,7 +3005,6 @@ flaring"""
 Acoustic_Environment = """Acoustic Environment
 Sound
 Noise
-Receptor
 Equipment
 Frequency
 Inaudible
@@ -3009,13 +3013,9 @@ Decibel
 Notification
 Noise control
 Noise management
-Model
-modelling
-Monitoring
-monitor
+loud
 db
 acoustic"""
-
 
 Environmental_Obligations = """Environmental Obligations
 MBCA
