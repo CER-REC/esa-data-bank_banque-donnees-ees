@@ -2961,23 +2961,14 @@ greenhouse gases
 climate change
 point source
 area source
-venting
-fugitive
 release
 leak
 burning
 assumption
 offset
-carbon dioxide
-CO2
-CO2 equivalent
-Net zero
-net-zero
-Reduce
-Combustion emissions
+off-set
 International Standards Organization
 ISO
-methane
 ghg
 ozone
 global warming
@@ -2988,7 +2979,6 @@ throughput
 net zero
 net-zero
 Environment and Climate Change Canada (ECCC)
-Venting
 Threshold
 CO2
 Carbon dioxide
