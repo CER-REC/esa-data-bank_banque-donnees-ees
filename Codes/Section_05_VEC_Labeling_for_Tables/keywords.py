@@ -695,6 +695,7 @@ in-stream work
 Restricted activity period
 Fish-bearing water body
 Riparian
+acquatic
 Aquatic
 Aquatic invasive species
 Spawning
@@ -732,9 +733,6 @@ shiner
 sucker
 whitefish
 cisco
-marine
-clam
-scallop
 sea
 ocean
 lake
@@ -855,8 +853,6 @@ Rougheye Rockfish type II
 Sebastes sp. type II
 Yelloweye Rockfish
 Sebastes ruberrimus
-Yelloweye Rockfish
-Sebastes ruberrimus
 Columbia Sculpin
 Cottus hubbsi
 Deepwater Sculpin
@@ -891,8 +887,6 @@ Tope
 Galeorhinus galeus
 Blackstripe Topminnow
 Fundulus notatus
-Bull Trout
-Salvelinus confluentus
 Bull Trout
 Salvelinus confluentus
 Westslope Cutthroat Trout
@@ -1653,7 +1647,9 @@ Delphinapterus leucas
 Fin Whale
 Balaenoptera physalus
 Killer Whale
-Orcinus orcaesoplodon bidens"""
+Orcinus orcaesoplodon bidens
+clam
+scallop"""
 
 Species_at_Risk = """Species at Risk
 Species of Special Status
