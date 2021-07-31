@@ -904,19 +904,12 @@ Fen
 Marsh
 Swamp
 Shallow water
-Intermittent
-Permanent
-Non-permanent
 Wetland function
-Offsetting
 Hydrological function
 Drainage area
 Canadian wetland classification system
 Federal policy on wetland conservation
-Conservation
 Wetland monitoring
-Reclamation
-Compensation
 water recharge
 potholes
 ponds
@@ -2944,7 +2937,10 @@ nitrogen dioxide
 oxides of nitrogen
 NOX
 Clean Air Act
-concentration"""
+concentration
+groundlevel
+ground-level
+receptor"""
 
 GHG_Emissions_and_Climate_Change = """GHG Emissions and Climate Change
 greenhouse
