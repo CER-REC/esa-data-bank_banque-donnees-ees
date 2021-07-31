@@ -93,18 +93,6 @@ clay
 stone
 stoniness"""
 
-
-# Diversity
-# Abundance
-# Ecological
-# Inventory
-# Community
-# communities
-
-# ecological community
-
-
-
 Vegetation = """Vegetation
 Plant
 planting
@@ -724,9 +712,6 @@ In-stream
 instream
 Wetted width
 substrate
-whale
-marine mammal
-marine organisms
 salmon
 oncorhynchus
 walleye
@@ -755,7 +740,6 @@ ocean
 lake
 pond
 bay
-orca
 subtidal
 Striped Bass
 Morone saxatilis
@@ -811,27 +795,6 @@ Rainbow Trout
 Oncorhynchus mykiss
 Atlantic Whitefish
 Coregonus huntsmani
-Northern Molluscs
-Abalone
-Haliotis kamtschatkana
-Rayed Bean
-Villosa fabalis
-Fawnsfoot
-Truncilla donaciformis
-Kidneyshell
-Ptychobranchus fasciolaris
-Lilliput
-Toxolasma parvum
-Salamander Mussel
-Simpsonaias ambigua
-Round Pigtoe
-Pleurobema sintoxia
-Northern Riffleshell
-Epioblasma torulosa rangiana
-Banff Springs Snail
-Physella johnsoni
-Snuffbox
-Epioblasma triquetra
 Eastern Sand Darter
 Ammocrypta pellucida
 Eastern Sand Darter
@@ -866,28 +829,6 @@ Westslope Cutthroat Trout
 Oncorhynchus clarkii lewisi
 Northern Wolffish
 Anarhichas denticulatus
-Atlantic Mud-piddock
-Barnea truncata
-Mapleleaf
-Quadrula quadrula
-Threehorn Wartyback
-Obliquaria reflexa
-Sea Otter
-Enhydra lutris
-Harbour Porpoise
-Phocoena phocoena
-Steller Sea Lion
-Eumetopias jubatus
-Bowhead Whale
-Balaena mysticetus
-Fin Whale
-Balaenoptera physalus
-Grey Whale
-Eschrichtius robustus
-Humpback Whale
-Megaptera novaeangliae
-Sowerby\'s Beaked Whale
-Mesoplodon bidens
 Bigmouth Buffalo
 Ictiobus cyprinellus
 Channel Darter
@@ -959,51 +900,7 @@ Oncorhynchus clarkii lewisi
 Warmouth
 Lepomis gulosus
 Atlantic Wolffish
-Anarhichas lupus
-Brook Floater
-Alasmidonta varicosa
-Wavy-rayed Lampmussel
-Lampsilis fasciola
-Yellow Lampmussel
-Lampsilis cariosa
-Mapleleaf
-Quadrula quadrula
-Rocky Mountain Ridged Mussel
-Gonidea angulata
-Olympia Oyster
-Ostrea lurida
-Eastern Pondmussel
-Ligumia nasuta
-Rainbow
-Villosa iris
-Harbour Seal Lacs des Loups Marins
-Seal
-Phoca vitulina mellonae
-Pacific Water Shrew
-Sorex bendirii
-Whale
-Beluga Whale
-Delphinapterus leucas
-Blue Whale
-Balaenoptera musculus
-Blue Whale
-Balaenoptera musculus
-Killer Whale
-Orcinus orca
-North Atlantic Right Whale
-Eubalaena glacialis
-North Pacific Right Whale
-Eubalaena japonica
-Northern Bottlenose Whale
-Hyperoodon ampullatus
-Sei Whale
-Balaenoptera borealis
-Beluga Whale
-Delphinapterus leucas
-Fin Whale
-Balaenoptera physalus
-Killer Whale
-Orcinus orca"""
+Anarhichas lupus"""
 
 Wetlands = """Wetlands
 Class (wetland class)
@@ -1054,6 +951,7 @@ Ungulate
 Amphibian
 Reptile
 Breeding
+eggs
 Den
 denning
 Wintering
@@ -1126,6 +1024,10 @@ bug
 weasel
 otter
 skunk
+mollusk
+mollusc
+reptile
+amphibian
 mineral lick
 minerallick
 hunting
@@ -1662,7 +1564,96 @@ Gnaphosa snohomish
 Dune Tachinid Fly
 Germaria angustata
 Weidemeyer\'s Admiral
-Limenitis weidemeyerii"""
+Limenitis weidemeyerii
+orca
+Northern Abalone
+Haliotis kamtschatkana
+Rayed Bean
+Villosa fabalis
+Fawnsfoot
+Truncilla donaciformis
+Kidneyshell
+Ptychobranchus fasciolaris
+Lilliput
+Toxolasma parvum
+Salamander Mussel
+Simpsonaias ambigua
+Round Pigtoe
+Pleurobema sintoxia
+Northern Riffleshell
+Epioblasma torulosa rangiana
+Banff Springs Snail
+Physella johnsoni
+Snuffbox
+Epioblasma triquetra
+Atlantic Mud-piddock
+Barnea truncata
+Mapleleaf
+Quadrula quadrula
+Threehorn Wartyback
+Obliquaria reflexa
+Sea Otter
+Enhydra lutris
+Harbour Porpoise
+Phocoena phocoena
+Steller Sea Lion
+Eumetopias jubatus
+whale
+marine mammal
+marine organisms
+Bowhead Whale
+Balaena mysticetus
+Fin Whale
+Balaenoptera physalus
+Grey Whale
+Eschrichtius robustus
+Humpback Whale
+Megaptera novaeangliae
+Sowerby\'s Beaked Whale
+Brook Floater
+Alasmidonta varicosa
+Wavy-rayed Lampmussel
+Lampsilis fasciola
+Yellow Lampmussel
+Lampsilis cariosa
+Mapleleaf
+Quadrula quadrula
+Rocky Mountain Ridged Mussel
+Gonidea angulata
+Olympia Oyster
+Ostrea lurida
+Eastern Pondmussel
+Ligumia nasuta
+Rainbow
+Villosa iris
+Harbour Seal Lacs des Loups Marins
+Seal
+Phoca vitulina mellonae
+Pacific Water Shrew
+Sorex bendirii
+Whale
+Beluga Whale
+Delphinapterus leucas
+Blue Whale
+Balaenoptera musculus
+Blue Whale
+Balaenoptera musculus
+Killer Whale
+Orcinus orca
+North Atlantic Right Whale
+Eubalaena glacialis
+North Pacific Right Whale
+Eubalaena japonica
+Northern Bottlenose Whale
+Hyperoodon ampullatus
+Sei Whale
+Balaenoptera borealis
+Beluga Whale
+Delphinapterus leucas
+Fin Whale
+Balaenoptera physalus
+Killer Whale
+Orcinus orcaesoplodon bidens"""
 
 Species_at_Risk = """Species at Risk
 Species of Special Status
