@@ -3364,31 +3364,24 @@ Signage
 Waterway
 Crossing
 crossing plan
-navigation
 impacting Navigation
 dewatering of navigable waters
 navigable waters
 navigable waterway
 navigable
 navigate
-waterway
 watercourse
 watercourse crossing
 water crossing
-crossing
 crossing methodology
 horizontal directional drilling
 HDD
 bridge
-temporary
-permanent
 marine
 marine terminal
 waterway user
 recreational waterway user
 navigational use
-river
-creek
 tributary
 tourism
 tourist
@@ -3448,6 +3441,7 @@ residents
 community
 traditions
 alcohol
+drugs
 substance abuse
 stresses
 household cohesion
@@ -3478,6 +3472,9 @@ toxic
 human health
 nuisances
 health
+death
+illness
+disease
 Aesthetics
 human receptors
 CCME Guidelines
