@@ -3324,10 +3324,6 @@ archeological assessment
 pre-contact
 post-contact
 human remains
-Permit
-license
-licence
-clearance
 Heritage Conservation Branch
 Ontario ministry of tourism culture and sport
 Heritage resources act
@@ -3351,7 +3347,9 @@ Acheological impact assessment
 AIA
 Nunavut territorial lands use regulations
 Northwest territories historical advisory Board
-Yukon heritage resources Board"""
+Yukon heritage resources Board
+oldforest
+old forest"""
 
 Navigation_and_Navigation_Safety = """Navigation and Navigation Safety
 Navigation
@@ -3453,7 +3451,6 @@ illegal
 disruptive activities
 privacy
 inhabited
-population
 human behaviour
 human behavior
 workforce
@@ -3578,6 +3575,7 @@ recycling facilities
 highways
 roads
 airports
+bridge
 911 dispatch services
 Local commercial accommodation
 Camp sites
@@ -3655,7 +3653,8 @@ hotel
 big box stores
 town centre
 property
-motel"""
+motel
+construction"""
 
 Employment_and_Economy = """Employment and Economy
 Employment opportunities
@@ -3689,8 +3688,6 @@ university
 non-university
 bachelor
 certificate
-diploma
-degree
 Economy
 wage
 tips
@@ -3780,7 +3777,6 @@ distribution
 outreach
 commitment
 financial
-development
 benefits"""
 
 Rights_of_Indigenous_Peoples = """Rights of Indigenous Peoples
@@ -4026,7 +4022,6 @@ keywords = [
     Wildlife_and_Wildlife_Habitat,
     Species_at_Risk,
     GHG_Emissions_and_Climate_Change,
-    Assessment_of_Upstream_GHG_Emissions,
     Air_Emissions,
     Acoustic_Environment,
     Electromagnetism_and_Corona_Discharge,
