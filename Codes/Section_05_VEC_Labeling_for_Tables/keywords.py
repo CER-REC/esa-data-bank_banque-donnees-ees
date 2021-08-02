@@ -677,13 +677,17 @@ surfacewater
 hot spring
 creek
 tidal
-subtidal"""
+subtidal
+mercury
+contamination"""
 
 Fish_and_Fish_Habitat = """Fish and Fish Habitat
 Fish
 fish-bearing
 fisheries
 Fisheries and Oceans Canada
+mercury
+contamination
 DFO
 Fisheries and Oceans
 Local fisheries
@@ -3777,7 +3781,8 @@ distribution
 outreach
 commitment
 financial
-benefits"""
+benefits
+monitoring"""
 
 Rights_of_Indigenous_Peoples = """Rights of Indigenous Peoples
 potential rights
