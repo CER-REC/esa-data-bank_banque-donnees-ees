@@ -21,12 +21,12 @@ do_tag_title_table = 1  # assign table titles to each table using text search me
 do_toc_title_table = 1  # assign table titles to each table using TOC method
 do_final_title_table = 1  # replace continued tables and create final table title
 
-do_tag_title_fig = 0  # assign figure titles to each figure using text search method
-do_toc_title_fig = 0  # assign figure titles to each figure using TOC method
-do_final_title_fig = 0  # replace continued figures and create final figure title
+do_tag_title_fig = 1  # assign figure titles to each figure using text search method
+do_toc_title_fig = 1  # assign figure titles to each figure using TOC method
+do_final_title_fig = 1  # replace continued figures and create final figure title
 
-create_tables_csv = 1
-create_figs_csv = 1
+create_tables_csv = 0
+create_figs_csv = 0
 
 if __name__ == "__main__":
     # get list of all documents, read from pdfs
@@ -183,49 +183,45 @@ if __name__ == "__main__":
     if create_figs_csv:
         # get final figs csv files
         with engine.connect() as conn:
-            stmt = text(
-                '''SELECT toc.titleTOC, toc.page_name, toc.toc_page_num, toc.toc_pdfId, toc.toc_title_order, pdfs.short_name
+            stmt = '''SELECT toc.titleTOC, toc.page_name, toc.toc_page_num, toc.toc_pdfId, toc.toc_title_order, toc.loc_pdfId, toc.loc_page_list, pdfs.short_name
                 FROM toc LEFT JOIN pdfs ON toc.toc_pdfId = pdfs.pdfId WHERE title_type='Figure'
-                ORDER BY pdfs.short_name, toc.toc_pdfId, toc.toc_page_num, toc.toc_title_order;''')
+                ORDER BY pdfs.short_name, toc.toc_pdfId, toc.toc_page_num, toc.toc_title_order;'''
             df = pd.read_sql_query(stmt, conn)
-        df.rename(columns={'titleTOC': 'Name', 'loc_pdfId': 'location_DataID', 'loc_page': 'location_Page'}, inplace=True)
 
-        # new_list = []
-        #
-        # df['loc_page'] = None
-        # df['sim'] = None
-        # df['ratio'] = None
-        # for index, row in df.iterrows():
-        #     p = row['loc_page_list']
-        #     if p:
-        #         pages = json.loads(p)
-        #         df.loc[index, 'loc_page'] = pages[0]['page_num']
-        #         df.loc[index, 'sim'] = pages[0]['sim']
-        #         df.loc[index, 'ratio'] = pages[0]['ratio']
-        #
-        #         for page in pages:
-        #             new_row = {'Name': row['Name'],  # 'Name_French': row['Name_French'],
-        #                        'page_name': row['page_name'],
-        #                        'toc_page_num': row['toc_page_num'],
-        #                        'toc_pdfId': row['toc_pdfId'],
-        #                        'toc_title_order': row['toc_title_order'],
-        #                        'short_name': row['short_name'],
-        #                        # 'location_DataID': row['location_DataID'],
-        #                        # 'assigned_count': row['assigned_count'],
-        #                        # 'loc_page_list': row['loc_page_list'],
-        #                        'sim': page['sim'], 'ratio': page['ratio'],
-        #                        # 'location_Page': page['page_num']
-        #                        }
-        #             new_list.append(new_row)
-        #     else:
-        #         new_list.append(row)
-        # df_pivoted = pd.DataFrame(new_list)
+        new_list = []
+
+        df['loc_page'] = None
+        df['sim'] = None
+        df['ratio'] = None
+        for index, row in df.iterrows():
+            p = row['loc_page_list']
+            if p:
+                pages = json.loads(p)
+                df.loc[index, 'loc_page'] = pages[0]['page_num']
+                df.loc[index, 'sim'] = pages[0]['sim']
+                df.loc[index, 'ratio'] = pages[0]['ratio']
+
+                for page in pages:
+                    new_row = {'Name': row['titleTOC'],  # 'Name_French': row['Name_French'],
+                               'page_name': row['page_name'],
+                               'toc_page_num': row['toc_page_num'],
+                               'toc_pdfId': row['toc_pdfId'],
+                               'toc_title_order': row['toc_title_order'],
+                               'short_name': row['short_name'],
+                               'loc_pdfId': row['loc_pdfId'],
+                               # 'assigned_count': row['assigned_count'],
+                               # 'loc_page_list': row['loc_page_list'],
+                               'sim': page['sim'],
+                               'ratio': page['ratio'],
+                               'page_num': page['page_num']
+                               }
+                    new_list.append(new_row)
+            else:
+                new_list.append(row)
+        df_pivoted = pd.DataFrame(new_list)
 
         # df.to_csv('Data_Files/final_figs_new.csv', index=False, encoding='utf-8-sig')
         # df_pivoted.to_csv('Data_Files/final_figs_pivoted_new.csv', index=False, encoding='utf-8-sig')
 
-        df.to_csv(constants.save_dir + 'final_figs_new.csv', index=False, encoding='utf-8-sig')
-        # df_pivoted.to_csv(constants.save_dir + 'final_figs_pivoted_new.csv', index=False, encoding='utf-8-sig')
-
-
-
+        # df.to_csv(constants.save_dir + 'final_figs_new.csv', index=False, encoding='utf-8-sig')
+        df_pivoted.to_csv(constants.save_dir + 'final_figs_pivoted_new.csv', index=False, encoding='utf-8-sig')
