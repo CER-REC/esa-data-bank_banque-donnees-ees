@@ -4,7 +4,7 @@ from nltk.corpus import stopwords
 from nltk.stem.porter import *
 from nltk.tokenize import word_tokenize
 
-Physical_and_Meteorological_Environment = """Physical and Meteorological Environment
+Landscape_terrain_and_weather = """Physical and Meteorological Environment
 Physical Environment
 Meteorological Environment
 Precipitation
@@ -52,7 +52,7 @@ elevation
 terrain"""
 
 
-Soil_and_Soil_Productivity = """Soil Productivity
+Soil = """Soil Productivity
 Soil
 Agriculture
 Topsoil
@@ -93,7 +93,7 @@ clay
 stone
 stoniness"""
 
-Vegetation = """Vegetation
+Plants = """Vegetation
 Plant
 planting
 Rare plant
@@ -614,7 +614,7 @@ Acroscyphus sphaerophoroides
 Western Waterfan
 Peltigera gowardii"""
 
-Water_Quality_and_Quantity = """Water Quality and Quantity
+Water = """Water Quality and Quantity
 Water
 waterbody
 water body
@@ -681,7 +681,7 @@ subtidal
 mercury
 contamination"""
 
-Fish_and_Fish_Habitat = """Fish and Fish Habitat
+Fish = """Fish and Fish Habitat
 Fish
 fish-bearing
 fisheries
@@ -926,7 +926,7 @@ floodplains
 vernal pool
 baygall"""
 
-Wildlife_and_Wildlife_Habitat = """Wildlife and Wildlife Habitat
+Wildlife = """Wildlife and Wildlife Habitat
 nocturnal
 bat trees
 hibernation
@@ -2906,7 +2906,7 @@ Acroscyphus sphaerophoroides
 Western Waterfan
 Peltigera gowardii"""
 
-Air_Emissions = """Air Emissions
+Air_emissions = """Air Emissions
 Air
 CAC
 criteria air contaminant
@@ -2949,7 +2949,7 @@ ground-level
 gm3
 receptor"""
 
-GHG_Emissions_and_Climate_Change = """GHG Emissions and Climate Change
+Greenhouse_gas_emissions = """GHG Emissions and Climate Change
 greenhouse
 greenhouse gas
 green house gas
@@ -2988,7 +2988,7 @@ fugitive
 venting
 flaring"""
 
-Acoustic_Environment = """Acoustic Environment
+Noise = """Acoustic Environment
 Sound
 Noise
 Equipment
@@ -3024,7 +3024,7 @@ legislation
 regulatory
 regulations"""
 
-Traditional_Land_and_Resource_Use = """Traditional Land and Resource Use
+Indigenous_land_water_and_air_use = """Traditional Land and Resource Use
 TLRU
 traditional
 Traditional ecological knowledge
@@ -3215,7 +3215,7 @@ enoch cree nation
 indian
 eskimo"""
 
-Electromagnetism_and_Corona_Discharge = """Electromagnetism and Corona Discharge
+Electricity_and_electromagnetism = """Electromagnetism and Corona Discharge
 voltage
 ozone concentration
 eletric
@@ -3240,7 +3240,7 @@ foul weather
 ambient conditions
 240 kV"""
 
-Human_Occupancy_and_Resource_Use = """Human Occupancy and Resource Use
+Proximity_to_people = """Human Occupancy and Resource Use
 Human Occupancy and Resource Use
 residents
 human Occupancy
@@ -3296,7 +3296,7 @@ navigable waterways
 local
 TLU Impact assessment"""
 
-Heritage_Resources = """Heritage Resources
+Archaeological_paleontological_historical_and_culturally_significant_sites_and_resources = """Heritage Resources
 Heritage Resources
 Heritage
 Archaeology
@@ -3355,7 +3355,7 @@ Yukon heritage resources Board
 oldforest
 old forest"""
 
-Navigation_and_Navigation_Safety = """Navigation and Navigation Safety
+Human_access_to_boats_and_waterways = """Navigation and Navigation Safety
 Navigation
 Nonnavigable
 Navigation protection activities
@@ -3429,7 +3429,7 @@ streambank
 streambed
 side containment"""
 
-Social_and_Cultural_Well_Being = """Social and Cultural Well-Being
+Impact_to_social_and_cultural_well_being = """Social and Cultural Well-Being
 Social
 Routing
 socio-cultural
@@ -3468,7 +3468,7 @@ social agency
 cultural agency
 cultrual groups"""
 
-Human_Health_and_Aesthetics = """Human Health and Aesthetics
+Impact_to_human_health_and_viewscapes = """Human Health and Aesthetics
 toxic
 human health
 nuisances
@@ -3528,7 +3528,7 @@ health indicator data
 statistics canada
 mortality"""
 
-Infrastructure_and_Services = """Infrastructure and Services
+Social_cultural_economic_infrastructure_and_services = """Infrastructure and Services
 Infractructure
 Services
 Hospital
@@ -3658,7 +3658,7 @@ property
 motel
 construction"""
 
-Employment_and_Economy = """Employment and Economy
+Economic_Offsets_and_Impact = """Employment and Economy
 Employment opportunities
 Business opportunities
 contracting opportunities
@@ -3782,7 +3782,7 @@ financial
 benefits
 monitoring"""
 
-Rights_of_Indigenous_Peoples = """Rights of Indigenous Peoples
+Treaty_and_Indigenous_Rights = """Rights of Indigenous Peoples
 potential rights
 established rights
 asserted rights
@@ -4014,32 +4014,6 @@ o’chiese first nation
 ermineskin cree nation
 enoch cree nation
 eskimo"""
-
-keywords = [
-    Physical_and_Meteorological_Environment,
-    Soil_and_Soil_Productivity,
-    Vegetation,
-    Water_Quality_and_Quantity,
-    Fish_and_Fish_Habitat,
-    Wetlands,
-    Wildlife_and_Wildlife_Habitat,
-    Species_at_Risk,
-    GHG_Emissions_and_Climate_Change,
-    Air_Emissions,
-    Acoustic_Environment,
-    Electromagnetism_and_Corona_Discharge,
-    Human_Occupancy_and_Resource_Use,
-    Heritage_Resources,
-    Navigation_and_Navigation_Safety,
-    Traditional_Land_and_Resource_Use,
-    Social_and_Cultural_Well_Being,
-    Human_Health_and_Aesthetics,
-    Infrastructure_and_Services,
-    Employment_and_Economy,
-    Environmental_Obligations,
-    Rights_of_Indigenous_Peoples,
-]
-
 
 keywords = [Landscape_terrain_and_weather, 
             Soil,
