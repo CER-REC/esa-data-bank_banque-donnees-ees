@@ -4040,6 +4040,30 @@ keywords = [
     Rights_of_Indigenous_Peoples,
 ]
 
+
+keywords = [Landscape_terrain_and_weather, 
+            Soil,
+            Plants,
+            Water,
+            Fish,
+            Wetlands,
+            Wildlife,
+            Species_at_Risk,
+            Greenhouse_gas_emissions,
+            Air_emissions,
+            Noise,
+            Electricity_and_electromagnetism,
+            Proximity_to_people,
+            Archaeological_paleontological_historical_and_culturally_significant_sites_and_resources,
+            Human_access_to_boats_and_waterways,
+            Indigenous_land_water_and_air_use,
+            Impact_to_social_and_cultural_well_being,
+            Impact_to_human_health_and_viewscapes,
+            Social_cultural_economic_infrastructure_and_services,
+            Economic_Offsets_and_Impact,
+            Environmental_Obligations,
+            Treaty_and_Indigenous_Rights]
+
 keywords = [x.lower().split("\n") for x in keywords]
 
 stemmer = PorterStemmer()
