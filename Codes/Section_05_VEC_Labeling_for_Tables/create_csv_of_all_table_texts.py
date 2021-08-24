@@ -20,7 +20,7 @@ for i in range(len(index_df)):
         for row in reader:
             csv_string += ' '.join(row)
         csv_string = remove_s_tags(csv_string)
-        index_df['text'][i] = csv_string
+        index_df['text'][i] = csv_string[:30_000]
 
 print(index_df.head())
 
