@@ -687,8 +687,8 @@ subtidal
 mercury
 water contamination"""
 
-Fish = """Fish and Fish Habitat
-Fish
+Fish = """Fish
+Fish Habitat
 fish-bearing
 fisheries
 Fisheries and Oceans Canada
@@ -935,6 +935,8 @@ baygall
 slough"""
 
 Wildlife = """Wildlife and Wildlife Habitat
+wildlife
+wildlife habitat
 nocturnal
 bat trees
 hibernation
@@ -4007,6 +4009,7 @@ Animakhee Wazhing
 Whitefish Lake, ON"""
 
 Electricity_and_electromagnetism = """Electromagnetism and Corona Discharge
+electromagnetism
 voltage
 ozone concentration
 eletric
@@ -4265,6 +4268,7 @@ cultural agency
 cultrual groups"""
 
 Impact_to_human_health_and_viewscapes = """Human Health and Aesthetics
+viewscapes
 toxic
 human health
 nuisances
