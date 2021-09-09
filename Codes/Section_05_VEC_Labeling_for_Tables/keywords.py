@@ -4,7 +4,7 @@ from nltk.corpus import stopwords
 from nltk.stem.porter import *
 from nltk.tokenize import word_tokenize
 
-Physical_and_Meteorological_Environment = """Physical and Meteorological Environment
+Landscape_terrain_and_weather = """Physical and Meteorological Environment
 Physical Environment
 Meteorological Environment
 Precipitation
@@ -49,10 +49,16 @@ avalanche
 sloping
 topography
 elevation
-terrain"""
+terrain
+landscape
+weather
+physiography
+bedrock
+geology
+natural hazard"""
 
 
-Soil_and_Soil_Productivity = """Soil Productivity
+Soil = """Soil Productivity
 Soil
 Agriculture
 Topsoil
@@ -60,7 +66,7 @@ Subsoil
 Soil horizon
 Drainage
 Erosion
-Contamination
+soil contamination
 CCME
 Canadian Council of Ministers of the Environment
 Soil compaction
@@ -93,7 +99,7 @@ clay
 stone
 stoniness"""
 
-Vegetation = """Vegetation
+Plants = """Vegetation
 Plant
 planting
 Rare plant
@@ -614,7 +620,7 @@ Acroscyphus sphaerophoroides
 Western Waterfan
 Peltigera gowardii"""
 
-Water_Quality_and_Quantity = """Water Quality and Quantity
+Water = """Water Quality and Quantity
 Water
 waterbody
 water body
@@ -679,15 +685,16 @@ creek
 tidal
 subtidal
 mercury
-contamination"""
+water contamination"""
 
-Fish_and_Fish_Habitat = """Fish and Fish Habitat
-Fish
+Fish = """Fish
+Fish Habitat
 fish-bearing
 fisheries
 Fisheries and Oceans Canada
 mercury
-contamination
+water contamination
+deleterious
 DFO
 Fisheries and Oceans
 Local fisheries
@@ -924,9 +931,12 @@ carr
 pocosin
 floodplains
 vernal pool
-baygall"""
+baygall
+slough"""
 
-Wildlife_and_Wildlife_Habitat = """Wildlife and Wildlife Habitat
+Wildlife = """Wildlife and Wildlife Habitat
+wildlife
+wildlife habitat
 nocturnal
 bat trees
 hibernation
@@ -944,9 +954,17 @@ Reptile
 Breeding
 eggs
 Den
+migration
+staging
+movement corridors
+forest interior
 denning
 Wintering
 overwintering
+national park
+national wildlife reserve
+national wildlife area
+world biosphere reserve
 Hibernaculum
 hibernacula
 Riparian habitat
@@ -2906,7 +2924,7 @@ Acroscyphus sphaerophoroides
 Western Waterfan
 Peltigera gowardii"""
 
-Air_Emissions = """Air Emissions
+Air_emissions = """Air Emissions
 Air
 CAC
 criteria air contaminant
@@ -2949,7 +2967,7 @@ ground-level
 gm3
 receptor"""
 
-GHG_Emissions_and_Climate_Change = """GHG Emissions and Climate Change
+Greenhouse_gas_emissions = """GHG Emissions and Climate Change
 greenhouse
 greenhouse gas
 green house gas
@@ -2988,7 +3006,7 @@ fugitive
 venting
 flaring"""
 
-Acoustic_Environment = """Acoustic Environment
+Noise = """Acoustic Environment
 Sound
 Noise
 Equipment
@@ -3000,8 +3018,14 @@ Notification
 Noise control
 Noise management
 loud
+quiet
 db
-acoustic"""
+acoustic
+construction traffic
+blasting
+machinery
+gas plant
+compression station"""
 
 Environmental_Obligations = """Environmental Obligations
 MBCA
@@ -3022,9 +3046,10 @@ Framework
 law
 legislation
 regulatory
-regulations"""
+regulations
+Federal Wetland Policy"""
 
-Traditional_Land_and_Resource_Use = """Traditional Land and Resource Use
+Indigenous_land_water_and_air_use = """Traditional Land and Resource Use
 TLRU
 traditional
 Traditional ecological knowledge
@@ -3039,6 +3064,7 @@ Treaty Lands
 Indigenous Land
 Traditional Territory
 Oral Indigenous Knowledge
+settlement area
 IK
 OIK
 TK
@@ -3213,9 +3239,777 @@ o’chiese first nation
 ermineskin cree nation
 enoch cree nation
 indian
-eskimo"""
+eskimo
+Crown land
+?Akisq'nuk
+?Esdilagh
+'Namgis
+Aamjiwnaang
+Fort Liard
+Adams Lake
+Ahousaht
+Ahtahkakoop
+&Abrevethélets
+Aklavik
+Tobacco Plains
+Ahkwesáhsne Kanien'kehá:ka
+Alderville
+Alexander
+Alexis Nakota Sioux
+Tsi Del Del
+Alkali Lake
+Anaham
+Anderson Lake
+Animbiigoo Zaagi'igan Anishinaabek
+Big Island
+Anishinabe of Wauzhushk Onigum
+St. Mary's
+Ikpiarjuk
+Tsiigehtchic
+Aseniwuche Winewak
+Ashcroft
+Athabasca Chipewyan
+Whitefish Lake
+Attawapiskat
+Aundeck-Omni-Kaning
+Grise Fiord
+Awaetlala
+Peerless Trout
+Barren Lands
+Batchewana
+Beardy's and Okemasis'
+Bearskin Lake
+Beausoleil
+Beaver
+Beaver Lake
+Scia'new
+Fort Norman
+Behdzi Ahda"
+Heíltsuk
+Nuxalk
+Big Cove
+Joseph Bighead Cree
+Big River
+Bigstone Cree
+Birch Narrows
+Birdtail Sioux
+Walpole Island
+Stony Rapids
+Little Black River
+Marcel Colomb
+Blood
+Bloodvein
+Blueberry River
+Montana Cree
+St'uxtews
+Boothroyd
+Boston Bar
+Bridge River
+Brokenhead Ojibway
+Wet'suwet'en
+Qikiqtarjuaq
+Brunwick House
+Tjipogtotjg
+Buffalo Point
+Buffalo River Dene
+Oxford House
+Burns Lake
+Burnt Church
+Tsleil Waututh
+Calling Lake
+Cambridge Bay
+Wei Wai Kum
+Stswecem'c/Xgat'tem
+Canoe Lake Cree
+Canupawakpa Dakota
+Kinngait
+Cape Mudge
+Carcross/Tagish
+Ceg-a-Kin
+Cayoose Creek
+Ch'iyáqtel
+Chacachas
+Chakastaypasin
+Seton Lake
+Champagne and Aishihik
+Chawathil
+Cheam
+Chehalis
+Chemainus
+Chemawawin Cree
+Cheslatta Carrier
+Big Bear
+Janvier
+Chisasibi
+Tla-o-qui-aht
+Clearwater River Dene
+Clyde River
+Cold Lake
+Coldwater
+Comox
+Constance Lake
+Cook's Ferry
+Cote
+Cowessess
+Cowichan
+O-Chi-Chak-Ko-Sipi
+Mikisew Cree
+Cross Lake
+Cumberland House
+Dakota Plains Wahpeton
+Dakota Tipi
+Dauphin River
+Day Star
+Daylu Dena Council
+Skeetchestn
+Dease River
+Dechi Laot'i
+Deh Gah Gotie Dene
+Fort Franklin
+Dene Tha'
+Fort Resolution
+Nitinaht
+Tli Cho
+Doig River
+Douglas
+Driftpile
+Duncan's
+Dzawada'enuxw
+Ebb and Flow
+Natoaganeg
+Ehattesaht
+Kesyehot'ine
+Enoch
+Ermineskin Cree
+Esdilah
+Esquimalt
+Fairford
+Fisher River Cree
+Fishing lake
+Flying Dust
+Fond du Lac Denesuline
+Fort Churchill
+Fort Folly
+Fort Good Hope
+Fort Albany
+Fort Alexander
+Smith's Landing
+Fort George
+Fort MacKay
+Fort McMurray
+Fort McPherson
+Fort Nelson
+Fort Rupert Band
+Liidlii Kue
+Fort Smith
+Fort Ware
+Xaxl'ip
+Fox Lake Cree
+Nadleh Whut'en
+Frog Lake
+Gamblers
+Rae Lakes
+Garden Hill
+Gesgapegiag
+Gingolx
+Gitanmaax
+Kitwancool
+Gitg'a'ata
+Kitkatla
+New Aiyansh
+Gitsegukla
+Kitselas
+Gitwangak
+Gitwinksihlkw
+Gitxsan
+Glen Vowell
+God's Lake
+Manto Sipi
+George Gordon
+Grand Rapids
+Grouard
+Gwa'Sala-Nakwaxda'xw
+Gwawaenuk
+Hagwilget
+Haisla
+Halalt
+Halfway River
+Hatchet Lake
+Hay River
+Heart Lake
+Hesquiaht
+Tenlenaitmux
+Wanipigow
+Holman
+Homalco
+Horse Lake
+Hupacasath
+Huu-ay-aht
+Iglulik
+Indian Birch
+Indian Island
+Inuvik
+Iqaluit
+Iskut
+Ministikwan
+Kinonjeoshtegon
+James Smith
+Jean Marie River
+Muskoday
+K'ómoks
+Ka'a'gee Tu
+Ka:'yu:'k't'h'/Che:k:tles7et'h'
+Kahkewistahaw
+Kahnawà:ke
+Kamloops
+Kanaka Bar
+Kanehsatà:ke
+Rankin Inlet
+Kaska Nation
+Katzie
+Poor Man or Lean Man
+Keeseekoose
+Riding Mountain Band
+Kehewin Cree
+Kelly Lake
+Kelly Lake Cree
+Kelly Lake Métis Settlement
+Lake Harbour
+Kinistin
+Kispiox
+Kitasoo/Xai'Xais
+Kitsumkalum
+Klahoose
+Kluane
+Kluskus
+Kwanlin Dun
+Kwantlen
+Kwaw-Kwaw-Apilt
+Kwiakah
+Kwicksutaineuk-ah-kwaw-ah-mish
+Kwikwetlem
+Lac La Martre
+Lac La Ronge
+Leq'á:mel
+Lakalzap
+Lake Babine
+Lake Cowichan
+Lake Manitoba
+Lake St. Martin
+Lax-Kw'alaams
+Lean Man
+Lekwungen
+Lhtakot'en
+Liard
+Mount Currie
+T'it'q'et
+Restigouche
+Little Black Bear
+Little Grand Rapids
+Little Pine
+Little Red River Cree
+Little Salmon Carmacks
+Little Saskatchewan
+Skwlax
+Long Plain
+Loon River
+Louis Bull
+Yaqan Nukiy
+Lower Nicola
+Lower Similkameen
+Lubicon Lake
+Lucky Man
+Snowdrift
+Lyackson
+Lytton
+Madawaska Maliseet
+Makwa Sahgaiehcan
+Malahat
+Maliseet
+Mamalilikulla-Qwe'Qwa'Sot'Em
+Manawan
+Mathias Colomb
+Matsqui
+McLeod Lake
+Metlakatla
+Miawpukek Mi'kamawey Mawi'omi
+La Nation Micmac de Gespeg
+Mistawasis
+Mittimatalik
+Mississaugas of the New Credit
+Kenhtë:ke Kanyen'keh·:ka
+Montreal Lake Cree
+Moose Lake
+Moosomin
+Moricetown
+Mosquito, Grizzly Bear's Head, Lean Man
+Mowachaht/Muchalaht
+Muscowpetung
+Utshimassit
+Muskeg Lake
+Muskowekwan
+Musqueam
+N'ahadehe
+Na-Cho Nyak Dun
+Nak'azdli
+Nanoose
+Nazko
+Nee Tahi Buhn
+Nekaneet
+Xeni Gwet'in
+Nisichawayasihk
+Neskonlith
+Nicomen
+Nisga'a Nation
+Nooaitch
+Northlands Denesuline
+Northwest Angle No. 33
+Northwest Angle 37
+Simpcw
+Norway House
+Nuchatlaht
+Nunavut
+Nuwitti
+Nut Lake
+Oak Lake
+O'Chiese
+Sioux Valley Dakota
+Ocean Man
+Ochapowace
+Opitciwan
+Odanak
+Ohamil
+Okanagan
+Okanese
+Old Masset Village Council
+Willow Crees
+Onion Lake
+Opaskwayak Cree
+O-Pipon-Na-Piwin Cree
+Oregon Jack Creek
+Oromocto
+Osoyoos
+Oujé Bougoumou Cree
+Oweekeno
+Pacheedaht
+Pangnirtung
+Pasqua
+Pauingassi
+Paul
+Paulatuk
+Pauquachin
+Ts'kw'aylaxw
+Peepeekisis
+Peguis
+Pehdzeh Ki
+Selkirk
+Peigan
+Pelican Lake
+Penelakut
+Penticton
+Peter Ballantyne
+Peter Chapman
+Peters
+Pheasant Rump Nakota
+Piapot
+Algonquins of Pikwákanagán
+Pine Creek
+Piyesiw-awasis
+Popkum
+Poplar River
+Poundmaker
+Prophet River Band, Dene Tsaa Tse K'Nai
+Qalipu Mi'Kmaq
+Qausuittuq
+Qayqayt
+Qualicum
+Quatsino
+Rat Portage
+Red Earth
+Red Pheasant
+Red Sucker Lake
+Rolling River
+Roseau River Anishinabe
+Ross River
+Sachs Harbour
+Saddle Lake Cree
+Saik'uz
+Sakimay
+Samahquam
+Sambaah Ke Dene
+Samson
+Sandy Bay
+Sapotaweyak
+Saulteau
+Saulteaux
+Sawridge
+Scowlitz
+Seabird Island
+Shishálh
+Semiahmoo
+Secwepemc
+Shackan
+Shamattawa
+Shoal Lake
+Shxwhá:y Village
+Sîkîp Sâkahikan
+Siksika
+Sinixt
+Siska
+Six Nations
+Skatin
+Skawahlook
+Skidegate
+Skin Tyee
+Skulkayn
+Skownan
+Skuppah
+Skwah
+Tla'Amin
+Snuneymuxw
+Soda Creek
+Soowahlie
+Splatsin
+Tataskweyak Cree
+Spuzzum
+Squamish
+Squiala
+St. Theresa Point
+Standing Buffalo Dakota
+Star Blanket
+Stellat'en
+Yunesit'in
+Stoney Nakoda
+Stony Knoll
+Sturgeon Lake
+Sturgeon Lake Cree
+Sucker Creek, AB
+Sucker Creek, ON
+T'exelc
+Semá:th
+Sunchild
+Swan Lake
+Swan River
+Sweetgrass
+Ta'an Kwäch'än
+Tahltan
+Takla Lake
+Taku River Tlingit
+Tallcree
+Teetl'itzheh
+Teslin Tlingit
+The Key
+Tl'azt'en
+Tl'esqox
+Tli Cho Government
+Turner Island
+Tobique
+Valley River
+Toquaht
+T'Sou-ke
+Tr'on dëk Hwëch'in
+Ts'ueh Nda
+Tsartlip
+Tsawout
+Tsawwassen
+Tsay Keh Dene
+Tseshaht
+Tseycum
+Tsuu T'ina
+Tuktoyaktuk
+Uchucklesaht
+Ucluelet
+Ulkatcho
+Union Bar
+Upper Nicola
+Upper Similkameen
+Vuntut Gwitchin
+Wahpeton Dakota
+War Lake
+Wasagamack
+Waswanipi Cree
+Waywayseecappo
+Wemotaci
+Nation Huronne Wendat
+Westbank
+West Moberly
+Wet'suwet'en Nation
+Whispering Pines/Clinton
+White Bear
+White River
+Whitecap Dakota
+Atikameg
+Witchekan Lake
+Wolastokwik NeGoot-Gook
+Wôlinak
+Wood Mountain Lakota
+Woodland Cree
+Wrigley
+Yeqwyeqwí:ws
+Yale
+Yekooche
+Yellowknives Dene
+York Factory
+Columbia Lake
+Alexandria
+Chippewas of Sarnia
+Acho Dene Koe
+Sexqeltqin
+Aitchelitz
+Akun'kunik'
+Akwesasne
+Redstone Band
+Esketemc
+Tl'etinqox-t'in
+N'quatqua
+Lake Nipigon Ojibway
+Anishinaabeg of Naongashiing
+Aqam
+Arctic Bay
+Arctic Red River
+Grande Cache
+Atikameksheng  Anishnawbek
+Sucker Creek
+Ausuittuq
+Da'naxda'xw
+Bald Hill
+Beardy's and Okemasis
+Beaver Lake Cree
+Beecher Bay
+Tulita Dene
+Bella Bella
+Bella Coola
+Elsipogtog
+Naongashiing
+Big Island Lake
+Turnor Lake
+Bkejwanong
+Black Lake Denesuliné
+Makadewaagamijiwanong
+Black Sturgeon
+Kainai
+Bobtail
+Bonaparte
+Nxwisten
+Broman Lake
+Broughton Island
+Buctouche
+Bunibonibee
+Ts'il kaz koh
+Esgenoopetitj
+Burrard
+Jean Baptiste Gambler
+Ikaluktutiak
+Campbell River
+Canoe Creek
+Cape Dorset
+We Wai Kai
+Carry the Kettle Nakota
+Sekw'el'was
+Ch'yaqtel
+Tsal'alh
+Chi:yo:m
+Sts'Ailes
+Stz'uminus
+Chemawawin
+Chief Big Bear
+Chipewyan Prairie
+Clayoquot
+Kangiqtugaapik
+Crane River
+Cree Chip
+Pimicikamak
+Waskahikanihk Cree Cree
+Lower Post
+Deadman's Creek
+Wekwèti
+Fort Providence
+Déline
+Deninu K'ue
+Ditidaht
+Dog Rib Rae
+Xa'xtsa
+Tsawataineuk
+Eel Ground
+English River
+Ermineskin
+Pinaymootang
+Fisher River
+Sayisi Dene
+K'asho Got'ine
+Sagkeeng
+Fort Fitzgerald Dene
+Lheidli T'enneh
+Kwawkewlth
+Fort Simpson
+Salt River 195
+Kwadacha
+Fountain
+Fox Lake
+Fraser Lake
+Gamèti
+Gitanyow
+Hartley Bay
+Gitkxaala
+Gitlakdamix
+Gits'ilaasu
+God's Lake Narrows
+Manto Sipi Cree
+Goodfish
+Misipawistik Cree
+Kapawe'no
+Kitamaat
+K'atlodeeche
+High Bar
+Hollow Water
+Uluqsaqtuuq
+Xwémalhkwu
+Ohiaht
+Wuskwi Sipihk
+Island Lake
+Jackhead
+Tthe'k'ehdeli
+John Smith
+Comoks
+Kakisa
+Kyuquot
+Tk'emlúps
+Kangiqliniq
+Kawacatoose
+Keeseekoowenin
+Kimmirut
+Lhoosk'uz Dene
+Kwikwasut'inuxw Haxwa'mis
+Wha Ti
+Lakahahmen
+Laxgalt'Sap
+Nat'oot'en
+Lapatack Cree
+Kawacatoose or Mosquito, Grizzly Bear's Head, Lean Man
+Songhees
+Red Bluff
+Lil'wat
+Lillooet
+Listuguj
+Little Shuswap Lake
+Lower Kootenay
+Lù'an Män Ku Dän
+Lutsel K'e Dene
+Maliseet of Viger
+Manouane
+Mathias Colomb Cree
+Tsek'hene
+Purtujuq
+Mohawks of the Bay of Quinte
+Montreal Lake
+Mosakahiken
+Witset
+Mushuau Innu
+Petequakey
+Nahanni Butte
+Nak'azdli Whut'en
+Snaw-naw-as
+Nemaiah
+Nelson House
+Northlands
+Northwest Angle 33
+Northwest Angle No. 37
+North Thompson
+Norway House Cree
+Tlatlasikwala
+Yellow Quill
+Oak River
+Obedjiwan
+Shxw'ow'hamel
+One Arrow
+The Pas
+O-Pipon-Na-Piwin
+Oujé Bougoumou
+Wuikinuvx
+Pacheenaht
+Panniqtuuq
+Pavillion
+Pelly Band
+Piikani
+Peter Ballantyne Cree
+Skw'atels
+Golden Lake
+Thunderchild
+Poor Man
+Prophet River
+Resolute Bay
+Onihcikiskowapowin
+Stony Creek
+Zagime Anishinabek
+Trout Lake
+White Mud River
+Sapotaweyak Cree
+Sq'éwlets
+Sechelt
+Waterhen Lake
+Sq'ewá:lxw
+Sq'ewq&emacryl
+Water Hen
+Sliammon
+Xatsu'll/Cm'etem
+Spallumcheen
+Tataskweyak
+Stone
+Young Chipeeweyan
+Sukwekwin
+Sumas
+Tetlit Gwich'in
+Toosey
+Tlowitsis-mumtagila
+Tootinaowaziibeeng
+T'Souke
+West Point
+Tyendinaga
+Weymontachi
+Whitefish
+Yakweakwioose
+Akisq'nuk
+Alexis Creek
+Gwichya Gwich'in
+Atikameksheng Anishnawbek
+Tanakteuk
+Kapuskwatinak
+Begaee Shuhagot'ine
+Black River
+Xwísten
+Tzeachten
+Chalath
+Waskahikanihk Cree
+Poplar House People
+Kwakiutl
+God's River
+Misipawistik
+Ulukhaktok
+Ministikwan Lake Cree
+Mosquito
+Pukatawagan
+Pond Inlet
+Mosakahiken Cree
+Necoslie
+Whitefish Bay
+South Indian Lake
+Pikwàkanagàn
+Dene Tsaa Tse K'Nai
+Saddle Lake
+Shoal River
+Skowkale
+Split Lake
+Williams Lake
+Tlowitsis
+Whitefish Lake, AB
+Whitefish Lake (Atikameg)
+Peerless Lake
+Grizzly Bear's Head
+Animakhee Wazhing
+Whitefish Lake, ON"""
 
-Electromagnetism_and_Corona_Discharge = """Electromagnetism and Corona Discharge
+Electricity_and_electromagnetism = """Electromagnetism and Corona Discharge
+electromagnetism
 voltage
 ozone concentration
 eletric
@@ -3234,13 +4028,13 @@ maximum load
 induction
 frequency
 inteference
-radio
-television
+radio interference
+television interference
 foul weather
 ambient conditions
 240 kV"""
 
-Human_Occupancy_and_Resource_Use = """Human Occupancy and Resource Use
+Proximity_to_people = """Human Occupancy and Resource Use
 Human Occupancy and Resource Use
 residents
 human Occupancy
@@ -3296,7 +4090,7 @@ navigable waterways
 local
 TLU Impact assessment"""
 
-Heritage_Resources = """Heritage Resources
+Archaeological_paleontological_historical_and_culturally_significant_sites_and_resources = """Heritage Resources
 Heritage Resources
 Heritage
 Archaeology
@@ -3311,6 +4105,11 @@ Historic site
 Hunting camp
 Trail
 Culturally significant
+grading
+trenching
+excavating
+drilling
+clearing of vegetation
 Dig site
 Archaeologist
 Archeologist
@@ -3355,7 +4154,7 @@ Yukon heritage resources Board
 oldforest
 old forest"""
 
-Navigation_and_Navigation_Safety = """Navigation and Navigation Safety
+Human_access_to_boats_and_waterways = """Navigation and Navigation Safety
 Navigation
 Nonnavigable
 Navigation protection activities
@@ -3429,7 +4228,7 @@ streambank
 streambed
 side containment"""
 
-Social_and_Cultural_Well_Being = """Social and Cultural Well-Being
+Impact_to_social_and_cultural_well_being = """Social and Cultural Well-Being
 Social
 Routing
 socio-cultural
@@ -3468,7 +4267,8 @@ social agency
 cultural agency
 cultrual groups"""
 
-Human_Health_and_Aesthetics = """Human Health and Aesthetics
+Impact_to_human_health_and_viewscapes = """Human Health and Aesthetics
+viewscapes
 toxic
 human health
 nuisances
@@ -3526,9 +4326,11 @@ human health impact assessment
 Canadian handbook on health impact assessment
 health indicator data
 statistics canada
-mortality"""
+mortality
+beauty
+odour"""
 
-Infrastructure_and_Services = """Infrastructure and Services
+Social_cultural_economic_infrastructure_and_services = """Infrastructure and Services
 Infractructure
 Services
 Hospital
@@ -3656,9 +4458,10 @@ big box stores
 town centre
 property
 motel
-construction"""
+construction
+increased demand"""
 
-Employment_and_Economy = """Employment and Economy
+Economic_Offsets_and_Impact = """Employment and Economy
 Employment opportunities
 Business opportunities
 contracting opportunities
@@ -3780,9 +4583,10 @@ outreach
 commitment
 financial
 benefits
-monitoring"""
+monitoring
+environmental monitoring certificate program"""
 
-Rights_of_Indigenous_Peoples = """Rights of Indigenous Peoples
+Treaty_and_Indigenous_Rights = """Rights of Indigenous Peoples
 potential rights
 established rights
 asserted rights
@@ -4013,33 +4817,773 @@ samson cree first nation
 o’chiese first nation
 ermineskin cree nation
 enoch cree nation
-eskimo"""
-
-keywords = [
-    Physical_and_Meteorological_Environment,
-    Soil_and_Soil_Productivity,
-    Vegetation,
-    Water_Quality_and_Quantity,
-    Fish_and_Fish_Habitat,
-    Wetlands,
-    Wildlife_and_Wildlife_Habitat,
-    Species_at_Risk,
-    GHG_Emissions_and_Climate_Change,
-    Air_Emissions,
-    Acoustic_Environment,
-    Electromagnetism_and_Corona_Discharge,
-    Human_Occupancy_and_Resource_Use,
-    Heritage_Resources,
-    Navigation_and_Navigation_Safety,
-    Traditional_Land_and_Resource_Use,
-    Social_and_Cultural_Well_Being,
-    Human_Health_and_Aesthetics,
-    Infrastructure_and_Services,
-    Employment_and_Economy,
-    Environmental_Obligations,
-    Rights_of_Indigenous_Peoples,
-]
-
+eskimo
+?Akisq'nuk
+?Esdilagh
+'Namgis
+Aamjiwnaang
+Fort Liard
+Adams Lake
+Ahousaht
+Ahtahkakoop
+&Abrevethélets
+Aklavik
+Tobacco Plains
+Ahkwesáhsne Kanien'kehá:ka
+Alderville
+Alexander
+Alexis Nakota Sioux
+Tsi Del Del
+Alkali Lake
+Anaham
+Anderson Lake
+Animbiigoo Zaagi'igan Anishinaabek
+Big Island
+Anishinabe of Wauzhushk Onigum
+St. Mary's
+Ikpiarjuk
+Tsiigehtchic
+Aseniwuche Winewak
+Ashcroft
+Athabasca Chipewyan
+Whitefish Lake
+Attawapiskat
+Aundeck-Omni-Kaning
+Grise Fiord
+Awaetlala
+Peerless Trout
+Barren Lands
+Batchewana
+Beardy's and Okemasis'
+Bearskin Lake
+Beausoleil
+Beaver
+Beaver Lake
+Scia'new
+Fort Norman
+Behdzi Ahda"
+Heíltsuk
+Nuxalk
+Big Cove
+Joseph Bighead Cree
+Big River
+Bigstone Cree
+Birch Narrows
+Birdtail Sioux
+Walpole Island
+Stony Rapids
+Little Black River
+Marcel Colomb
+Blood
+Bloodvein
+Blueberry River
+Montana Cree
+St'uxtews
+Boothroyd
+Boston Bar
+Bridge River
+Brokenhead Ojibway
+Wet'suwet'en
+Qikiqtarjuaq
+Brunwick House
+Tjipogtotjg
+Buffalo Point
+Buffalo River Dene
+Oxford House
+Burns Lake
+Burnt Church
+Tsleil Waututh
+Calling Lake
+Cambridge Bay
+Wei Wai Kum
+Stswecem'c/Xgat'tem
+Canoe Lake Cree
+Canupawakpa Dakota
+Kinngait
+Cape Mudge
+Carcross/Tagish
+Ceg-a-Kin
+Cayoose Creek
+Ch'iyáqtel
+Chacachas
+Chakastaypasin
+Seton Lake
+Champagne and Aishihik
+Chawathil
+Cheam
+Chehalis
+Chemainus
+Chemawawin Cree
+Cheslatta Carrier
+Big Bear
+Janvier
+Chisasibi
+Tla-o-qui-aht
+Clearwater River Dene
+Clyde River
+Cold Lake
+Coldwater
+Comox
+Constance Lake
+Cook's Ferry
+Cote
+Cowessess
+Cowichan
+O-Chi-Chak-Ko-Sipi
+Mikisew Cree
+Cross Lake
+Cumberland House
+Dakota Plains Wahpeton
+Dakota Tipi
+Dauphin River
+Day Star
+Daylu Dena Council
+Skeetchestn
+Dease River
+Dechi Laot'i
+Deh Gah Gotie Dene
+Fort Franklin
+Dene Tha'
+Fort Resolution
+Nitinaht
+Tli Cho
+Doig River
+Douglas
+Driftpile
+Duncan's
+Dzawada'enuxw
+Ebb and Flow
+Natoaganeg
+Ehattesaht
+Kesyehot'ine
+Enoch
+Ermineskin Cree
+Esdilah
+Esquimalt
+Fairford
+Fisher River Cree
+Fishing lake
+Flying Dust
+Fond du Lac Denesuline
+Fort Churchill
+Fort Folly
+Fort Good Hope
+Fort Albany
+Fort Alexander
+Smith's Landing
+Fort George
+Fort MacKay
+Fort McMurray
+Fort McPherson
+Fort Nelson
+Fort Rupert Band
+Liidlii Kue
+Fort Smith
+Fort Ware
+Xaxl'ip
+Fox Lake Cree
+Nadleh Whut'en
+Frog Lake
+Gamblers
+Rae Lakes
+Garden Hill
+Gesgapegiag
+Gingolx
+Gitanmaax
+Kitwancool
+Gitg'a'ata
+Kitkatla
+New Aiyansh
+Gitsegukla
+Kitselas
+Gitwangak
+Gitwinksihlkw
+Gitxsan
+Glen Vowell
+God's Lake
+Manto Sipi
+George Gordon
+Grand Rapids
+Grouard
+Gwa'Sala-Nakwaxda'xw
+Gwawaenuk
+Hagwilget
+Haisla
+Halalt
+Halfway River
+Hatchet Lake
+Hay River
+Heart Lake
+Hesquiaht
+Tenlenaitmux
+Wanipigow
+Holman
+Homalco
+Horse Lake
+Hupacasath
+Huu-ay-aht
+Iglulik
+Indian Birch
+Indian Island
+Inuvik
+Iqaluit
+Iskut
+Ministikwan
+Kinonjeoshtegon
+James Smith
+Jean Marie River
+Muskoday
+K'ómoks
+Ka'a'gee Tu
+Ka:'yu:'k't'h'/Che:k:tles7et'h'
+Kahkewistahaw
+Kahnawà:ke
+Kamloops
+Kanaka Bar
+Kanehsatà:ke
+Rankin Inlet
+Kaska Nation
+Katzie
+Poor Man or Lean Man
+Keeseekoose
+Riding Mountain Band
+Kehewin Cree
+Kelly Lake
+Kelly Lake Cree
+Kelly Lake Métis Settlement
+Lake Harbour
+Kinistin
+Kispiox
+Kitasoo/Xai'Xais
+Kitsumkalum
+Klahoose
+Kluane
+Kluskus
+Kwanlin Dun
+Kwantlen
+Kwaw-Kwaw-Apilt
+Kwiakah
+Kwicksutaineuk-ah-kwaw-ah-mish
+Kwikwetlem
+Lac La Martre
+Lac La Ronge
+Leq'á:mel
+Lakalzap
+Lake Babine
+Lake Cowichan
+Lake Manitoba
+Lake St. Martin
+Lax-Kw'alaams
+Lean Man
+Lekwungen
+Lhtakot'en
+Liard
+Mount Currie
+T'it'q'et
+Restigouche
+Little Black Bear
+Little Grand Rapids
+Little Pine
+Little Red River Cree
+Little Salmon Carmacks
+Little Saskatchewan
+Skwlax
+Long Plain
+Loon River
+Louis Bull
+Yaqan Nukiy
+Lower Nicola
+Lower Similkameen
+Lubicon Lake
+Lucky Man
+Snowdrift
+Lyackson
+Lytton
+Madawaska Maliseet
+Makwa Sahgaiehcan
+Malahat
+Maliseet
+Mamalilikulla-Qwe'Qwa'Sot'Em
+Manawan
+Mathias Colomb
+Matsqui
+McLeod Lake
+Metlakatla
+Miawpukek Mi'kamawey Mawi'omi
+La Nation Micmac de Gespeg
+Mistawasis
+Mittimatalik
+Mississaugas of the New Credit
+Kenhtë:ke Kanyen'keh·:ka
+Montreal Lake Cree
+Moose Lake
+Moosomin
+Moricetown
+Mosquito, Grizzly Bear's Head, Lean Man
+Mowachaht/Muchalaht
+Muscowpetung
+Utshimassit
+Muskeg Lake
+Muskowekwan
+Musqueam
+N'ahadehe
+Na-Cho Nyak Dun
+Nak'azdli
+Nanoose
+Nazko
+Nee Tahi Buhn
+Nekaneet
+Xeni Gwet'in
+Nisichawayasihk
+Neskonlith
+Nicomen
+Nisga'a Nation
+Nooaitch
+Northlands Denesuline
+Northwest Angle No. 33
+Northwest Angle 37
+Simpcw
+Norway House
+Nuchatlaht
+Nunavut
+Nuwitti
+Nut Lake
+Oak Lake
+O'Chiese
+Sioux Valley Dakota
+Ocean Man
+Ochapowace
+Opitciwan
+Odanak
+Ohamil
+Okanagan
+Okanese
+Old Masset Village Council
+Willow Crees
+Onion Lake
+Opaskwayak Cree
+O-Pipon-Na-Piwin Cree
+Oregon Jack Creek
+Oromocto
+Osoyoos
+Oujé Bougoumou Cree
+Oweekeno
+Pacheedaht
+Pangnirtung
+Pasqua
+Pauingassi
+Paul
+Paulatuk
+Pauquachin
+Ts'kw'aylaxw
+Peepeekisis
+Peguis
+Pehdzeh Ki
+Selkirk
+Peigan
+Pelican Lake
+Penelakut
+Penticton
+Peter Ballantyne
+Peter Chapman
+Peters
+Pheasant Rump Nakota
+Piapot
+Algonquins of Pikwákanagán
+Pine Creek
+Piyesiw-awasis
+Popkum
+Poplar River
+Poundmaker
+Prophet River Band, Dene Tsaa Tse K'Nai
+Qalipu Mi'Kmaq
+Qausuittuq
+Qayqayt
+Qualicum
+Quatsino
+Rat Portage
+Red Earth
+Red Pheasant
+Red Sucker Lake
+Rolling River
+Roseau River Anishinabe
+Ross River
+Sachs Harbour
+Saddle Lake Cree
+Saik'uz
+Sakimay
+Samahquam
+Sambaah Ke Dene
+Samson
+Sandy Bay
+Sapotaweyak
+Saulteau
+Saulteaux
+Sawridge
+Scowlitz
+Seabird Island
+Shishálh
+Semiahmoo
+Secwepemc
+Shackan
+Shamattawa
+Shoal Lake
+Shxwhá:y Village
+Sîkîp Sâkahikan
+Siksika
+Sinixt
+Siska
+Six Nations
+Skatin
+Skawahlook
+Skidegate
+Skin Tyee
+Skulkayn
+Skownan
+Skuppah
+Skwah
+Tla'Amin
+Snuneymuxw
+Soda Creek
+Soowahlie
+Splatsin
+Tataskweyak Cree
+Spuzzum
+Squamish
+Squiala
+St. Theresa Point
+Standing Buffalo Dakota
+Star Blanket
+Stellat'en
+Yunesit'in
+Stoney Nakoda
+Stony Knoll
+Sturgeon Lake
+Sturgeon Lake Cree
+Sucker Creek, AB
+Sucker Creek, ON
+T'exelc
+Semá:th
+Sunchild
+Swan Lake
+Swan River
+Sweetgrass
+Ta'an Kwäch'än
+Tahltan
+Takla Lake
+Taku River Tlingit
+Tallcree
+Teetl'itzheh
+Teslin Tlingit
+The Key
+Tl'azt'en
+Tl'esqox
+Tli Cho Government
+Turner Island
+Tobique
+Valley River
+Toquaht
+T'Sou-ke
+Tr'on dëk Hwëch'in
+Ts'ueh Nda
+Tsartlip
+Tsawout
+Tsawwassen
+Tsay Keh Dene
+Tseshaht
+Tseycum
+Tsuu T'ina
+Tuktoyaktuk
+Uchucklesaht
+Ucluelet
+Ulkatcho
+Union Bar
+Upper Nicola
+Upper Similkameen
+Vuntut Gwitchin
+Wahpeton Dakota
+War Lake
+Wasagamack
+Waswanipi Cree
+Waywayseecappo
+Wemotaci
+Nation Huronne Wendat
+Westbank
+West Moberly
+Wet'suwet'en Nation
+Whispering Pines/Clinton
+White Bear
+White River
+Whitecap Dakota
+Atikameg
+Witchekan Lake
+Wolastokwik NeGoot-Gook
+Wôlinak
+Wood Mountain Lakota
+Woodland Cree
+Wrigley
+Yeqwyeqwí:ws
+Yale
+Yekooche
+Yellowknives Dene
+York Factory
+Columbia Lake
+Alexandria
+Chippewas of Sarnia
+Acho Dene Koe
+Sexqeltqin
+Aitchelitz
+Akun'kunik'
+Akwesasne
+Redstone Band
+Esketemc
+Tl'etinqox-t'in
+N'quatqua
+Lake Nipigon Ojibway
+Anishinaabeg of Naongashiing
+Aqam
+Arctic Bay
+Arctic Red River
+Grande Cache
+Atikameksheng  Anishnawbek
+Sucker Creek
+Ausuittuq
+Da'naxda'xw
+Bald Hill
+Beardy's and Okemasis
+Beaver Lake Cree
+Beecher Bay
+Tulita Dene
+Bella Bella
+Bella Coola
+Elsipogtog
+Naongashiing
+Big Island Lake
+Turnor Lake
+Bkejwanong
+Black Lake Denesuliné
+Makadewaagamijiwanong
+Black Sturgeon
+Kainai
+Bobtail
+Bonaparte
+Nxwisten
+Broman Lake
+Broughton Island
+Buctouche
+Bunibonibee
+Ts'il kaz koh
+Esgenoopetitj
+Burrard
+Jean Baptiste Gambler
+Ikaluktutiak
+Campbell River
+Canoe Creek
+Cape Dorset
+We Wai Kai
+Carry the Kettle Nakota
+Sekw'el'was
+Ch'yaqtel
+Tsal'alh
+Chi:yo:m
+Sts'Ailes
+Stz'uminus
+Chemawawin
+Chief Big Bear
+Chipewyan Prairie
+Clayoquot
+Kangiqtugaapik
+Crane River
+Cree Chip
+Pimicikamak
+Waskahikanihk Cree Cree
+Lower Post
+Deadman's Creek
+Wekwèti
+Fort Providence
+Déline
+Deninu K'ue
+Ditidaht
+Dog Rib Rae
+Xa'xtsa
+Tsawataineuk
+Eel Ground
+English River
+Ermineskin
+Pinaymootang
+Fisher River
+Sayisi Dene
+K'asho Got'ine
+Sagkeeng
+Fort Fitzgerald Dene
+Lheidli T'enneh
+Kwawkewlth
+Fort Simpson
+Salt River 195
+Kwadacha
+Fountain
+Fox Lake
+Fraser Lake
+Gamèti
+Gitanyow
+Hartley Bay
+Gitkxaala
+Gitlakdamix
+Gits'ilaasu
+God's Lake Narrows
+Manto Sipi Cree
+Goodfish
+Misipawistik Cree
+Kapawe'no
+Kitamaat
+K'atlodeeche
+High Bar
+Hollow Water
+Uluqsaqtuuq
+Xwémalhkwu
+Ohiaht
+Wuskwi Sipihk
+Island Lake
+Jackhead
+Tthe'k'ehdeli
+John Smith
+Comoks
+Kakisa
+Kyuquot
+Tk'emlúps
+Kangiqliniq
+Kawacatoose
+Keeseekoowenin
+Kimmirut
+Lhoosk'uz Dene
+Kwikwasut'inuxw Haxwa'mis
+Wha Ti
+Lakahahmen
+Laxgalt'Sap
+Nat'oot'en
+Lapatack Cree
+Kawacatoose or Mosquito, Grizzly Bear's Head, Lean Man
+Songhees
+Red Bluff
+Lil'wat
+Lillooet
+Listuguj
+Little Shuswap Lake
+Lower Kootenay
+Lù'an Män Ku Dän
+Lutsel K'e Dene
+Maliseet of Viger
+Manouane
+Mathias Colomb Cree
+Tsek'hene
+Purtujuq
+Mohawks of the Bay of Quinte
+Montreal Lake
+Mosakahiken
+Witset
+Mushuau Innu
+Petequakey
+Nahanni Butte
+Nak'azdli Whut'en
+Snaw-naw-as
+Nemaiah
+Nelson House
+Northlands
+Northwest Angle 33
+Northwest Angle No. 37
+North Thompson
+Norway House Cree
+Tlatlasikwala
+Yellow Quill
+Oak River
+Obedjiwan
+Shxw'ow'hamel
+One Arrow
+The Pas
+O-Pipon-Na-Piwin
+Oujé Bougoumou
+Wuikinuvx
+Pacheenaht
+Panniqtuuq
+Pavillion
+Pelly Band
+Piikani
+Peter Ballantyne Cree
+Skw'atels
+Golden Lake
+Thunderchild
+Poor Man
+Prophet River
+Resolute Bay
+Onihcikiskowapowin
+Stony Creek
+Zagime Anishinabek
+Trout Lake
+White Mud River
+Sapotaweyak Cree
+Sq'éwlets
+Sechelt
+Waterhen Lake
+Sq'ewá:lxw
+Sq'ewq&emacryl
+Water Hen
+Sliammon
+Xatsu'll/Cm'etem
+Spallumcheen
+Tataskweyak
+Stone
+Young Chipeeweyan
+Sukwekwin
+Sumas
+Tetlit Gwich'in
+Toosey
+Tlowitsis-mumtagila
+Tootinaowaziibeeng
+T'Souke
+West Point
+Tyendinaga
+Weymontachi
+Whitefish
+Yakweakwioose
+Akisq'nuk
+Alexis Creek
+Gwichya Gwich'in
+Atikameksheng Anishnawbek
+Tanakteuk
+Kapuskwatinak
+Begaee Shuhagot'ine
+Black River
+Xwísten
+Tzeachten
+Chalath
+Waskahikanihk Cree
+Poplar House People
+Kwakiutl
+God's River
+Misipawistik
+Ulukhaktok
+Ministikwan Lake Cree
+Mosquito
+Pukatawagan
+Pond Inlet
+Mosakahiken Cree
+Necoslie
+Whitefish Bay
+South Indian Lake
+Pikwàkanagàn
+Dene Tsaa Tse K'Nai
+Saddle Lake
+Shoal River
+Skowkale
+Split Lake
+Williams Lake
+Tlowitsis
+Whitefish Lake, AB
+Whitefish Lake (Atikameg)
+Peerless Lake
+Grizzly Bear's Head
+Animakhee Wazhing
+Whitefish Lake, ON"""
 
 keywords = [Landscape_terrain_and_weather, 
             Soil,
