@@ -1,14 +1,12 @@
 from tika import parser
 import multiprocessing as mp
-from os import listdir
+from os import listdir, path, makedirs
 from pathlib import Path
 import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
-
 import time
-
 
 
 def list_files(path):
@@ -20,15 +18,16 @@ def store_text_in_sql_database_with_sqlalchemy(text):
     """This function takes the extracted text and stores it in our MSSQL database."""
 
 # run script in root directory
-pdfs_path = str(Path('.') / "Data_Files/esa-project-pdfs-subsample")
-output_path = pdfs_path / "extracted_texts"
+pdfs_path = str(Path('.') / "Data_Files/esa-project-pdfs-subsample/")
+output_path = pdfs_path + "/extracted_texts/"
 
-if not output_path.exists():
-    output_path.mkdir()
+if not path.exists(output_path):
+    makedirs(output_path)
 
 def process_file(filename):
-    in_filename = str(Path('.') / filename)
-    out_filename = str(Path('.') / 'extracted_texts' / filename) + '.txt'
+    """This function takes a single PDF file and extracts the text from it."""
+    in_filename = pdfs_path + '/' + filename
+    out_filename = output_path + '/' + filename + '.txt'
 
     text = parser.from_file(in_filename)
     with open(out_filename, 'w+') as outfile:
