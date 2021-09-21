@@ -27,11 +27,11 @@ if not path.exists(output_path):
 def process_file(filename):
     """This function takes a single PDF file and extracts the text from it."""
     in_filename = pdfs_path + '/' + filename
-    out_filename = output_path + '/' + filename + '.txt'
+    out_filename = output_path + '/' + filename[:-4] + '.txt'
 
     text = parser.from_file(in_filename)
     with open(out_filename, 'w+') as outfile:
-        # outfile.write(text["content"])
+        outfile.write(text["content"])
         print(text['content'])
 
 if __name__ == '__main__':
