@@ -5,6 +5,7 @@ from pathlib import Path
 import time
 
 import spacy
+import re
 
 import sqlalchemy
 from sqlalchemy import create_engine
@@ -18,15 +19,17 @@ def list_files(path):
     """This function creates a list of strings with the names of all the PDFs in the specified directory."""
     return [f for f in listdir(path) if f.endswith('.pdf')]
 
-def remove_all_short_strings(sents_list):
+def remove_false_sentences(sents_list):
     """This function will remove all short strings from sents_list so that we are only left with proper sentences."""
     new_sents_list = []
     for sent in sents_list:
-        new_sent = sent.replace('\n', ' ')
+        if sent.isspace() == False:
+            sent = 'false' # removes all extracted sentences with no whitespace
+        sent = sent.replace('\n', ' ')
+        sent = re.sub(' +', ' ', sent)
         if len(sent) > 20:
-            new_sents_list.append(new_sent)
+            new_sents_list.append(new_sent) # only saves sentences with more than 20 characters
     return new_sents_list
-
 
 # def store_text_in_sql_database_with_sqlalchemy(text):
 #     """This function takes the extracted text and stores it in our MSSQL database."""
@@ -52,6 +55,7 @@ def process_file(filename):
         sents_list = []
         for sent in doc.sents:
             sents_list.append(sent.text)
+        sents_list = remove_false_sentences(sents_list)
         print(sents_list)
 
 if __name__ == '__main__':
