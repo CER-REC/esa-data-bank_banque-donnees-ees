@@ -38,6 +38,8 @@ yarn-error.log*
 /Data Files/**/*.*
 /Data_Files/**/*.*
 /Data_Files/**/**/*.*
+/Data_Files
+/Output_Files
 /Error_Logs/**/*.*
 /Error Logs/**/*.*
 tag_errors.txt
