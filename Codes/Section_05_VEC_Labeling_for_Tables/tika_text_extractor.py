@@ -53,7 +53,6 @@ def split_sents_with_bullet_points(sents_list):
             new_sents_list.append(sent)
     return new_sents_list
 
-
 def regex_remove_items_with_page_number(sents_list):
     """This function removes all sentences that contain a page number."""
     new_sents_list = []
@@ -61,6 +60,17 @@ def regex_remove_items_with_page_number(sents_list):
         if re.search(r'\d+\s*[pP]\s*\d+', sent) == None:
             new_sents_list.append(sent)
     return new_sents_list
+
+## TODO~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+def regex_remove_spaced_words(sents_list):
+    """This function removes all sentences where there is a space between every single character.
+    It checks if there are more then 4 spaces in the first 10 characters."""
+    new_sents_list = []
+    for sent in sents_list:
+        if re.search(r'\s{4,}', sent[:10]) == None:
+            new_sents_list.append(sent)
+    return new_sents_list
+
 
 if not path.exists(output_path):
     makedirs(output_path)
