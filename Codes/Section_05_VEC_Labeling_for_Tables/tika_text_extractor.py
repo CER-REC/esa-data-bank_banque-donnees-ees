@@ -23,12 +23,13 @@ def remove_false_sentences(sents_list):
     """This function will remove all short strings from sents_list so that we are only left with proper sentences."""
     new_sents_list = []
     for sent in sents_list:
-        if sent.isspace() == False:
+        if (' ' in sent) == False:
             sent = 'false' # removes all extracted sentences with no whitespace
         sent = sent.replace('\n', ' ')
         sent = re.sub(' +', ' ', sent)
-        if len(sent) > 20:
-            new_sents_list.append(new_sent) # only saves sentences with more than 20 characters
+        if len(sent) > 6:
+            new_sents_list.append(sent) # only saves sentences with more than 20 characters
+    # print(new_sents_list)
     return new_sents_list
 
 # def store_text_in_sql_database_with_sqlalchemy(text):
@@ -50,7 +51,7 @@ def process_file(filename):
     text = parser.from_file(in_filename)
     with open(out_filename, 'w+') as outfile:
         outfile.write(text["content"])
-        print(text['content'])
+        # print(text['content'])
         doc = nlp(text['content'])
         sents_list = []
         for sent in doc.sents:
