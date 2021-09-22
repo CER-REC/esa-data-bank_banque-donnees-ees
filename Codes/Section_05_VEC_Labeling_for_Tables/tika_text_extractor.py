@@ -38,10 +38,29 @@ def remove_false_sentences(sents_list):
     # print(new_sents_list)
     return new_sents_list
 
-# def store_text_in_sql_database_with_sqlalchemy(text):
-#     """This function takes the extracted text and stores it in our MSSQL database."""
+def split_sents_with_bullet_points(sents_list):
+    """This function splits a list of sentences into a list of lists of sentences, where each list contains sentences
+    that are separated by a bullet point."""
+    new_sents_list = []
+    d = '•'
+    for sent in sents_list:
+        if (d in sent) == True:
+            new_sents = [d+e for e in sent.split(d) if e]
+            for sent in new_sents:
+                if len(sent) > 6:
+                    new_sents_list.append(sent)
+        else:
+            new_sents_list.append(sent)
+    return new_sents_list
 
 
+def regex_remove_items_with_page_number(sents_list):
+    """This function removes all sentences that contain a page number."""
+    new_sents_list = []
+    for sent in sents_list:
+        if re.search(r'\d+\s*[pP]\s*\d+', sent) == None:
+            new_sents_list.append(sent)
+    return new_sents_list
 
 if not path.exists(output_path):
     makedirs(output_path)
@@ -61,8 +80,10 @@ def process_file(filename):
         for sent in doc.sents:
             sents_list.append(sent.text)
         sents_list = remove_false_sentences(sents_list)
+        sents_list = split_sents_with_bullet_points(sents_list)
         print(sents_list)
-        pickle.dump(sents_list, open(pickle_filename, 'wb'))
+
+        # pickle.dump(sents_list, open(pickle_filename, 'wb'))
 
 if __name__ == '__main__':
     time_start = time.time()
