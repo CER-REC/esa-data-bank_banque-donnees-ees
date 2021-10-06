@@ -4087,7 +4087,6 @@ municipal
 infrastructure
 rail
 navigable waterways
-local
 TLU Impact assessment"""
 
 Archaeological_paleontological_historical_and_culturally_significant_sites_and_resources = """Heritage Resources
