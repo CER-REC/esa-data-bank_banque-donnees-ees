@@ -4035,7 +4035,7 @@ ambient conditions
 240 kV"""
 
 Proximity_to_people = """Human Occupancy and Resource Use
-Human Occupancy and Resource Use
+Proximity to people
 residents
 human Occupancy
 resource use
