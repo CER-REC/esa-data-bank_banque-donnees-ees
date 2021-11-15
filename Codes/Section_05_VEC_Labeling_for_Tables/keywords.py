@@ -4016,7 +4016,6 @@ eletric
 electricity
 magnetic
 magnetism
-current
 corona
 discharge
 magnetic
