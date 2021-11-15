@@ -1,0 +1,29 @@
+name: berdi
+channels:
+  - defaults
+dependencies:
+  - python=3.7
+  - cudatoolkit=10.1
+  - cudnn=7.6
+  - pip
+  - pip:
+    - wheel
+    - PyPDF2
+    - tika
+    - python-dotenv
+    - SQLAlchemy
+    - camelot-py[cv]
+    - fitz
+    - mysqlclient
+    - pyodbc
+    - pandas
+    - beautifulsoup4
+    - nltk
+    - scikit-learn
+    - transformers
+    - tqdm
+    - torch
+    - numpy
+    - spacy
+    - fuzzywuzzy
+    - wget
