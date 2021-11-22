@@ -56,7 +56,7 @@ def download_file(path, Index0):
     for index, row in Index0.iterrows():
         try:
             dataID = row['Data ID']
-            full_name = os.path.join(path + '\\Data_Files\\PDFs\\', (str(dataID) + '.pdf'))
+            full_name = os.path.join(path + '\\data\\raw\\PDFs\\', (str(dataID) + '.pdf'))
             if not os.path.exists(full_name):
                 download_url = 'http://docs2.cer-rec.gc.ca/ll-eng/llisapi.dll?func=ll&objId=' + str(
                     dataID) + '&objaction=download&viewType=1'
@@ -75,7 +75,7 @@ def download_file(path, Index0):
     df_scraping_errorlog = pd.DataFrame({'error_dataIDs': error_dataIDs,
                                          'error_urls': error_urls
                                          })
-    df_scraping_errorlog.to_csv(path + '\\Error_Logs\\ScrapingErrorLogs.csv', index=False, encoding='utf-8-sig')
+    df_scraping_errorlog.to_csv(path + '\\error_logs\\ScrapingErrorLogs.csv', index=False, encoding='utf-8-sig')
     return count
 
 
@@ -124,9 +124,9 @@ def rotate_pdf(path, Index0):
     # Iterating each row in the Index0 dataframe
     for index, row in Index0.iterrows():
         try:
-            pdf_out_path = path + "\\Data_Files\\PDFs_Rotated\\" + str(row['Data ID']) + "_Rotated.pdf"
+            pdf_out_path = path + "\\data\\processed\\rotated_pdfs\\" + str(row['Data ID']) + "_Rotated.pdf"
             if not os.path.exists(pdf_out_path):
-                full_path = path + "\\Data_Files\\PDFs\\" + str(row['Data ID']) + ".pdf"
+                full_path = path + "\\data\\pdfs\\" + str(row['Data ID']) + ".pdf"
                 pdf_in = open(full_path, 'rb')
                 pdf_reader = PyPDF2.PdfFileReader(pdf_in, strict=False)
                 pdf_writer = PyPDF2.PdfFileWriter()
@@ -150,7 +150,7 @@ def rotate_pdf(path, Index0):
     df_rotating_errorlog = pd.DataFrame({'error_dataIDs': error_dataIDs,
                                          'error_urls': error_urls
                                          })
-    df_rotating_errorlog.to_csv(path + '\\Error_Logs\\RotatingErrorLogs.csv', index=False, encoding='utf-8-sig')
+    df_rotating_errorlog.to_csv(path + '\\error_logs\\RotatingErrorLogs.csv', index=False, encoding='utf-8-sig')
     return count
 
 
