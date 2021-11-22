@@ -1,0 +1,816 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Volume 8B - Marine Mammals - 22Feb2010
+
+
+Sec. 52 Application 
+Volume 8B: Environmental and Socio-Economic Assessment (ESA) -  
+Marine Transportation 
+Section 10: Marine Mammals  
+ 
+
+Page 10-64   May 2010 
+ 
+
+10.7.2.1 Potential Effect Mechanisms: Effects on Behaviour due to Underwater 
+Noise 
+
+The potential effect mechanisms of behavioural change due to underwater noise are the same for NP 
+humpback whales as those for NR killer whales and are assessed using the same vessel transit and 
+berthing examples.  
+
+Tankers and tugs operating within the CCAA will contribute low frequency underwater sounds to the 
+marine environment. Humpback whales are most sensitive to sounds below 1,000 Hz (Richardson et al. 
+1995). Therefore, the predominantly low frequency (50 to 500 Hz) underwater sounds of tankers and tugs 
+operating within the CCAA will be highly audible to humpback whales. Sounds will be detectable by 
+humpback whales over very large areas. Acoustic modelling of sound levels above those of humpback 
+whale hearing was not extended to the lower detection limits, but spatial extents presented will specify the 
+received sound levels at the furthest extent of modelling. 
+
+As in the NR killer whale assessment, one berthing example and four tug and vessel examples in select 
+areas in the CCAA are modelled (see Figure 10-15). 
+
+Berthing 
+
+Approximately four hours of berthing or unberthing will occur daily at the Kitimat Terminal. The 
+predicted area in which sound will be audible to humpback whales for berthing extends northward to the 
+entrance of Minette Bay; humpback whales will hear sound levels of 35 dB above the threshold up to 
+26 km south (to mid-Maitland Island; see Figures 10-15 and 10-16). 
+
+Vessel Transit Operations 
+
+The predicted noise from transiting vessels that would be audible to humpback whales was modelled 
+separately in four areas to provide an overall representation of acoustic changes throughout different 
+habitats in the CCAA. For predicted sound contours for NP humpback whales at each site, 
+see Figure 10-15. 
+
+Transit through Douglas Channel (Kitkiata Inlet) 
+
+The area in which sound will be audible to humpback whales will extend across Douglas Channel 
+(average width of roughly 4 to 5 km), and sound levels of 45 dB above the hearing threshold will be 
+received up to 22.2 km from the vessels in either direction along the channel (see Figure 10-17). 
+
+
+
+Skeena
+
+Loretta 
+Is.
+
+Hawkesbury
+Island
+
+Princess Royal
+Island
+
+Hartley
+Bay
+
+Pitt
+Island
+
+Porcher
+Island
+
+Stephens
+Island
+
+McCauley
+Island
+
+Banks
+Island
+
+Trutch
+Island
+
+Dewdney
+Is.
+
+Campania Is.
+
+Gil
+Island
+
+Fin
+Is.
+
+Aristazabal
+Island
+
+Roderick
+Island
+
+Sa
+ra
+
+h 
+Is.
+
+Gurd
+Is.
+
+Dolphin
+Is. Spicer
+
+Is.
+
+Kennedy
+Island
+
+Smith
+Island
+
+Digby
+Is.
+
+Prince Rupert
+
+Kitkatla
+
+Klemtu
+
+Farrant
+Is.
+
+Gribbell
+Island
+
+Maitl
+and
+Is.
+
+Rennison
+Is.
+
+Beauchemin Channel
+
+Laredo
+Sound
+
+Laredo Channel
+
+Estevan Sound
+
+Squally       Channel
+
+Campania
+Sound
+
+Caamaño
+Sound
+
+Nepean
+Sound
+
+Otter 
+Chann
+
+el
+
+Wright
+Sound
+
+W
+hale     Channel
+
+La
+re
+
+do
+ In
+
+let
+
+Fin
+lay
+
+so
+n 
+
+Ch
+an
+
+ne
+l
+
+Do
+ug
+
+las
+ C
+
+ha
+nn
+
+el
+
+Ve
+rne
+
+y P
+ass
+
+ag
+e
+
+Kit
+im
+
+at 
+Ar
+
+m
+
+Principe Channel
+
+Chatham
+Sound
+
+Ske
+ena 
+
+Rive
+r
+
+Grenville Channel
+
+Browning
+Entrance
+
+Og
+de
+
+n C
+ha
+
+nn
+el
+
+Kitkatla Channel
+
+Kitkiata Inlet
+
+NP
+
+Jacques Whitford AXYS Ltd.
+FIGURE NUMBER:
+
+PROJECTION:
+
+CONTRACTOR: DATE:
+
+AUTHOR: APPROVED BY:PREPARED FOR:PREPARED BY: SCALE:
+
+ENB R ID GE N OR TH ER N GA TEW A Y PR OJ EC T 10-15
+
+NAD 83
+DATUM:
+
+UTM 9
+
+CM
+
+PRINCIPE CHANNEL:
+Tanker
+2 Escort Tugs
+
+CAAMAÑO SOUND:
+Tanker
+1 Escort Tug
+
+WRIGHT SOUND:
+Tanker
+3 Escort Tugs
+
+KITKIATA INLET:
+Tanker
+2 Escort Tugs
+
+BERTHING:
+Tanker
+2 Escort Tugs
+2 Berthing Tugs
+
+1:750,000
+
+Kitimat
+
+Kitamaat
+VillageKitimatTerminal
+
+Humpback Whale - 
+Predicted Sound Levels above Hearing Threshold
+
+from Vessel Transit at Four Locations
+and during Berthing Operations
+
+See Figure 10-16
+for more details
+
+See Figure 10-19
+for more details
+
+See Figure 10-20
+for more details
+
+See Figure 10-18
+for more details
+
+See Figure 10-17
+for more details
+
+Pipeline Route
+Terrestrial PDA
+Confined Channel Assessment Area
+
+Sound Level
+(dB re threshold)
+
+20
+25
+30
+35
+40
+45
+50
+55
+60
+65
+70
+75
+80
+85
+90
+95
+100
+105
+110
+115
+Railway
+Road
+River / Stream
+
+0 5 10 15 20
+
+Kilometres
+
+Reference: Pipeline Route R
+
+JWA-1048334-1566
+
+REFERENCES: NTDB Topographic Mapsheets provided by the Majesty the Queen in Right of Canada, Department of Natural Resources.  All rights reserved.
+
+R:
+\2
+
+00
+9F
+
+isc
+al
+
+\1
+04
+
+83
+34
+
+_N
+or
+
+th
+er
+
+nG
+at
+
+ew
+ay
+
+_E
+SA
+
+_2
+00
+
+9
+
+20100305
+
+
+
+Minette 
+Bay
+
+Coste
+Island
+
+Clio
+Bay
+
+Gobeil
+Bay
+
+10
+0 m
+
+20
+0 m
+
+300 
+m
+
+10
+0 m
+
+200
+ m
+
+100 m
+
+Pipeline Route
+Security Fence
+Terrestrial PDA
+Marine PDA
+
+Sound Level
+(dB re threshold)
+
+20
+25
+30
+35
+40
+45
+50
+55
+60
+65
+70
+75
+80
+85
+90
+95
+100
+Bathymetric Contour (100 m)
+Railway
+Road
+
+NP
+
+Jacques Whitford AXYS Ltd.
+FIGURE NUMBER:
+
+PROJECTION:
+
+CONTRACTOR: DATE:
+
+AUTHOR: APPROVED BY:PREPARED FOR:PREPARED BY: SCALE:
+
+ENB R ID GE  N OR TH ER N  GA T EW A Y P RO J EC T 10-16
+
+NAD 83
+DATUM:
+
+UTM 9
+
+CM1:80,000
+
+Bish Creek
+
+K 
+i t 
+
+i m
+ a 
+
+t   
+ A 
+
+r m
+Bish
+Cove
+
+Emsley
+Cove
+
+Emsley
+Point
+
+Coste
+Island
+
+Kitamaat
+Village
+
+Kitimat
+Terminal
+
+To
+ K
+
+itim
+at 
+
+Coste
+Point
+
+Humpback Whale - 
+Predicted Sound Levels above Hearing Threshold
+
+from Vessel Transit during Berthing Operations
+
+Reference: Pipeline Route R
+
+JWA-1048334-1567
+
+REFERENCES: NTDB Topographic Mapsheets provided by the Majesty the Queen in Right of Canada, Department of Natural Resources.  All rights reserved.
+
+R:
+\2
+
+00
+9F
+
+isc
+al\
+
+10
+48
+
+33
+4_
+
+No
+rth
+
+er
+nG
+
+at
+ew
+
+ay
+_E
+
+SA
+_2
+
+00
+9
+
+20090914
+
+0 0.5 1 1.5 2
+
+Kilometres
+
+Kitimat
+Terminal
+
+Key Plan
+
+Kitamaat
+Village
+
+Kitimat
+
+K i
+ t i
+
+ m
+ a 
+
+t   
+ A 
+
+r m
+
+1:700,000
+
+
+
+100
+m
+
+20
+0m
+
+300
+m
+
+400
+m
+
+30
+0m
+
+10
+0m
+
+100m
+
+200m
+
+300m
+
+400m
+
+Sound Level
+(dB re threshold)
+
+20
+25
+30
+35
+40
+45
+50
+55
+60
+65
+70
+75
+80
+85
+90
+95
+Bathymetric Contour (100 m)
+
+NP
+
+Jacques Whitford AXYS Ltd.
+FIGURE NUMBER:
+
+PROJECTION:
+
+CONTRACTOR: DATE:
+
+AUTHOR: APPROVED BY:PREPARED FOR:PREPARED BY: SCALE:
+
+ENB R ID GE  N OR TH ER N  GA T EW A Y P RO J EC T
+
+NAD 83
+DATUM:
+
+UTM 9
+
+CM
+
+To
+ Ki
+
+tim
+at
+
+Maitland 
+Island
+
+Hawkesbury Island
+
+Kitkiata Inlet
+
+Do
+ug
+
+las
+ C
+
+ha
+nn
+
+el
+
+10-17
+
+1:90,000
+Humpback Whale - 
+
+Predicted Sound Levels above Hearing Threshold
+from Vessel Transit near Kitkiata Inlet
+
+Reference: Pipeline Route R
+
+JWA-1048334-1568
+
+REFERENCES: NTDB Topographic Mapsheets provided by the Majesty the Queen in Right of Canada, Department of Natural Resources.  All rights reserved.
+
+R:
+\2
+
+00
+9F
+
+isc
+al\
+
+10
+48
+
+33
+4_
+
+No
+rth
+
+er
+nG
+
+at
+ew
+
+ay
+_E
+
+SA
+_2
+
+00
+9
+
+20090902
+
+0 0.5 1 1.5 2 2.5
+
+Kilometres
+
+Hartley 
+Bay
+
+Gribbell
+Island
+
+Hawkesbury
+Island
+
+To
+ Ki
+
+tim
+at
+
+Do
+ug
+
+la
+s C
+
+ha
+nn
+
+el
+
+Wright
+Sound
+
+Key Plan
+1:850,000
+
+
+
+
