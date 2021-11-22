@@ -56,7 +56,7 @@ def download_file(path, Index0):
     for index, row in Index0.iterrows():
         try:
             dataID = row['Data ID']
-            full_name = os.path.join(path + '\\data\\raw\\PDFs\\', (str(dataID) + '.pdf'))
+            full_name = os.path.join(path + '\\data\\raw\\pdfs\\', (str(dataID) + '.pdf'))
             if not os.path.exists(full_name):
                 download_url = 'http://docs2.cer-rec.gc.ca/ll-eng/llisapi.dll?func=ll&objId=' + str(
                     dataID) + '&objaction=download&viewType=1'
