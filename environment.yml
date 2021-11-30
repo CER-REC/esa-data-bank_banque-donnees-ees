@@ -26,3 +26,4 @@ dependencies:
     - numpy==1.21.4
     - spacy==3.2.0
     - fuzzywuzzy==0.18.0
+    - ipython==7.30.0
