@@ -30,7 +30,7 @@ if __name__ == '__main__':
     print("{} Files were successfully rotated".format(count))
 
     # Convert to pickle files
-    for pdf_folder_name, pickle_file_folder_name in {('pdfs', 'pickle_files'), ('rotated_pdfs', 'pickle_rotated_files')}:
+    for pdf_folder_name, pickle_file_folder_name in {('pdfs', 'pickle_files'), ('rotated_pdfs', 'pickle_files_rotated')}:
         pdf_folder_path = os.path.join(os.getcwd(), 'data\\raw', pdf_folder_name)
         pdf_file_paths = [os.path.join(pdf_folder_path, file)
                         for file in os.listdir(pdf_folder_path) if file.endswith('.pdf')]
