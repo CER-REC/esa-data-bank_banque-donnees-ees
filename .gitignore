@@ -33,12 +33,12 @@ yarn-error.log*
 **/log.txt
 /Support files
 /data/raw/pdfs/*.pdf
+/data/raw/rotated_pdfs/*.pdf
 /data/raw/index_for_projects/*.csv
 /data/processed/csvs/all_csvs/*.csv
 /data/processed/csvs/new_projects/*.csv
 /data/processed/pickle_files/*.pkl
-/data/processed/pickle_rotated_files/*.pkl
-/data/processed/rotated_pdfs/*.pdf
+/data/processed/pickle_files_rotated/*.pkl
 /data/output/**/*.*
 /data/interim/**/Intermediate_Index_Files/*.*
 /error_logs/**/
