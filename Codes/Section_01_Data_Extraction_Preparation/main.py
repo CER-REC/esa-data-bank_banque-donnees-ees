@@ -31,10 +31,10 @@ if __name__ == '__main__':
 
     # Convert to pickle files
     for pdf_folder_name, pickle_file_folder_name in {('pdfs', 'pickle_files'), ('rotated_pdfs', 'pickle_rotated_files')}:
-        pdf_folder_path = os.path.join(os.getcwd(), 'data/raw', pdf_folder_name)
+        pdf_folder_path = os.path.join(os.getcwd(), 'data\\raw', pdf_folder_name)
         pdf_file_paths = [os.path.join(pdf_folder_path, file)
                         for file in os.listdir(pdf_folder_path) if file.endswith('.pdf')]
-        pickle_folder_path = os.path.join(os.getcwd(), 'data/processed', pickle_file_folder_name)
+        pickle_folder_path = os.path.join(os.getcwd(), 'data\\processed', pickle_file_folder_name)
 
         # multiprocessing
         args = [(file, pickle_folder_path) for file in pdf_file_paths]
