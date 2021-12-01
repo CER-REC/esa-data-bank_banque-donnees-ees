@@ -12,7 +12,8 @@ from pdf_metadata import get_pdf_metadata
 if __name__ == '__main__':
 
     # Necesary to avoid the error with multiprocessing
-    # For more info: https://www.kite.com/python/docs/exceptions.RuntimeError
+    # For more info (Windows): https://www.kite.com/python/docs/exceptions.RuntimeError
+    # If using Linux/MacOS: https://pythonspeed.com/articles/python-multiprocessing/
     freeze_support()
 
     # Update the path when adding a new list of projects
