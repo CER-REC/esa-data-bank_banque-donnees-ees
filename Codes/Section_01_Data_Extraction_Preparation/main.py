@@ -4,9 +4,9 @@ import os
 import multiprocessing
 from IPython.core.interactiveshell import InteractiveShell
 InteractiveShell.ast_node_interactivity = "all"
-
-from Codes.Section_01_Data_Extraction_Preparation.file_preparation import download_file, rotate_pdf, pickle_pdf_xml
-from Codes.Section_01_Data_Extraction_Preparation.pdf_metadata import get_pdf_metadata
+# Codes.Section_01_Data_Extraction_Preparation.
+from file_preparation import download_file, rotate_pdf, pickle_pdf_xml
+from pdf_metadata import get_pdf_metadata
 
 
 # Update the path when adding a new list of projects
@@ -25,7 +25,7 @@ print("{} Files were successfully rotated".format(count))
 
 # Convert to pickle files
 for pdf_folder_name, pickle_file_folder_name in {('pdfs', 'pickle_files'), ('rotated_pdfs', 'pickle_rotated_files')}:
-    pdf_folder_path = os.path.join(os.getcwd(), 'data', pdf_folder_name)
+    pdf_folder_path = os.path.join(os.getcwd(), 'data/pdfs/', pdf_folder_name)
     pdf_file_paths = [os.path.join(pdf_folder_path, file)
                       for file in os.listdir(pdf_folder_path) if file.endswith('.pdf')]
     pickle_folder_path = os.path.join(os.getcwd(), 'data', pickle_file_folder_name)
