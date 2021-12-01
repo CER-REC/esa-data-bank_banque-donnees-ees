@@ -124,9 +124,9 @@ def rotate_pdf(path, Index0):
     # Iterating each row in the Index0 dataframe
     for index, row in Index0.iterrows():
         try:
-            pdf_out_path = path + "\\data\\processed\\rotated_pdfs\\" + str(row['Data ID']) + "_Rotated.pdf"
+            pdf_out_path = path + "\\data\\raw\\rotated_pdfs\\" + str(row['Data ID']) + "_Rotated.pdf"
             if not os.path.exists(pdf_out_path):
-                full_path = path + "\\data\\pdfs\\" + str(row['Data ID']) + ".pdf"
+                full_path = path + "\\data\\raw\\pdfs\\" + str(row['Data ID']) + ".pdf"
                 pdf_in = open(full_path, 'rb')
                 pdf_reader = PyPDF2.PdfFileReader(pdf_in, strict=False)
                 pdf_writer = PyPDF2.PdfFileWriter()
@@ -166,7 +166,7 @@ def pickle_pdf_xml(pdf_file_path, pickle_folder):
         xml = parser.from_file(pdf_file_path, xmlContent=True)
         file_name = os.path.split(pdf_file_path)[-1].replace('.pdf', '')
         pickle_file_path = os.path.join(pickle_folder, file_name + '.pkl')
-        if os.path.exists(pickle_file_path):
+        if os.path.exists(pickle_folder):
             pickle.dump(xml, open(pickle_file_path, "wb"))
             print(pickle_file_path)
     except:
