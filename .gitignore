@@ -47,8 +47,8 @@ toc_errors.txt
 final_errors.txt
 fig_errors.txt
 /**/tmp
-/Codes/Section_05_VEC_Labeling_for_Tables/data/
-/Codes/Section_05_VEC_Labeling_for_Tables/mydata/
+berdi/Section_05_VEC_Labeling_for_Tables/data/*.*
+berdi/Section_05_VEC_Labeling_for_Tables/mydata/*.*
 
 #############################
 # Cookiecutter Data Science #
