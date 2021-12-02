@@ -16,5 +16,5 @@ tqdm==4.62.3
 torch==1.10.0
 numpy==1.21.4
 spacy==3.2.0
-fuzzywuzzy==0.18.0
 ipython==7.30.0
+fuzzywuzzy==0.18.0
