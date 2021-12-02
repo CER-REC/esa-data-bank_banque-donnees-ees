@@ -4016,7 +4016,6 @@ eletric
 electricity
 magnetic
 magnetism
-current
 corona
 discharge
 magnetic
@@ -4035,7 +4034,7 @@ ambient conditions
 240 kV"""
 
 Proximity_to_people = """Human Occupancy and Resource Use
-Human Occupancy and Resource Use
+Proximity to people
 residents
 human Occupancy
 resource use
@@ -4087,7 +4086,6 @@ municipal
 infrastructure
 rail
 navigable waterways
-local
 TLU Impact assessment"""
 
 Archaeological_paleontological_historical_and_culturally_significant_sites_and_resources = """Heritage Resources
