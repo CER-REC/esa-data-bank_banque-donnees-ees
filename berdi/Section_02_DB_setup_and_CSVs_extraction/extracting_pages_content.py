@@ -240,7 +240,7 @@ def insert_clean_content(table):
 def insert_clean_contents():
     insert_clean_content("pages_normal_txt")
     insert_clean_content("pages_rotated90_txt")
-    # insert_clean_content("pages_rotated270_txt")
+    insert_clean_content("pages_rotated270_txt")
 
 
 def rotate_pdf(pdf):
@@ -260,19 +260,18 @@ def rotate_pdf(pdf):
     pdf_path270 = pdf_files_folder_rotated270.joinpath(f"{pdf.stem}.pdf")
     rotate(pdf_path90, 90)
     rotate(pdf_path270, 270)
-    # print(f"Done {pdf.stem}")
 
 
-def rotate_pdfs():
+def rotate_pdfs(multiprocessing=False):
     t = time.time()
-
     pdfs = list(pdf_files_folder_normal.glob("*.pdf"))
 
-    # for pdf_file in pdfs:
-    #     rotate_pdf(pdf_file)
-
-    with Pool() as pool:
-        pool.map(rotate_pdf, pdfs, chunksize=1)
+    if multiprocessing == False:
+        for pdf_file in pdfs:
+            rotate_pdf(pdf_file)
+    else:
+        with Pool() as pool:
+            pool.map(rotate_pdf, pdfs, chunksize=1)
 
     sec = round(time.time() - t)
     print(
@@ -296,6 +295,6 @@ def clean_xml(xml_string):
 
 
 if __name__ == "__main__":
-    # rotate_pdfs() # run this if you need to rotate PDFs
+    rotate_pdfs(multiprocessing=True)
     insert_contents()
-    # insert_clean_contents()
+    insert_clean_contents()
