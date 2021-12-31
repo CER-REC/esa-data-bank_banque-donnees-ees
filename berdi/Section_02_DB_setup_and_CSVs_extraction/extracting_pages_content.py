@@ -163,7 +163,7 @@ def insert_content(row):
     )
 
 
-def insert_contents():
+def insert_contents(multiprocessing=False):
     t = time.time()
 
     # Reading from the MySQL Database and creating dataframe from query
@@ -178,38 +178,35 @@ def insert_contents():
     clean_tmp()
     skipping = []
     current_id = None
-    for row in data:
-        try:
-            current_id = row["pdfId"]
-            insert_content(row)
-            print(f"Done {current_id}")
-        except Exception as e:
-            skipping.append(current_id)
-            print(f"ERROR! {current_id}: {e}")
-    # print(skipping)
+    if multiprocessing == False:
+        for row in data:
+            try:
+                current_id = row["pdfId"]
+                insert_content(row)
+                print(f"Done {current_id}")
+            except Exception as e:
+                skipping.append(current_id)
+                print(f"ERROR! {current_id}: {e}")
+    else:
+        # Running the insert_content function with multiprocessing
+        with Pool(96) as pool:
+            pool.map(insert_content, data, chunksize=1)
 
-    # for row in data:
-    #     insert_content(row)
-
-    # Running the insert_content function with multiprocessing
-    # with Pool(96) as pool:
-    #     pool.map(insert_content, data, chunksize=1)
-
-    # count = 0
-    # while True:
-    #     try:
-    #         clean_tmp()
-    #         with Pool() as pool:
-    #             pool.map(insert_content, data, chunksize=1)
-    #     except Exception as e:
-    #         print("\n===========================================================\n")
-    #         print(f"Counter: {count}: {e}")
-    #         traceback.print_tb(e.__traceback__)
-    #         print("\n===========================================================\n")
-    #         count += 1
-    #     else:
-    #         print(f"Final counter value is {count}")
-    #         break
+        count = 0
+        while True:
+            try:
+                clean_tmp()
+                with Pool() as pool:
+                    pool.map(insert_content, data, chunksize=1)
+            except Exception as e:
+                print("\n===========================================================\n")
+                print(f"Counter: {count}: {e}")
+                traceback.print_tb(e.__traceback__)
+                print("\n===========================================================\n")
+                count += 1
+            else:
+                print(f"Final counter value is {count}")
+                break
 
     sec = round(time.time() - t)
     print(
