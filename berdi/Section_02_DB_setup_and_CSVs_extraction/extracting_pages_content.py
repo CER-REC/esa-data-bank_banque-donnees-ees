@@ -320,5 +320,5 @@ def clean_xml(xml_string):
 if __name__ == "__main__":
     freeze_support()
     rotate_pdfs(multiprocessing=True)
-    insert_contents()
+    insert_contents(multiprocessing=False)
     insert_clean_contents()
