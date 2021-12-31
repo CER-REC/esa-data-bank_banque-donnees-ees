@@ -1,6 +1,6 @@
 import sys
 from pathlib import Path
-from Codes.Database_Connection_Files.connect_to_database import connect_to_db
+from berdi.Database_Connection_Files.connect_to_database import connect_to_db
 from dotenv import load_dotenv
 import os
 import pandas as pd
@@ -11,7 +11,13 @@ import time
 from multiprocessing import Pool
 import re
 from bs4 import BeautifulSoup
+
 sys.path.append(str(Path(__file__).parent.parent.absolute()))
+
+
+# Caution! Removes all data!
+# Only make clear_database = True, if you want to remove all data from the database.
+clear_database = False
 
 # Load environment variables from .env file
 load_dotenv(override=True)
@@ -22,10 +28,6 @@ engine = connect_to_db()
 # Load environment variables (from .env file) for the PDF folder path
 # In order to extract the content from the PDFs, it is important to
 # rotate the PDFs that are not in the normal top-to-bottom structure.
-# You will likely need to run this code first and the PDFs with bad
-# results are likely due to the PDF structure. Put the PDFs that
-# need to be rotated by 90 degrees in a PDF_rotated90 folder and
-# those that need to be rotated by 270 in a PDF_rotated270 folder.
 # The rotate_pdf function will rotate those PDFs to a normal structure.
 pdf_files_folder_normal = Path(os.getenv("PDFS_FILEPATH"))
 pdf_files_folder_rotated90 = Path(os.getenv("PDFS_FILEPATH") + "_Rotated")
@@ -38,11 +40,6 @@ if not pdf_files_folder_rotated90.exists():
 if not pdf_files_folder_rotated270.exists():
     print(pdf_files_folder_rotated270, "does not exist!")
 
-# Increase max size of pandas dataframe output when using a notebook
-pd.set_option("display.max_columns", None)
-pd.set_option('display.max_rows', None)
-pd.set_option('display.width', 1200)
-
 # Set up Tika to extract text content from PDFs
 tika.TikaClientOnly = True
 os.environ["TIKA_STARTUP_MAX_RETRY"] = "10"
@@ -53,21 +50,25 @@ tmp_folder = Path.cwd().joinpath("tmp")
 
 
 # Careful! Removes all data!
-# def clear_db():
-#     stmt1 = "DELETE FROM pages_normal_txt;"
-#     stmt2 = "DELETE FROM pages_normal_xml;"
-#     stmt3 = "DELETE FROM pages_rotated90_txt;"
-#     stmt4 = "DELETE FROM pages_rotated90_xml;"
-#     stmt5 = "DELETE FROM pages_rotated270_txt;"
-#     stmt6 = "DELETE FROM pages_rotated270_xml;"
-#     with engine.connect() as conn:
-#         conn.execute(stmt1)
-#         conn.execute(stmt2)
-#         conn.execute(stmt3)
-#         conn.execute(stmt4)
-#         conn.execute(stmt5)
-#         conn.execute(stmt6)
-#     print("DB is cleared")
+def clear_db():
+    stmt1 = "DELETE FROM pages_normal_txt;"
+    stmt2 = "DELETE FROM pages_normal_xml;"
+    stmt3 = "DELETE FROM pages_rotated90_txt;"
+    stmt4 = "DELETE FROM pages_rotated90_xml;"
+    stmt5 = "DELETE FROM pages_rotated270_txt;"
+    stmt6 = "DELETE FROM pages_rotated270_xml;"
+    with engine.connect() as conn:
+        conn.execute(stmt1)
+        conn.execute(stmt2)
+        conn.execute(stmt3)
+        conn.execute(stmt4)
+        conn.execute(stmt5)
+        conn.execute(stmt6)
+    print("DB is cleared")
+
+
+if clear_database == True:
+    clear_db()
 
 
 def clean_tmp():
@@ -81,7 +82,7 @@ def clean_tmp():
 
 
 def clean_text(txt):
-    rgx = re.compile(r'[^\w`~!@#$%^&*()_=+[{}|;:\',<.>/?\-\\\"\]]+')
+    rgx = re.compile(r"[^\w`~!@#$%^&*()_=+[{}|;:\',<.>/?\-\\\"\]]+")
     result = re.sub(rgx, " ", txt)
     return result.strip()
 
@@ -92,7 +93,7 @@ def insert_content(row):
     # Using PyPDF2 and Tika's parser method to extract PDF contents
     def process_pdf(pdf_folder, table_name, xml):
         # print(f"Starting {pdf_id}")
-        if table_name == 'pages_rotated90_txt':
+        if table_name == "pages_rotated90_txt":
             pdf = pdf_folder.joinpath(f"{pdf_id}_Rotated.pdf")
         else:
             pdf = pdf_folder.joinpath(f"{pdf_id}.pdf")
@@ -114,7 +115,11 @@ def insert_content(row):
                 random_file = tmp_folder.joinpath(f"{os.urandom(24).hex()}.pdf")
                 with random_file.open(mode="wb") as outfile:
                     writer.write(outfile)
-                content = parser.from_file(outfile.name, xmlContent=xml, requestOptions={'timeout': 300})["content"] # Tika's parser extracts content of one page
+                content = parser.from_file(
+                    outfile.name, xmlContent=xml, requestOptions={"timeout": 300}
+                )[
+                    "content"
+                ]  # Tika's parser extracts content of one page
                 if content is None:
                     content = ""
                 content = content.strip()
@@ -126,14 +131,36 @@ def insert_content(row):
                 stmt = f"INSERT INTO {table_name} (pdfId, page_num, content, clean_content) VALUES (%s,%s,%s,%s);"
                 result = conn.execute(stmt, (pdf_id, p, content, cleaned_content))
                 if result.rowcount != 1:
-                    raise Exception(f"{pdf_id}-{p}: ERROR! Updated {result.rowcount} rows!")
+                    raise Exception(
+                        f"{pdf_id}-{p}: ERROR! Updated {result.rowcount} rows!"
+                    )
 
-    # process_pdf(pdf_folder=pdf_files_folder_normal, table_name="pages_normal_xml", xml=True)
-    # process_pdf(pdf_folder=pdf_files_folder_normal, table_name="pages_normal_txt", xml=False)
-    # process_pdf(pdf_folder=pdf_files_folder_rotated90, table_name="pages_rotated90_xml", xml=True)
-    process_pdf(pdf_folder=pdf_files_folder_rotated90, table_name="pages_rotated90_txt", xml=False)
-    # process_pdf(pdf_folder=pdf_files_folder_rotated270, table_name="pages_rotated270_xml", xml=True)
-    # process_pdf(pdf_folder=pdf_files_folder_rotated270, table_name="pages_rotated270_txt", xml=False)
+    process_pdf(
+        pdf_folder=pdf_files_folder_normal, table_name="pages_normal_xml", xml=True
+    )
+    process_pdf(
+        pdf_folder=pdf_files_folder_normal, table_name="pages_normal_txt", xml=False
+    )
+    process_pdf(
+        pdf_folder=pdf_files_folder_rotated90,
+        table_name="pages_rotated90_xml",
+        xml=True,
+    )
+    process_pdf(
+        pdf_folder=pdf_files_folder_rotated90,
+        table_name="pages_rotated90_txt",
+        xml=False,
+    )
+    process_pdf(
+        pdf_folder=pdf_files_folder_rotated270,
+        table_name="pages_rotated270_xml",
+        xml=True,
+    )
+    process_pdf(
+        pdf_folder=pdf_files_folder_rotated270,
+        table_name="pages_rotated270_txt",
+        xml=False,
+    )
 
 
 def insert_contents():
@@ -145,9 +172,8 @@ def insert_contents():
         df = pd.read_sql(stmt, conn)
     data = df.to_dict("records")
 
-    # java -d64 -jar -Xms50g -Xmx50g tika-server-1.24.jar
     parser.from_file(__file__)  # testing tika server
-    print('Server apparently works...')
+    print("Server apparently works...")
 
     clean_tmp()
     skipping = []
@@ -186,7 +212,9 @@ def insert_contents():
     #         break
 
     sec = round(time.time() - t)
-    print(f"Done {len(data)} in {sec} seconds ({round(sec / 60, 2)} min or {round(sec / 3600, 2)} hours)")
+    print(
+        f"Done {len(data)} in {sec} seconds ({round(sec / 60, 2)} min or {round(sec / 3600, 2)} hours)"
+    )
 
 
 def insert_clean_content(table):
@@ -199,13 +227,17 @@ def insert_clean_content(table):
         for item in data:
             cleaned_text = clean_text(item["content"])
             query = f"UPDATE {table} SET clean_content = %s WHERE pdfId = %s AND page_num = %s"
-            result = conn.execute(query, (cleaned_text, item["pdfId"], item["page_num"]))
+            result = conn.execute(
+                query, (cleaned_text, item["pdfId"], item["page_num"])
+            )
             if result.rowcount != 1:
                 raise Exception(f"{item}: updated {result.rowcount} rows")
             print(item["pdfId"], item["page_num"], "is done")
 
     sec = round(time.time() - t)
-    print(f"Done {len(data)} in {sec} seconds ({round(sec / 60, 2)} min or {round(sec / 3600, 2)} hours)")
+    print(
+        f"Done {len(data)} in {sec} seconds ({round(sec / 60, 2)} min or {round(sec / 3600, 2)} hours)"
+    )
 
 
 def insert_clean_contents():
@@ -246,16 +278,22 @@ def rotate_pdfs():
         pool.map(rotate_pdf, pdfs, chunksize=1)
 
     sec = round(time.time() - t)
-    print(f"Done {len(pdfs)} in {sec} seconds ({round(sec / 60, 2)} min or {round(sec / 3600, 2)} hours)")
+    print(
+        f"Done {len(pdfs)} in {sec} seconds ({round(sec / 60, 2)} min or {round(sec / 3600, 2)} hours)"
+    )
 
 
 def clean_xml(xml_string):
     soup = BeautifulSoup(xml_string, features="lxml")
-    page = soup.find('div', class_="page")
+    page = soup.find("div", class_="page")
     for tag in page.find_all():
-        if len(tag.get_text(strip=True)) == 0:  # removing empty tags like <p></p> or <p />
+        if (
+            len(tag.get_text(strip=True)) == 0
+        ):  # removing empty tags like <p></p> or <p />
             tag.extract()
-        tag.string = tag.get_text(strip=True)  # trimming whitespace in the beginning/end
+        tag.string = tag.get_text(
+            strip=True
+        )  # trimming whitespace in the beginning/end
     output = "".join(str(child) for child in page.findChildren(recursive=False))
     return output
 
