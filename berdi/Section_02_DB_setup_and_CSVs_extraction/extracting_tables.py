@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+
 sys.path.append(str(Path(__file__).parent.parent.absolute()))
 from Codes.Database_Connection_Files.connect_to_database import connect_to_db
 from multiprocessing import Pool
@@ -14,6 +15,11 @@ import camelot
 import traceback
 import re
 
+
+# Caution! Removes all data!
+# Only make clear_database = True, if you want to remove all data from the database.
+clear_database = False
+
 # Load environment variables (from .env file) for the database
 engine = connect_to_db()
 
@@ -27,15 +33,9 @@ if not pdf_files_folder.exists():
 elif not csv_tables_folder.exists():
     print(csv_tables_folder, "does not exist!")
 
-# Increase max size of pandas dataframe output when using a notebook
-pd.set_option("display.max_columns", None)
-pd.set_option('display.max_rows', None)
-pd.set_option('display.width', 1200)
-
-regex = re.compile("[0-9a-zA-Z]")
-
 
 def is_empty(lines):
+    regex = re.compile("[0-9a-zA-Z]")
     for line in lines:
         for cell in line:
             if regex.search(cell):
@@ -61,23 +61,38 @@ def extract_csv(args):
                 accuracy = table.accuracy
                 whitespace = table.whitespace
                 top_row_json = json.dumps(table.df.iloc[0].tolist())
-                csv_text = table.df.to_json(None, orient='values')
-                table.to_csv(csv_full_path, index=False, header=False, encoding="utf-8-sig")
+                csv_text = table.df.to_json(None, orient="values")
+                table.to_csv(
+                    csv_full_path, index=False, header=False, encoding="utf-8-sig"
+                )
                 has_content = 0 if is_empty(json.dumps(csv_text)) else 1
 
                 with engine.connect() as conn2:
                     statement2 = text(
-                        "INSERT INTO csvs (csvId, csvFileName, csvFullPath, pdfId, page, tableNumber," +
-                        "topRowJson, csvRows, csvColumns, method, accuracy, whitespace, csvText, hasContent) " +
-                        "VALUE (:csvId, :csvFileName, :csvFullPath, :pdfId, :page, :tableNumber, " +
-                        ":topRowJson, :csvRows, :csvColumns, :method, :accuracy, :whitespace, :csvText, :hasContent);")
-                    conn2.execute(statement2, {"csvId": csv_id, "csvFileName": csv_file_name,
-                                               "csvFullPath": csv_full_path, "pdfId": pdf_id,
-                                               "page": csv_page, "tableNumber": table_number,
-                                               "topRowJson": top_row_json, "csvRows": csv_rows,
-                                               "csvColumns": csv_columns, "method": method,
-                                               "accuracy": accuracy, "whitespace": whitespace,
-                                               "csvText": csv_text, "hasContent": has_content})
+                        "INSERT INTO csvs (csvId, csvFileName, csvFullPath, pdfId, page, tableNumber,"
+                        + "topRowJson, csvRows, csvColumns, method, accuracy, whitespace, csvText, hasContent) "
+                        + "VALUE (:csvId, :csvFileName, :csvFullPath, :pdfId, :page, :tableNumber, "
+                        + ":topRowJson, :csvRows, :csvColumns, :method, :accuracy, :whitespace, :csvText, :hasContent);"
+                    )
+                    conn2.execute(
+                        statement2,
+                        {
+                            "csvId": csv_id,
+                            "csvFileName": csv_file_name,
+                            "csvFullPath": csv_full_path,
+                            "pdfId": pdf_id,
+                            "page": csv_page,
+                            "tableNumber": table_number,
+                            "topRowJson": top_row_json,
+                            "csvRows": csv_rows,
+                            "csvColumns": csv_columns,
+                            "method": method,
+                            "accuracy": accuracy,
+                            "whitespace": whitespace,
+                            "csvText": csv_text,
+                            "hasContent": has_content,
+                        },
+                    )
 
         try:
             pdf_file_path = pdf_files_folder2.joinpath(f"{pdf_id}.pdf")
@@ -89,24 +104,34 @@ def extract_csv(args):
                     # May need to modify parameters for your specific use-case
                     # More info here: https://camelot-py.readthedocs.io/en/master/
                     # And here for Advanced Usage: https://camelot-py.readthedocs.io/en/master/user/advanced.html
-                    tables = camelot.read_pdf(str(pdf_file_path), pages=str(page), strip_text='\n',
-                                              line_scale=40, flag_size=True, copy_text=['v'])
+                    tables = camelot.read_pdf(
+                        str(pdf_file_path),
+                        pages=str(page),
+                        strip_text="\n",
+                        line_scale=40,
+                        flag_size=True,
+                        copy_text=["v"],
+                    )
                     save_tables(tables, page, "lattice-v")
                 except Exception as e:
-                    print(f'Error processing {pdf_id} on page {page}:')
+                    print(f"Error processing {pdf_id} on page {page}:")
                     print(e)
                     traceback.print_tb(e.__traceback__)
 
             # Add extracted table to the database
             with engine.connect() as conn:
-                statement = text("UPDATE pdfs SET csvsExtracted = :csvsExtracted WHERE pdfId = :pdfId;")
-                conn.execute(statement, {"csvsExtracted": 'true', "pdfId": pdf_id})
+                statement = text(
+                    "UPDATE pdfs SET csvsExtracted = :csvsExtracted WHERE pdfId = :pdfId;"
+                )
+                conn.execute(statement, {"csvsExtracted": "true", "pdfId": pdf_id})
             duration = round(time.time() - start_time)
             mins = round(duration / 60, 2)
             hrs = round(duration / 3600, 2)
-            print(f"{pdf_id}: done {total_pages} pages in {duration} seconds ({mins} min or {hrs} hours)")
+            print(
+                f"{pdf_id}: done {total_pages} pages in {duration} seconds ({mins} min or {hrs} hours)"
+            )
         except Exception as e:
-            print(f'Error processing {pdf_id}:')
+            print(f"Error processing {pdf_id}:")
             print(e)
             traceback.print_tb(e.__traceback__)
         finally:
@@ -114,21 +139,29 @@ def extract_csv(args):
 
 
 # CAREFUL! DELETES ALL CSV files and CSV DB entries, and resets PDFs (csvsExtracted = NULL)!
-# def clear_db():
-#     with engine.connect() as conn:
-#         result = conn.execute("DELETE FROM csvs;")
-#         print(f"Deleted {result.rowcount} csvs from DB")
-#         result = conn.execute("UPDATE pdfs SET csvsExtracted = NULL WHERE csvsExtracted IS NOT NULL;")
-#         print(f"Reset {result.rowcount} PDFs from DB (csvsExtracted = NULL)")
-#     csvs = list(csv_tables_folder.glob("*.csv"))
-#     for f in csvs:
-#         f.unlink()
-#     print(f"Deleted {len(csvs)} CSV files")
-#     print("Done")
+def clear_db():
+    with engine.connect() as conn:
+        result = conn.execute("DELETE FROM csvs;")
+        print(f"Deleted {result.rowcount} csvs from DB")
+        result = conn.execute(
+            "UPDATE pdfs SET csvsExtracted = NULL WHERE csvsExtracted IS NOT NULL;"
+        )
+        print(f"Reset {result.rowcount} PDFs from DB (csvsExtracted = NULL)")
+    csvs = list(csv_tables_folder.glob("*.csv"))
+    for f in csvs:
+        f.unlink()
+    print(f"Deleted {len(csvs)} CSV files")
+    print("Done")
 
 
-def extract_tables():
-    statement = text("SELECT * FROM pdfs WHERE csvsExtracted IS NULL ORDER BY totalPages DESC;")
+if clear_database == True:
+    clear_db()
+
+
+def extract_tables(multiprocessing=False):
+    statement = text(
+        "SELECT * FROM pdfs WHERE csvsExtracted IS NULL ORDER BY totalPages DESC;"
+    )
     with engine.connect() as conn:
         df = pd.read_sql(statement, conn)
     pdfs = df.to_dict("records")
@@ -136,31 +169,36 @@ def extract_tables():
     files = []
     for pdf in pdfs:
         files.append(
-            (pdf["pdfId"],
-             int(pdf["totalPages"]),
-             str(pdf_files_folder),
-             str(csv_tables_folder)))
+            (
+                pdf["pdfId"],
+                int(pdf["totalPages"]),
+                str(pdf_files_folder),
+                str(csv_tables_folder),
+            )
+        )
 
     start_time = time.time()
     time_stamp = time.strftime("%H:%M:%S %Y-%m-%d")
     print(f"Items to process: {len(files)} at {time_stamp}\n")
 
-    # Sequential mode - if using, please comment out the multiprocessing mode code  
-    for file in files[:]:
-        result = extract_csv(file)
-        print(result, end='', flush=True)
-
-
-    # Multiprocessing mode - if using, please comment out the sequential mode code
-    # with Pool() as pool:
-    #     results = pool.map(extract_csv, files, chunksize=1)
-    # for result in results:
-    #     print(result, end='', flush=True)
+    if multiprocessing == False:
+        # Sequential mode
+        for file in files[:]:
+            result = extract_csv(file)
+            print(result, end="", flush=True)
+    else:
+        # Multiprocessing mode
+        with Pool() as pool:
+            results = pool.map(extract_csv, files, chunksize=1)
+        for result in results:
+            print(result, end="", flush=True)
 
     duration = round(time.time() - start_time)
     mins = round(duration / 60, 2)
     secs = round(duration / 3600, 2)
-    print(f"\nDone {len(files)} items in {duration} seconds ({mins} min or {secs} hours)")
+    print(
+        f"\nDone {len(files)} items in {duration} seconds ({mins} min or {secs} hours)"
+    )
 
 
 if __name__ == "__main__":
