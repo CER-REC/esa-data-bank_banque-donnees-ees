@@ -14,7 +14,22 @@ The table extraction process utilizes a MySQL Database to store the results of t
     * `csvsExtracted` is the indication whether all pages of the PDF were processed and all the tables were extracted from it (NULL - not processed, "true" - processed)
     * `hearingOrder`, `application_name`, `application_title_short`, `title_short`, and `commodity` are metadata taken from the input Index file regarding the hearing order number, application name, etc.
 
-4. Run the scripts in this order:
+4. Tika configuration for extract text from large PDFs
+
+IMPORTANT: Before running the code in this section, make sure you go through the following steps:
+
+I. The following steps allow you to configure the Tika server to allow extraction of much bigger PDF files. Otherwise, the script will fail when you try to extract bigger files (especially when using multiprocessing).
+
+II. Download: the java runtime (64-bit version) from https://www.java.com/en/download/manual.jsp
+
+III. If you want to update tika version, go to: https://tika.apache.org/download.html
+
+IV. Run: `java -d64 -jar -Xms40g -Xmx40g tika-server-standard-2.1.0.jar`. Adjust the memory (40g in this case) to 2/3rds of RAM you have available. Adjust the tika version to the one you downloaded.
+
+(Optional): if you know how to use docker, spin one of the containers here instead of downloading tika: https://hub.docker.com/r/apache/tika.
+Note: the code runs slower on Windows if you use Docker because Windows needs to create a linux virtual environment.
+
+5. Run the scripts in this order:
     * `DB.sql` creates some of the tables in the database
     * `pdfs_db_seeding.py` populates `pdfs` table
     * `pages_and_blocks_db_seeding.py` populates `pages` and `blocks` tables
