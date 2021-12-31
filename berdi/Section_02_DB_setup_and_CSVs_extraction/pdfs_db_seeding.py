@@ -4,7 +4,8 @@ from sqlalchemy import text
 import os
 import pandas as pd
 import PyPDF2
-from Codes.Database_Connection_Files.connect_to_database import connect_to_db
+from berdi.Database_Connection_Files.connect_to_database import connect_to_db
+
 sys.path.append(str(Path(__file__).parent.parent.absolute()))
 
 
@@ -23,15 +24,30 @@ if not index2.exists():
 
 # Increase max size of pandas dataframe output when using a notebook
 pd.set_option("display.max_columns", None)
-pd.set_option('display.max_rows', None)
-pd.set_option('display.width', 1200)
+pd.set_option("display.max_rows", None)
+pd.set_option("display.width", 1200)
 
 
 def insert_pdfs():
     df = pd.read_csv(index2)
-    df = df[["Data ID", "Application Name", "Application Short Name", "Commodity", "Hearing Order"]]
-    df = df.rename(columns={"Data ID": "pdfId", "Commodity": "commodity", "Hearing Order": "hearingOrder",
-                            "Application Short Name": "short_name", "Application Name": "application_title_short"})
+    df = df[
+        [
+            "Data ID",
+            "Application Name",
+            "Application Short Name",
+            "Commodity",
+            "Hearing Order",
+        ]
+    ]
+    df = df.rename(
+        columns={
+            "Data ID": "pdfId",
+            "Commodity": "commodity",
+            "Hearing Order": "hearingOrder",
+            "Application Short Name": "short_name",
+            "Application Name": "application_title_short",
+        }
+    )
 
     with engine.connect() as conn:
         for row in df.itertuples():
@@ -48,15 +64,20 @@ def insert_pdfs():
                     total_pages = reader.getNumPages()
 
                 stmt = text(
-                    "INSERT INTO pdfs (pdfId, totalPages, hearingOrder, application_title_short," +
-                    "short_name, commodity) VALUES (:pdfId, :totalPages, :hearingOrder," +
-                    ":application_title_short, :short_name, :commodity);")
+                    "INSERT INTO pdfs (pdfId, totalPages, hearingOrder, application_title_short,"
+                    + "short_name, commodity) VALUES (:pdfId, :totalPages, :hearingOrder,"
+                    + ":application_title_short, :short_name, :commodity);"
+                )
                 params = {
                     "pdfId": row.pdfId,
                     "totalPages": total_pages,
-                    "hearingOrder": None if pd.isna(row.hearingOrder) else row.hearingOrder,
+                    "hearingOrder": None
+                    if pd.isna(row.hearingOrder)
+                    else row.hearingOrder,
                     "application_title_short": row.application_title_short,
-                    "short_name": row.short_name, "commodity": row.commodity}
+                    "short_name": row.short_name,
+                    "commodity": row.commodity,
+                }
                 result = conn.execute(stmt, params)
                 if result.rowcount != 1:
                     return print(f"{row.pdfId}: ERROR! Updated {result.rowcount} rows!")
