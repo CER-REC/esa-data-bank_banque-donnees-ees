@@ -8,7 +8,7 @@ import PyPDF2
 from tika import parser
 import tika
 import time
-from multiprocessing import Pool
+from multiprocessing import Pool, freeze_support
 import re
 from bs4 import BeautifulSoup
 
@@ -51,6 +51,8 @@ tmp_folder = Path.cwd().joinpath("tmp")
 
 # Careful! Removes all data!
 def clear_db():
+    """This function removes all data from the database."""
+
     stmt1 = "DELETE FROM pages_normal_txt;"
     stmt2 = "DELETE FROM pages_normal_xml;"
     stmt3 = "DELETE FROM pages_rotated90_txt;"
@@ -88,6 +90,8 @@ def clean_text(txt):
 
 
 def insert_content(row):
+    """This function extracts the text content from the PDFs and inserts it into the database."""
+
     pdf_id, total_pages = row["pdfId"], int(row["totalPages"])
 
     # Using PyPDF2 and Tika's parser method to extract PDF contents
@@ -164,6 +168,11 @@ def insert_content(row):
 
 
 def insert_contents(multiprocessing=False):
+    """
+    Inserts the text content of the PDFs into the database by using the
+    insert_content function either sequentially or with multiprocessing.
+    """
+
     t = time.time()
 
     # Reading from the MySQL Database and creating dataframe from query
@@ -215,6 +224,8 @@ def insert_contents(multiprocessing=False):
 
 
 def insert_clean_content(table):
+    """Cleans the text content of the PDFs saved in the database and updates the database."""
+
     t = time.time()
 
     stmt = f"SELECT pdfId, page_num, content FROM {table} WHERE clean_content IS NULL;"
@@ -244,6 +255,8 @@ def insert_clean_contents():
 
 
 def rotate_pdf(pdf):
+    """Rotates the PDFs so that they are all in the correct orientation."""
+
     def rotate(target_pdf, rotation):
         if target_pdf.exists():
             return
@@ -263,6 +276,14 @@ def rotate_pdf(pdf):
 
 
 def rotate_pdfs(multiprocessing=False):
+    """
+    Rotates the PDFs so that they are all in the correct orientation using
+    the rotate_pdf function either sequentially or with multiprocessing.
+
+    multiprocessing: bool
+        If True, the PDFs are rotated using multiprocessing.
+    """
+
     t = time.time()
     pdfs = list(pdf_files_folder_normal.glob("*.pdf"))
 
@@ -280,6 +301,8 @@ def rotate_pdfs(multiprocessing=False):
 
 
 def clean_xml(xml_string):
+    """Cleans text from the PDFs by removing unecessary XML tags and whitespace."""
+
     soup = BeautifulSoup(xml_string, features="lxml")
     page = soup.find("div", class_="page")
     for tag in page.find_all():
@@ -295,6 +318,7 @@ def clean_xml(xml_string):
 
 
 if __name__ == "__main__":
+    freeze_support()
     rotate_pdfs(multiprocessing=True)
     insert_contents()
     insert_clean_contents()
