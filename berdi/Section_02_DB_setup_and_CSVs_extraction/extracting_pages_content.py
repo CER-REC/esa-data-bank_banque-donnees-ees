@@ -11,6 +11,7 @@ import time
 from multiprocessing import Pool, freeze_support
 import re
 from bs4 import BeautifulSoup
+import traceback
 
 sys.path.append(str(Path(__file__).parent.parent.absolute()))
 
