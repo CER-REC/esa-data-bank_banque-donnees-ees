@@ -1,8 +1,6 @@
 import sys
 from pathlib import Path
 
-from dotenv.main import load_dotenv
-
 sys.path.append(str(Path(__file__).parents[2].resolve()))
 from berdi.Database_Connection_Files.connect_to_database import connect_to_db
 from multiprocessing import Pool
@@ -16,6 +14,7 @@ from contextlib import redirect_stdout, redirect_stderr
 import camelot
 import traceback
 import re
+from dotenv import load_dotenv
 
 
 REPO_ROOT = Path(__file__).parents[2].resolve()
@@ -23,7 +22,9 @@ RAW_DATA = "data/raw"
 PROCESSED_DATA = "data/processed"
 
 # Load environment variables (from .env file) for the database
-load_dotenv(override=True)
+load_dotenv(
+    dotenv_path=REPO_ROOT / "berdi/Database_Connection_Files" / ".env", override=True
+)
 engine = connect_to_db()
 
 pdf_files_folder = REPO_ROOT / RAW_DATA / "pdfs"

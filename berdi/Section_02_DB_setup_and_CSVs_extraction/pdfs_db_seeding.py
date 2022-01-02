@@ -6,14 +6,19 @@ from sqlalchemy import text
 import pandas as pd
 import PyPDF2
 from berdi.Database_Connection_Files.connect_to_database import connect_to_db
+from dotenv import load_dotenv
 
-
-engine = connect_to_db()
 
 REPO_ROOT = Path(__file__).parents[2].resolve()
 RAW_DATA = "data/raw"
 OLD_PROJECTS = "Index_of_PDFs_for_Major_Projects_with_ESAs.csv"
 NEW_PROJECTS = "Phase2_Index_of_PDFs_for_Major_Projects_with_ESAs.csv"
+
+# Load environment variables (from .env file) for the database
+load_dotenv(
+    dotenv_path=REPO_ROOT / "berdi/Database_Connection_Files" / ".env", override=True
+)
+engine = connect_to_db()
 
 # Load environment variables (from .env file) for the PDF folder path and Index filepath
 pdf_files_folder = REPO_ROOT / RAW_DATA / "pdfs"

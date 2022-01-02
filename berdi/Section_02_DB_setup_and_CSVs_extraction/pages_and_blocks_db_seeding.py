@@ -1,6 +1,5 @@
 import sys
 from pathlib import Path
-from dotenv.main import load_dotenv
 
 sys.path.append(str(Path(__file__).parents[2].resolve()))
 from berdi.Database_Connection_Files.connect_to_database import connect_to_db
@@ -12,13 +11,16 @@ import fitz
 from contextlib import redirect_stdout, redirect_stderr
 from io import StringIO
 import traceback
+from dotenv import load_dotenv
 
 
 REPO_ROOT = Path(__file__).parents[2].resolve()
 RAW_DATA = "data/raw"
 
 # Load environment variables (from .env file) for the database
-load_dotenv(override=True)
+load_dotenv(
+    dotenv_path=REPO_ROOT / "berdi/Database_Connection_Files" / ".env", override=True
+)
 engine = connect_to_db()
 
 # Load environment variables (from .env file) for the PDF folder path
