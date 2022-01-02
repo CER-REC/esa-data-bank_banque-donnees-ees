@@ -6,7 +6,6 @@ from berdi.Database_Connection_Files.connect_to_database import connect_to_db
 from multiprocessing import Pool
 import time
 from sqlalchemy import text
-import os
 import pandas as pd
 import json
 from io import StringIO
