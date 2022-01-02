@@ -16,10 +16,6 @@ import traceback
 sys.path.append(str(Path(__file__).parent.parent.absolute()))
 
 
-# Caution! Removes all data!
-# Only make clear_database = True, if you want to remove all data from the database.
-clear_database = False
-
 # Load environment variables from .env file
 load_dotenv(override=True)
 
@@ -68,10 +64,6 @@ def clear_db():
         conn.execute(stmt5)
         conn.execute(stmt6)
     print("DB is cleared")
-
-
-if clear_database == True:
-    clear_db()
 
 
 def clean_tmp():
@@ -320,6 +312,14 @@ def clean_xml(xml_string):
 
 if __name__ == "__main__":
     freeze_support()
+
+    # # Caution! Removes all data!
+    # # Only make clear_database = True, if you want to remove all data from the database.
+    # # Making this part verbose and commenting it to prevent accidental deletion of data.
+    # clear_database = False
+    # if clear_database == True:
+    #     clear_db()
+
     rotate_pdfs(multiprocessing=True)
     insert_contents(multiprocessing=False)
     insert_clean_contents()

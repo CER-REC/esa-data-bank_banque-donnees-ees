@@ -1,4 +1,3 @@
-import multiprocessing
 import sys
 from pathlib import Path
 from berdi.Database_Connection_Files.connect_to_database import connect_to_db
@@ -24,12 +23,12 @@ pdf_files_folder = Path(os.getenv("PDFS_FILEPATH"))
 
 # Careful! Deletes all pages and blocks data from the DB!
 # noinspection SqlWithoutWhere
-# def clear_figures_db():
-#     with engine.connect() as conn:
-#         result2 = conn.execute("DELETE FROM blocks;")
-#         print(f"Deleted {result2.rowcount} blocks.")
-#         result1 = conn.execute("DELETE FROM pages;")
-#         print(f"Deleted {result1.rowcount} pages.")
+def clear_figures_db():
+    with engine.connect() as conn:
+        result2 = conn.execute("DELETE FROM blocks;")
+        print(f"Deleted {result2.rowcount} blocks.")
+        result1 = conn.execute("DELETE FROM pages;")
+        print(f"Deleted {result1.rowcount} pages.")
 
 
 def insert(pdf):
@@ -222,4 +221,12 @@ def insert_pages_and_blocks(multi_process=False):
 
 
 if __name__ == "__main__":
+    # # Careful! Deletes all pages and blocks data from the DB!
+    # # noinspection SqlWithoutWhere
+    # # Only make clear_database = True, if you want to remove all data from the database.
+    # # Making this part verbose and commenting it to prevent accidental deletion of data.
+    # clear_figures = False
+    # if clear_figures == True:
+    #     clear_figures_db()
+
     insert_pages_and_blocks(multi_process=False)

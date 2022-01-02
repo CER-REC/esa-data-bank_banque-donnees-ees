@@ -153,10 +153,6 @@ def clear_db():
     print("Done")
 
 
-if clear_database == True:
-    clear_db()
-
-
 def extract_tables(multi_process=False):
     statement = text(
         "SELECT * FROM pdfs WHERE csvsExtracted IS NULL ORDER BY totalPages DESC;"
@@ -201,4 +197,11 @@ def extract_tables(multi_process=False):
 
 
 if __name__ == "__main__":
+    # CAREFUL! THE PART BELOW DELETES ALL CSV files and CSV DB entries, and resets PDFs (csvsExtracted = NULL)!
+    # # Only make clear_database = True, if you want to remove all data from the database.
+    # # Making this part verbose and commenting it to prevent accidental deletion of data.
+    # clear_database = False
+    # if clear_database == True:
+    #     clear_db()
+
     extract_tables(multi_process=False)
