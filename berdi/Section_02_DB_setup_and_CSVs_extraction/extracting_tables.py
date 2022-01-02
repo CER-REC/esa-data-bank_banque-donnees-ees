@@ -1,5 +1,7 @@
 import sys
 from pathlib import Path
+
+sys.path.append(str(Path(__file__).parents[2].resolve()))
 from berdi.Database_Connection_Files.connect_to_database import connect_to_db
 from multiprocessing import Pool
 import time
@@ -13,7 +15,6 @@ import camelot
 import traceback
 import re
 
-sys.path.append(str(Path(__file__).parent.parent.absolute()))
 
 # Caution! Removes all data!
 # Only make clear_database = True, if you want to remove all data from the database.

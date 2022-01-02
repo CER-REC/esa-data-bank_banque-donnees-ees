@@ -2,7 +2,6 @@ import sys
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).parents[2].resolve()))
-sys.path.append(str(Path(__file__).parents[1].resolve()))
 from sqlalchemy import text
 import pandas as pd
 import PyPDF2
