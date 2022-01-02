@@ -1,6 +1,5 @@
 import sys
 from pathlib import Path
-
 from dotenv.main import load_dotenv
 
 sys.path.append(str(Path(__file__).parents[2].resolve()))
@@ -8,7 +7,6 @@ from berdi.Database_Connection_Files.connect_to_database import connect_to_db
 from multiprocessing import Pool
 import time
 from sqlalchemy import text
-import os
 import pandas as pd
 import fitz
 from contextlib import redirect_stdout, redirect_stderr
