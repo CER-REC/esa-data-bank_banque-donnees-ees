@@ -201,4 +201,4 @@ def extract_tables(multiprocessing=False):
 
 
 if __name__ == "__main__":
-    extract_tables()
+    extract_tables(multiprocessing=False)
