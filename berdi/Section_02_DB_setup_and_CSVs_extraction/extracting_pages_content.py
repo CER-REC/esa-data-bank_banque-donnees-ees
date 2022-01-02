@@ -38,6 +38,19 @@ if not pdf_files_folder_rotated90.exists():
 if not pdf_files_folder_rotated270.exists():
     print(pdf_files_folder_rotated270, "does not exist!")
 
+# Tika configuration
+
+# IMPORTANT: Before running this script, make sure you go through the following steps:
+# 0. The following steps allow you to configure the Tika server to allow extraction of much bigger PDF files.
+# Otherwise, the script will fail when you try to extract bigger files (especially when using multiprocessing).
+# 1. Download: the java runtime (64-bit version) from https://www.java.com/en/download/manual.jsp
+# Note: You can also use the jar file inside this directory and skip to step 3.
+# 2. If you want to update tika version, go to: https://tika.apache.org/download.html
+# 3. Run: java -d64 -jar -Xms40g -Xmx40g tika-server-standard-2.1.0.jar
+# Adjust the memory (40g in this case) to 2/3rds of RAM you have available
+# (Optional): if you know how to use docker, spin one of the containers here instead of downloading tika: https://hub.docker.com/r/apache/tika
+# Note: the code runs slower on Windows if you use Docker because Windows needs to create a linux virtual environment.
+
 # Set up Tika to extract text content from PDFs
 tika.TikaClientOnly = True
 os.environ["TIKA_STARTUP_MAX_RETRY"] = "10"
