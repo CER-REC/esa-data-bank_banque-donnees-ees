@@ -16,19 +16,20 @@ from bs4 import BeautifulSoup
 import traceback
 
 
-# Load environment variables from .env file
-load_dotenv(override=True)
+REPO_ROOT = Path(__file__).parents[2].resolve()
+RAW_DATA = "data/raw"
 
 # Load environment variables (from .env file) for the database
+load_dotenv(override=True)
 engine = connect_to_db()
 
 # Load environment variables (from .env file) for the PDF folder path
 # In order to extract the content from the PDFs, it is important to
 # rotate the PDFs that are not in the normal top-to-bottom structure.
 # The rotate_pdf function will rotate those PDFs to a normal structure.
-pdf_files_folder_normal = Path(os.getenv("PDFS_FILEPATH"))
-pdf_files_folder_rotated90 = Path(os.getenv("PDFS_FILEPATH") + "_Rotated")
-pdf_files_folder_rotated270 = Path(os.getenv("PDFS_FILEPATH") + "_rotated270")
+pdf_files_folder_normal = REPO_ROOT / RAW_DATA / "pdfs"
+pdf_files_folder_rotated90 = REPO_ROOT / RAW_DATA / "rotated_pdfs"
+pdf_files_folder_rotated270 = REPO_ROOT / RAW_DATA / "rotated_pdfs"
 
 if not pdf_files_folder_normal.exists():
     print(pdf_files_folder_normal, "does not exist!")

@@ -1,6 +1,8 @@
 import sys
 from pathlib import Path
 
+from dotenv.main import load_dotenv
+
 sys.path.append(str(Path(__file__).parents[2].resolve()))
 from berdi.Database_Connection_Files.connect_to_database import connect_to_db
 from multiprocessing import Pool
@@ -16,17 +18,16 @@ import traceback
 import re
 
 
-# Caution! Removes all data!
-# Only make clear_database = True, if you want to remove all data from the database.
-clear_database = False
+REPO_ROOT = Path(__file__).parents[2].resolve()
+RAW_DATA = "data/raw"
+PROCESSED_DATA = "data/processed"
 
 # Load environment variables (from .env file) for the database
+load_dotenv(override=True)
 engine = connect_to_db()
 
-# Load environment variables (from .env file) for the PDF folder path and Index filepath
-pdf_files_folder = Path(os.getenv("PDFS_FILEPATH"))
-# csv_tables_folder = Path().resolve().parent.parent.joinpath("Data_Files").joinpath("CSVs")
-csv_tables_folder = Path(os.getenv("CSV_TABLES_FOLDER_PATH"))
+pdf_files_folder = REPO_ROOT / RAW_DATA / "pdfs"
+csv_tables_folder = REPO_ROOT / PROCESSED_DATA / "csvs"
 
 if not pdf_files_folder.exists():
     print(pdf_files_folder, "does not exist!")
