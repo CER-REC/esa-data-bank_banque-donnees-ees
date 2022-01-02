@@ -12,20 +12,13 @@ sys.path.append(str(Path(__file__).parent.parent.absolute()))
 engine = connect_to_db()
 
 # Load environment variables (from .env file) for the PDF folder path and Index filepath
-pdf_files_folder = Path(os.getenv("PDFS_FILEPATH"))
-# index2 = Path().resolve().parent.parent.joinpath("Input_Files").joinpath(
-#     "Index_of_PDFs_for_Major_Projects_with_ESAs.csv")
-index2 = Path(os.getenv("INDEX2_FILEPATH"))
+pdf_files_folder = Path(os.getenv("PDFS_FILEPATH"))  # data/raw/pdfs
+index2 = Path(os.getenv("INDEX2_FILEPATH"))  # data/raw/index_for_projects
 
 if not pdf_files_folder.exists():
     print(pdf_files_folder, "does not exist!")
 if not index2.exists():
     print(index2, "does not exist!")
-
-# Increase max size of pandas dataframe output when using a notebook
-pd.set_option("display.max_columns", None)
-pd.set_option("display.max_rows", None)
-pd.set_option("display.width", 1200)
 
 
 def insert_pdfs():
