@@ -1,3 +1,4 @@
+import multiprocessing
 import sys
 from pathlib import Path
 from berdi.Database_Connection_Files.connect_to_database import connect_to_db
@@ -191,7 +192,7 @@ def insert(pdf):
             return buf.getvalue()
 
 
-def insert_pages_and_blocks():
+def insert_pages_and_blocks(multi_process=False):
     stmt = text(
         "SELECT pdfId, totalPages FROM pdfs WHERE pagesBlocksExtracted = 0 ORDER BY totalPages DESC;"
     )
@@ -202,7 +203,7 @@ def insert_pages_and_blocks():
     print(f"Items to process: {len(args)}")
     start_time = time.time()
 
-    if multiprocessing == False:
+    if multi_process == False:
         # Sequential mode
         for arg in args:
             result = insert(arg)
@@ -221,4 +222,4 @@ def insert_pages_and_blocks():
 
 
 if __name__ == "__main__":
-    insert_pages_and_blocks()
+    insert_pages_and_blocks(multi_process=False)

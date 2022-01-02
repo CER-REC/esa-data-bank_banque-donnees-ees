@@ -157,7 +157,7 @@ if clear_database == True:
     clear_db()
 
 
-def extract_tables(multiprocessing=False):
+def extract_tables(multi_process=False):
     statement = text(
         "SELECT * FROM pdfs WHERE csvsExtracted IS NULL ORDER BY totalPages DESC;"
     )
@@ -180,7 +180,7 @@ def extract_tables(multiprocessing=False):
     time_stamp = time.strftime("%H:%M:%S %Y-%m-%d")
     print(f"Items to process: {len(files)} at {time_stamp}\n")
 
-    if multiprocessing == False:
+    if multi_process == False:
         # Sequential mode
         for file in files[:]:
             result = extract_csv(file)
@@ -201,4 +201,4 @@ def extract_tables(multiprocessing=False):
 
 
 if __name__ == "__main__":
-    extract_tables(multiprocessing=False)
+    extract_tables(multi_process=False)
