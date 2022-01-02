@@ -1,19 +1,19 @@
 import sys
 from pathlib import Path
+
+sys.path.append(str(Path(__file__).parents[2]))
 from sqlalchemy import text
 import os
 import pandas as pd
 import PyPDF2
 from berdi.Database_Connection_Files.connect_to_database import connect_to_db
 
-sys.path.append(str(Path(__file__).parent.parent.absolute()))
-
 
 engine = connect_to_db()
 
 # Load environment variables (from .env file) for the PDF folder path and Index filepath
-pdf_files_folder = Path(os.getenv("PDFS_FILEPATH"))  # data/raw/pdfs
-index2 = Path(os.getenv("INDEX2_FILEPATH"))  # data/raw/index_for_projects
+pdf_files_folder = Path("data/raw/pdfs")
+index2 = Path("data/raw/index_for_projects")
 
 if not pdf_files_folder.exists():
     print(pdf_files_folder, "does not exist!")
@@ -22,7 +22,7 @@ if not index2.exists():
 
 
 def insert_pdfs():
-    df = pd.read_csv(index2)
+    df = pd.read_csv(index2)  # getting permission error on Windows
     df = df[
         [
             "Data ID",
