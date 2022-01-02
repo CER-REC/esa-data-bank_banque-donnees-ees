@@ -202,16 +202,17 @@ def insert_pages_and_blocks():
     print(f"Items to process: {len(args)}")
     start_time = time.time()
 
-    # Sequential mode - if using, please comment out the multiprocessing mode code
-    for arg in args:
-        result = insert(arg)
-        print(result, end="", flush=True)
-
-    # # Multiprocessing mode - if using, please comment out the sequential mode code
-    # with Pool() as pool:
-    #     results = pool.map(insert, args, chunksize=1)
-    # for result in results:
-    #     print(result, end='', flush=True)
+    if multiprocessing == False:
+        # Sequential mode
+        for arg in args:
+            result = insert(arg)
+            print(result, end="", flush=True)
+    else:
+        # Multiprocessing mode
+        with Pool() as pool:
+            results = pool.map(insert, args, chunksize=1)
+        for result in results:
+            print(result, end="", flush=True)
 
     d = round(time.time() - start_time)
     print(
