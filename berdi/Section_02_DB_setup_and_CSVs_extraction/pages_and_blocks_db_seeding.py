@@ -18,8 +18,7 @@ sys.path.append(str(Path(__file__).parent.parent.absolute()))
 engine = connect_to_db()
 
 # Load environment variables (from .env file) for the PDF folder path
-pdf_files_folder = Path(os.getenv("PDFS_FILEPATH"))
-# pdf_files_folder = Path('Data_Files/PDFs')
+pdf_files_folder = Path(os.getenv("PDFS_FILEPATH"))  # data/pdfs
 
 # Careful! Deletes all pages and blocks data from the DB!
 # noinspection SqlWithoutWhere
