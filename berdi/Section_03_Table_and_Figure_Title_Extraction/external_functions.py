@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 import pandas as pd
 import re
 import regex
@@ -11,10 +12,14 @@ from fuzzywuzzy import fuzz
 import json
 import numpy as np
 
-from Codes.Database_Connection_Files.connect_to_database import connect_to_db
-import Codes.Section_03_Table_and_Figure_Title_Extraction.constants as constants
+from berdi.Database_Connection_Files.connect_to_database import connect_to_db
+import berdi.Section_03_Table_and_Figure_Title_Extraction.constants as constants
 
 
+# Load environment variables (from .env file) for the database
+load_dotenv(
+    dotenv_path=constants.ROOT_PATH / "berdi/Database_Connection_Files" / ".env", override=True
+)
 engine = connect_to_db()
 
 
