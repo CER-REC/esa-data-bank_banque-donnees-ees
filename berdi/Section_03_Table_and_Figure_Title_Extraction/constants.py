@@ -2,14 +2,16 @@ import re
 from pathlib import Path
 
 # paths to data
-main_path = r"//luxor/data/branch/Environmental Baseline Data/Version 4 - Final/"
-projects_path = Path(
-    main_path + r"Indices/Index 2 - PDFs for Major Projects with ESAs.xlsx"
-)
-pickles_path = main_path + "Pickles/"
-pickles_rotated_path = main_path + "Pickles_rotated/"
-csv_path = main_path + "CSV_final/"
-save_dir = main_path + "Saved2/"
+ROOT_PATH = Path(__file__).parents[1].resolve()
+RAW_DATA_PATH = ROOT_PATH / "data" / "raw"
+INDEX_PATH = RAW_DATA_PATH / "index_for_projects"
+PROCESSED_DATA_PATH = ROOT_PATH / "data" / "processed"
+
+projects_path = str(INDEX_PATH / "Index 2 - PDFs for Major Projects with ESAs.xlsx")
+pickles_path = str(PROCESSED_DATA_PATH / "pickle_files")
+pickles_rotated_path = str(PROCESSED_DATA_PATH / "pickle_files_rotated")
+csv_path = str(PROCESSED_DATA_PATH / "csvs" / "all_csvs")
+save_dir = str(ROOT_PATH / "data" / "output")
 
 # regexes
 empty_line_xml = re.compile(r"<\/p>\s*<p ?\/?>")
