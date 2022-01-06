@@ -1,5 +1,5 @@
 import pickle
-import nltk
+import os
 from nltk.corpus import stopwords
 from nltk.stem.porter import *
 from nltk.tokenize import word_tokenize
@@ -5583,28 +5583,30 @@ Grizzly Bear's Head
 Animakhee Wazhing
 Whitefish Lake, ON"""
 
-keywords = [Landscape_terrain_and_weather, 
-            Soil,
-            Plants,
-            Water,
-            Fish,
-            Wetlands,
-            Wildlife,
-            Species_at_Risk,
-            Greenhouse_gas_emissions,
-            Air_emissions,
-            Noise,
-            Electricity_and_electromagnetism,
-            Proximity_to_people,
-            Archaeological_paleontological_historical_and_culturally_significant_sites_and_resources,
-            Human_access_to_boats_and_waterways,
-            Indigenous_land_water_and_air_use,
-            Impact_to_social_and_cultural_well_being,
-            Impact_to_human_health_and_viewscapes,
-            Social_cultural_economic_infrastructure_and_services,
-            Economic_Offsets_and_Impact,
-            Environmental_Obligations,
-            Treaty_and_Indigenous_Rights]
+keywords = [
+    Landscape_terrain_and_weather,
+    Soil,
+    Plants,
+    Water,
+    Fish,
+    Wetlands,
+    Wildlife,
+    Species_at_Risk,
+    Greenhouse_gas_emissions,
+    Air_emissions,
+    Noise,
+    Electricity_and_electromagnetism,
+    Proximity_to_people,
+    Archaeological_paleontological_historical_and_culturally_significant_sites_and_resources,
+    Human_access_to_boats_and_waterways,
+    Indigenous_land_water_and_air_use,
+    Impact_to_social_and_cultural_well_being,
+    Impact_to_human_health_and_viewscapes,
+    Social_cultural_economic_infrastructure_and_services,
+    Economic_Offsets_and_Impact,
+    Environmental_Obligations,
+    Treaty_and_Indigenous_Rights,
+]
 
 keywords = [x.lower().split("\n") for x in keywords]
 
@@ -5614,11 +5616,25 @@ for i, label_keywords in enumerate(keywords):
     stemmed_words = []
     for word in label_keywords:
         token_words = word_tokenize(word)
-        stemmed_tokens = [stemmer.stem(t) for t in token_words if t not in stopwords.words("english")]
+        stemmed_tokens = [
+            stemmer.stem(t) for t in token_words if t not in stopwords.words("english")
+        ]
         stemmed_words.append(" ".join(stemmed_tokens))
     keywords[i] = stemmed_words
 
-print(keywords[0], keywords[1], keywords[2], keywords[3], keywords[4], keywords[5], keywords[6], keywords[7], keywords[8])
+print(
+    keywords[0],
+    keywords[1],
+    keywords[2],
+    keywords[3],
+    keywords[4],
+    keywords[5],
+    keywords[6],
+    keywords[7],
+    keywords[8],
+)
 
-with open("keywords.pkl", "wb") as f:
+vc_pkl_path = os.path.join(os.getcwd(), "data/raw/index_for_projects/vc_keywords.pkl")
+
+with open(vc_pkl_path, "wb") as f:
     pickle.dump(keywords, f)
