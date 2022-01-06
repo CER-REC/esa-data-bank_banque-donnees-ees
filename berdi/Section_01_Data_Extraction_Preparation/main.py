@@ -1,6 +1,7 @@
 import pandas as pd
 import time
 import os
+from pathlib import Path
 import multiprocessing as mp
 from multiprocessing import freeze_support
 from IPython.core.interactiveshell import InteractiveShell
@@ -18,20 +19,24 @@ if __name__ == "__main__":
     freeze_support()
 
     # Update the path when adding a new list of projects
-    Index0_path = os.path.join(
-        os.getcwd(),
-        "data/raw/index_for_projects/Index_of_pdfs_for_Major_Projects_with_ESAs.csv",
+    ROOT_PATH = Path(__file__).resolve().parents[2]
+    Index0_path = str(
+        ROOT_PATH
+        / "data"
+        / "raw"
+        / "index_for_projects"
+        / "Index_of_PDFs_for_Major_Projects_with_ESAs.csv"
     )
 
     # Load the list of projects
     Index0 = pd.read_csv(Index0_path)
 
     # Download files
-    count = download_file(os.getcwd(), Index0)
+    count = download_file(str(ROOT_PATH), Index0)
     print("{} Files were downloaded from {} URL links".format(count, len(Index0)))
 
     # Rotate files
-    count = rotate_pdf(os.getcwd(), Index0)
+    count = rotate_pdf(str(ROOT_PATH), Index0)
     print("{} Files were successfully rotated".format(count))
 
     # Convert to pickle files
@@ -39,14 +44,14 @@ if __name__ == "__main__":
         ("pdfs", "pickle_files"),
         ("rotated_pdfs", "pickle_files_rotated"),
     }:
-        pdf_folder_path = os.path.join(os.getcwd(), "data\\raw", pdf_folder_name)
+        pdf_folder_path = os.path.join(str(ROOT_PATH), "data\\raw", pdf_folder_name)
         pdf_file_paths = [
             os.path.join(pdf_folder_path, file)
             for file in os.listdir(pdf_folder_path)
             if file.endswith(".pdf")
         ]
         pickle_folder_path = os.path.join(
-            os.getcwd(), "data\\processed", pickle_file_folder_name
+            str(ROOT_PATH), "data\\processed", pickle_file_folder_name
         )
 
         # multiprocessing
@@ -63,9 +68,9 @@ if __name__ == "__main__":
         print("That took {} seconds".format(time.time() - starttime))
 
     # Add metadata and export to csv
-    Index1 = get_pdf_metadata(os.getcwd(), Index0)
+    Index1 = get_pdf_metadata(str(ROOT_PATH), Index0)
     metadata_file_path = os.path.join(
-        os.getcwd(),
+        str(ROOT_PATH),
         "data/interim/Intermediate_Index_Files/Index 1 - PDFs for Major Projects with ESAs.csv",
     )
     Index1.to_csv(metadata_file_path, index=False, encoding="utf-8-sig")
