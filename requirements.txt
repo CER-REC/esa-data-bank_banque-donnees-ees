@@ -1,5 +1,5 @@
 wheel==0.37.0
-PyPDF2==1.26.0
+PyPDF2==1.27.5
 tika==1.24
 python-dotenv==0.19.2
 SQLAlchemy==1.4.27
