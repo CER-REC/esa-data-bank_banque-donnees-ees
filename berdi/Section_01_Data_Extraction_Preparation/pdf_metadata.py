@@ -30,7 +30,7 @@ def get_pdf_metadata(root_folder, Index0):
 def check_topic_present(topic, text):
     """
     This basic function attempts to check if any of the keywords of a 
-    particular topic are present in the the description line of the PDF File. 
+    particular topic is present in the description line of the PDF File. 
     
     Parameters
     ----------
