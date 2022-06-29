@@ -34,7 +34,7 @@ yarn-error.log*
 /Support files
 /data/raw/pdfs/*.pdf
 /data/raw/rotated_pdfs/*.pdf
-/data/raw/index_for_projects/*.csv
+#/data/raw/index_for_projects/*.csv
 /data/processed/csvs/all_csvs/*.csv
 /data/processed/csvs/new_projects/*.csv
 /data/processed/pickle_files/*.pkl
