@@ -224,7 +224,7 @@ def pdf_size(path, Index0):
     # iterate through each row of the Dataframe
     for index, row in Index0.iterrows():
         try:
-            pdf_path = path + "\\Data_Files\\PDFs\\" + str(row['Data ID']) + '.pdf'
+            pdf_path = Path(path + "\\data\\raw\\pdfs\\" + str(row['Data ID']) + '.pdf')
             file = Path(pdf_path)
             size = file.stat().st_size
             sizes.append(size)
@@ -268,7 +268,7 @@ def pdf_pagenumbers(path, Index0):
     # iterate through each row of the Dataframe
     for index, row in Index0.iterrows():
         try:
-            pdf_path = Path(path + "\\Data_Files\\PDFs\\" + str(row['Data ID']) + '.pdf')
+            pdf_path = Path(path + "\\data\\raw\\pdfs\\" + str(row['Data ID']) + '.pdf')
             with pdf_path.open("rb") as pdf:
                 reader = PyPDF2.PdfFileReader(pdf)
                 if reader.isEncrypted:
@@ -315,7 +315,7 @@ def get_outline_present(path, Index0):
     # iterate through each row of the Dataframe
     for index, row in Index0.iterrows():
         try:
-            pdf_path = Path(path + "\\Data_Files\\PDFs\\" + str(row['Data ID']) + '.pdf')
+            pdf_path = Path(path + "\\data\\raw\\pdfs\\" + str(row['Data ID']) + '.pdf')
             with pdf_path.open("rb") as pdf:
                 reader = PyPDF2.PdfFileReader(pdf)
                 if reader.isEncrypted:
