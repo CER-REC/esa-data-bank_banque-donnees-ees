@@ -29,7 +29,7 @@ if __name__ == "__main__":
     )
 
     # Load the list of projects
-    Index0 = pd.read_csv(Index0_path)
+    Index0 = pd.read_csv(Index0_path, encoding ='cp1252')
 
     # Download files
     count = download_file(str(ROOT_PATH), Index0)
