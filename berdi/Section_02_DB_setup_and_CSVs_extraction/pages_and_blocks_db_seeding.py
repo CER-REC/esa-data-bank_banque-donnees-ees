@@ -2,7 +2,7 @@ import sys
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).parents[2].resolve()))
-from berdi.Database_Connection_Files.connect_to_database import connect_to_db
+from berdi.Database_Connection_Files.connect_to_sqlserver_database import connect_to_db
 from multiprocessing import Pool
 import time
 from sqlalchemy import text
@@ -15,13 +15,14 @@ from dotenv import load_dotenv
 
 
 REPO_ROOT = Path(__file__).parents[2].resolve()
+print(REPO_ROOT)
 RAW_DATA = "data/raw"
 
 # Load environment variables (from .env file) for the database
 load_dotenv(
     dotenv_path=REPO_ROOT / "berdi/Database_Connection_Files" / ".env", override=True
 )
-engine = connect_to_db()
+conn = connect_to_db()
 
 # Load environment variables (from .env file) for the PDF folder path
 pdf_files_folder = REPO_ROOT / RAW_DATA / "pdfs"
@@ -29,10 +30,11 @@ pdf_files_folder = REPO_ROOT / RAW_DATA / "pdfs"
 # Careful! Deletes all pages and blocks data from the DB!
 # noinspection SqlWithoutWhere
 def clear_figures_db():
-    with engine.connect() as conn:
-        result2 = conn.execute("DELETE FROM blocks;")
+    with conn:
+        cursor = conn.cursor()
+        result2 = cursor.execute("DELETE FROM [DS_TEST].BERDI.blocks;")
         print(f"Deleted {result2.rowcount} blocks.")
-        result1 = conn.execute("DELETE FROM pages;")
+        result1 = cursor.execute("DELETE FROM BERDI.pages;")
         print(f"Deleted {result1.rowcount} pages.")
 
 
@@ -51,43 +53,40 @@ def insert(pdf):
             # noinspection PyUnresolvedReferences
             doc = fitz.open(pdf_file_path)
             for page in doc:
-                figures = page.searchFor("Figure")
+                figures = page.search_for("Figure")
                 page_num = page.number + 1
 
-                with engine.connect() as conn:
-                    cursor = conn.execute(
-                        "select page_num from pages where pdfId = %s", pdf["pdfId"]
-                    )
-                page_nums = [i[0] for i in cursor.fetchall()]
+                with conn:
+                    cursor = conn.cursor()
+                    result = cursor.execute(
+                        "select page_num from [DS_TEST].BERDI.pages where pdfId = ?", (pdf["pdfId"])
+                    ).fetchall()
+                page_nums = [i[0] for i in result]
 
                 if page_num in page_nums:
                     continue
 
                 rotation = page.rotation
                 try:
-                    image_list = page.getImageList()  # get list of used images
+                    image_list = page.get_images()  # get list of used images
                 except Exception as e:
                     image_list = []
                     print("Error getting image list for:", pdf["pdfId"], page_num, e)
                 num_images = len(image_list)
-                page_text = page.getText("dict")  # list, extract the page’s text
+                page_text = page.get_text("dict")  # list, extract the page’s text
                 width = page_text["width"]
                 height = page_text["height"]
-                media_x0 = page.MediaBox[0]
-                media_y0 = page.MediaBox[1]
-                media_x1 = page.MediaBox[2]
-                media_y1 = page.MediaBox[3]
-                media_width = page.MediaBoxSize[0]
-                media_height = page.MediaBoxSize[1]
+                media_x0 = page.mediabox[0]
+                media_y0 = page.mediabox[1]
+                media_x1 = page.mediabox[2]
+                media_y1 = page.mediabox[3]
+                media_width = page.mediabox_size[0]
+                media_height = page.mediabox_size[1]
                 page_area = width * height
 
-                with engine.connect() as conn:
-                    stmt = (
-                        "INSERT INTO pages (pdfId,page_num,width,height,rotation,"
-                        "figures,num_images,media_x0,media_y0,media_x1,media_y1,"
-                        "media_width,media_height,page_area) "
-                        "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
-                    )
+                with conn:
+                    cursor = conn.cursor()
+                    stmt = "INSERT INTO [DS_TEST].BERDI.pages(pdfId,page_num,width,height,rotation,figures, num_images,media_x0,media_y0,media_x1,media_y1,media_width,media_height,page_area) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
                     params = (
                         pdf["pdfId"],
                         page_num,
@@ -104,7 +103,7 @@ def insert(pdf):
                         media_height,
                         page_area,
                     )
-                    conn.execute(stmt, params)
+                    cursor.execute(stmt, params)
 
                 for index, block in enumerate(page_text["blocks"]):
                     t = block["type"]
@@ -139,55 +138,36 @@ def insert(pdf):
                     bbox_area = bbox_width * bbox_height
                     bbox_area_image = bbox_area * t
 
-                    with engine.connect() as conn:
-                        stmt = text(
-                            "INSERT INTO blocks (pdfId,page_num,type,block_width,block_height,"
-                            "bbox_x0,bbox_y0,bbox_x1,bbox_y1,ext,color,xres,yres,bpc,block_area,"
-                            "bbox_width,bbox_height,bbox_area,bbox_area_image, block_order) "
-                            "VALUES (:pdfId,:page_num,:type,:block_width,:block_height,"
-                            ":bbox_x0,:bbox_y0,:bbox_x1,:bbox_y1,:ext,:color,:xres,:yres,:bpc,:block_area,"
-                            ":bbox_width,:bbox_height,:bbox_area,:bbox_area_image,:block_order);"
+                    with conn:
+                        cursor = conn.cursor()
+                        stmt = "INSERT INTO BERDI.blocks(pdfId,page_num,type,block_width,block_height,bbox_x0,bbox_y0,bbox_x1,bbox_y1,ext,color,xres,yres,bpc,block_area,bbox_width,bbox_height,bbox_area,bbox_area_image, block_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                        params = (
+                            pdf["pdfId"],
+                            page_num,
+                            t,
+                            block_width,
+                            block_height,
+                            bbox_x0,
+                            bbox_y0,
+                            bbox_x1,
+                            bbox_y1,
+                            ext,
+                            color,
+                            xres,
+                            yres,
+                            bpc,
+                            block_area,
+                            bbox_width,
+                            bbox_height,
+                            bbox_area,
+                            bbox_area_image,
+                            index + 1,
                         )
-
-                        params = {
-                            "pdfId": pdf["pdfId"],
-                            "page_num": page_num,
-                            "width": width,
-                            "height": height,
-                            "rotation": rotation,
-                            "figures": len(figures),
-                            "num_images": num_images,
-                            "type": t,
-                            "block_width": block_width,
-                            "block_height": block_height,
-                            "block_area": block_area,
-                            "media_x0": media_x0,
-                            "media_y0": media_y0,
-                            "media_x1": media_x1,
-                            "media_y1": media_y1,
-                            "media_width": media_width,
-                            "media_height": media_height,
-                            "bbox_x0": bbox_x0,
-                            "bbox_y0": bbox_y0,
-                            "bbox_x1": bbox_x1,
-                            "bbox_y1": bbox_y1,
-                            "ext": ext,
-                            "color": color,
-                            "xres": xres,
-                            "yres": yres,
-                            "bpc": bpc,
-                            "bbox_width": bbox_width,
-                            "bbox_height": bbox_height,
-                            "bbox_area": bbox_area,
-                            "bbox_area_image": bbox_area_image,
-                            "block_order": index + 1,
-                        }
-                        conn.execute(stmt, params)
-            with engine.connect() as conn:
-                statement = text(
-                    "UPDATE pdfs SET pagesBlocksExtracted = 1 WHERE pdfId = :pdfId;"
-                )
-                conn.execute(statement, {"pdfId": pdf["pdfId"]})
+                        cursor.execute(stmt, params)
+            with conn:
+                cursor = conn.cursor()
+                statement = "UPDATE [DS_TEST].BERDI.pdfs SET pagesBlocksExtracted = 1 WHERE pdfId = ?"
+                cursor.execute(statement, pdf["pdfId"])
             print(f"{pdf['pdfId']} is done.")
         except Exception as e:
             print(f"{pdf['pdfId']}: ERROR! {e}")
@@ -197,11 +177,12 @@ def insert(pdf):
 
 
 def insert_pages_and_blocks(multi_process=False):
-    stmt = text(
-        "SELECT pdfId, totalPages FROM pdfs WHERE pagesBlocksExtracted = 0 ORDER BY totalPages DESC;"
-    )
-    with engine.connect() as conn:
-        df = pd.read_sql(stmt, conn)
+    # stmt = text(
+    #     "SELECT pdfId, totalPages FROM [DS_TEST].BERDI.pdfs WHERE pagesBlocksExtracted = 0 ORDER BY totalPages DESC;"
+    # )
+    with conn:
+        #cursor = conn.cursor()
+        df = pd.read_sql("SELECT pdfId, totalPages FROM [DS_TEST].BERDI.pdfs WHERE pagesBlocksExtracted = 0 ORDER BY totalPages DESC;", conn)
     args = df.to_dict("records")
 
     print(f"Items to process: {len(args)}")
