@@ -5,6 +5,8 @@ DROP TABLE IF EXISTS BERDI.toc;
 DROP TABLE IF EXISTS BERDI.pages;
 DROP TABLE IF EXISTS BERDI.csvs;
 DROP TABLE IF EXISTS BERDI.blocks;
+DROP TABLE IF EXISTS BERDI.pages_normal_txt;
+DROP TABLE IF EXISTS BERDI.pages_rotated90_txt;
 DROP TABLE IF EXISTS BERDI.pdfs;
 
 DROP SCHEMA IF EXISTS BERDI;
@@ -112,4 +114,24 @@ CREATE TABLE BERDI.blocks (
 	titleFinal				TEXT,
 	PRIMARY KEY (pdfId,page_num,block_order),
 	CONSTRAINT BERDI_pdfId_and_page FOREIGN KEY (pdfId, page_num) REFERENCES BERDI.pages (pdfId, page_num) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+CREATE TABLE BERDI.pages_normal_txt (
+	pdfId					INT NOT NULL,
+	page_num				INT NOT NULL,
+	content					TEXT,
+	clean_content			TEXT,
+	PRIMARY KEY (pdfId, page_num),
+	CONSTRAINT BERDI_pdf_pages_normal_txt FOREIGN KEY (pdfId) REFERENCES BERDI.pdfs (pdfId) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+CREATE TABLE BERDI.pages_rotated90_txt (
+	pdfId					INT NOT NULL,
+	page_num				INT NOT NULL,
+	content					TEXT,
+	clean_content			TEXT,
+	PRIMARY KEY (pdfId, page_num),
+	CONSTRAINT BERDI_pdf_pages_rotated90_txt FOREIGN KEY (pdfId) REFERENCES BERDI.pdfs (pdfId) ON DELETE CASCADE ON UPDATE CASCADE
 );
