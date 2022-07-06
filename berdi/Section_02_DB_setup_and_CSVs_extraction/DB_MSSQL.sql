@@ -38,6 +38,8 @@ CREATE TABLE BERDI.toc (
 	toc_page_num			INT NOT NULL,
 	toc_pdfId				INT NOT NULL,
 	toc_title_order			INT NOT NULL,
+	loc_pdfId               INT,
+	loc_page_list           TEXT,
 	PRIMARY KEY (toc_page_num, toc_pdfId, toc_title_order),
 	CONSTRAINT BERDI_pdf_toc FOREIGN KEY (toc_pdfId) REFERENCES BERDI.pdfs (pdfId) ON DELETE CASCADE ON UPDATE CASCADE
 );
