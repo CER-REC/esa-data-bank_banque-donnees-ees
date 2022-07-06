@@ -23,7 +23,7 @@ CREATE TABLE BERDI.pdfs (
 	hearingOrder			TEXT,
 	application_name		TEXT,
 	application_title_short	TEXT,
-	short_name				TEXT,
+	short_name				VARCHAR(255) DEFAULT NULL,
 	commodity				TEXT,
 	pagesBlocksExtracted	INT DEFAULT 0,
 	folder_name				TEXT
