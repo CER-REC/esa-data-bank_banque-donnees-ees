@@ -2,7 +2,7 @@ import re
 from pathlib import Path
 
 # paths to data
-ROOT_PATH = Path(__file__).parents[1].resolve()
+ROOT_PATH = Path(__file__).parents[2].resolve()
 RAW_DATA_PATH = ROOT_PATH / "data" / "raw"
 INDEX_PATH = RAW_DATA_PATH / "index_for_projects"
 PROCESSED_DATA_PATH = ROOT_PATH / "data" / "processed"
