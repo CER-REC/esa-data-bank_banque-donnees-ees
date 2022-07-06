@@ -87,6 +87,7 @@ def project_figure_titles(project):
                             WHERE (toc_pdfId = ?) and (toc_page_num = ?) and (toc_title_order = ?);'''
                         params = [toc_id, toc_page, title_order]
                         result = cursor.execute(stmt, params)
+                        cursor.commit()
                     if result.rowcount != 1:
                         print('could not assign 0 count to: ', toc_id, toc_page, title_order)
             return True, buf.getvalue()
@@ -226,6 +227,7 @@ def figure_checker(args):
                         WHERE (toc_pdfId = ?) and (toc_page_num = ?) and (toc_title_order = ?);'''
             params = [count, doc_id, json.dumps(final_list), toc_id, toc_page, toc_order]
             result = cursor.execute(stmt, params)
+            cursor.commit()
             if result.rowcount != 1:
                 print('could not assign TOC count to: ', toc_id, toc_page, toc_order)
 
@@ -343,6 +345,7 @@ def find_tag_title_table(data_id):
                                         (page = ?) and (tableNumber = ?);'''
                             params = [title, data_id, page_num, table_num]
                             result = cursor.execute(stmt, params)
+                            cursor.commit()
                             if result.rowcount != 1:
                                 print('Did not go to database:', data_id, '_', page_num, '_', table_num, '_', i+1, ':', title,
                                       ': error:', result)
@@ -412,6 +415,7 @@ def find_tag_title_fig(data_id):
                         #params = {"pdf_id": data_id, "page_num": page_num, "block_num": block_num, "title_tag": title}
                         params = [title, data_id, page_num, block_num]
                         result = cursor.execute(stmt, params)
+                        cursor.commit()
                         if result.rowcount != 1:
                             print('Did not go to database:', data_id, '_', page_num, '_', block_num, '_', i+1, ':', title,
                                   ': error:', result)
@@ -480,6 +484,7 @@ def table_checker(args):
                 #params = {"count": count, "loc_id": doc_id, "loc_pages": json.dumps(p_list), "pdf_id": toc_id, "page_num": toc_page, "title_order": toc_order}
                 params = [count, doc_id, json.dumps(p_list), toc_id, toc_page, toc_order]
                 result = cursor.execute(stmt, params)
+                cursor.commit()
                 if result.rowcount != 1:
                     print('could not assign TOC count to: ', toc_id, toc_page, toc_order)
         conn.close()
@@ -560,6 +565,7 @@ def project_table_titles(project):
                         #params = {"pdf_id": toc_id, "page_num": toc_page, "title_order": title_order}
                         params = [toc_id, toc_page, title_order]
                         result = cursor.execute(stmt, params)
+                        cursor.commit()
                     if result.rowcount != 1:
                         print('could not assign 0 count to: ', toc_id, toc_page, title_order)
             return True, buf.getvalue()
@@ -603,6 +609,7 @@ def find_toc_title_table(data_id):
                         #params = {"pdf_id": data_id, "page_num": page_num, "table_num": table_num, "title_toc": title}
                         params = [title, data_id, page_num, table_num]
                         result = cursor.execute(stmt, params)
+                        cursor.commit()
                         if result.rowcount != 1:
                             print('Did not go to database:', data_id, '_', page_num, '_', table_num, '_', order, ':', title,
                                   ': error:', result)
@@ -655,6 +662,7 @@ def find_toc_title_fig(data_id):
                     #params = {"pdf_id": data_id, "page_num": page_num, "table_num": table_num, "title_toc": title}
                     params = [title, data_id, page_num, table_num]
                     result = cursor.execute(stmt, params)
+                    cursor.commit()
                     if result.rowcount != 1:
                         print('Did not go to database:', data_id, '_', page_num, '_', table_num, '_', order, ':', title,
                               ': error:', result)
@@ -711,6 +719,7 @@ def find_final_title_table(data_id):
                     #params = {"pdf_id": data_id, "page_num": page_num, "table_num": table_num, "title": title}
                     params = [title, data_id, page_num, table_num]
                     result = cursor.execute(stmt, params)
+                    cursor.commit()
                     if result.rowcount != 1:
                         print('Could not find:', data_id, '_', page_num, '_', table_num, ':', title, ': error:', result)
                     prev_title = title
@@ -763,6 +772,7 @@ def find_final_title_fig(data_id):
                             (page = ?) and (tableNumber = ?);'''
                 params = [title, data_id, page_num, table_num]
                 result = cursor.execute(stmt, params)
+                cursor.commit()
                 if result.rowcount != 1:
                     print('Could not find:', data_id, '_', page_num, '_', table_num, ':', title, ': error:', result)
                 prev_title = title
