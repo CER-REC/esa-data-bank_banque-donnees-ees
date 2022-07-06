@@ -67,11 +67,11 @@ if __name__ == "__main__":
 
             # delete any existing TOC from this document
             stmt = '''DELETE FROM [DS_TEST].[BERDI].toc WHERE toc_pdfId = ?;'''
-            params = {doc_id}
+            params = [doc_id]
             result = cursor.execute(stmt, params)
 
             # get text of this document
-            params = {doc_id}
+            params = [doc_id]
             stmt = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_normal_txt
                 WHERE (pdfId = ?);'''
             text_df = pd.read_sql_query(stmt, conn, params=params, index_col="page_num")
@@ -94,18 +94,12 @@ if __name__ == "__main__":
                     if type in constants.accepted_toc:  # if accepted type
                         stmt = '''INSERT INTO [DS_TEST].[BERDI].toc (assigned_count, title_type, titleTOC, page_name,
                             toc_page_num, toc_pdfId, toc_title_order)
-                            VALUE (null, :type, :title, :page_name, :page_num, :pdfId, :order);'''
-                        params = {
-                            "type": type,
-                            "title": title,
-                            "page_name": page_name,
-                            "page_num": page_num,
-                            "pdfId": doc_id,
-                            "order": i + 1,
-                        }
+                            VALUES (null, ?,?,?,?,?,?);'''
+                        params = [type, title, page_name, page_num, doc_id, i+1]
                         result = cursor.execute(stmt, params)
                         if result.rowcount != 1:
                             print("Did not go to database:", doc_id, page_num, toc)
+                        cursor.commit()
         conn.close()
 
     # get page numbers for all the figures found in TOC
