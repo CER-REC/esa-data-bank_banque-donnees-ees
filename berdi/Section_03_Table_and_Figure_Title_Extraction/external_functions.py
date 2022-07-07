@@ -14,6 +14,7 @@ import json
 import numpy as np
 import sys
 
+#sys.path.append(str(Path(__file__).parents[2].resolve()))
 from berdi.Database_Connection_Files.connect_to_sqlserver_database import connect_to_db
 import berdi.Section_03_Table_and_Figure_Title_Extraction.constants as constants
 
@@ -118,6 +119,8 @@ def figure_checker(args):
         stmt = '''SELECT page FROM [DS_TEST].[BERDI].csvs WHERE (pdfId = ?)
                     and (titleFinal = '' or titleFinal is null) GROUP BY page;'''
         params = [doc_id]
+        print(stmt)
+        print(params)
         extra_pages_df = pd.read_sql_query(stmt, conn, params=params)
         extra_pages = [p for p in extra_pages_df['page'].tolist() if p not in image_pages] # list of extra pages to check
 
@@ -281,11 +284,13 @@ def find_tag_title_table(data_id):
             table_pages = df['page'].unique().tolist()
 
             if len(table_pages) > 0:
-                params = [data_id, table_pages]
+                params = [data_id]
                 stmt = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_normal_txt
-                            WHERE (pdfId = ?) and (page_num in ?);'''
+            WHERE (pdfId = ?) and page_num in {};'''.format('({})'.format(','.join([str(p) for p in table_pages])))
                 stmt_rotated = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_rotated90_txt
-                                    WHERE (pdfId = ?) and (page_num in ?);'''
+            WHERE (pdfId = ?) and page_num in {};'''.format('({})'.format(','.join([str(p) for p in table_pages])))
+                # stmt_rotated = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_rotated90_txt
+                #                     WHERE (pdfId = ?) and (page_num in ?);'''
                 text_df = pd.read_sql_query(stmt, conn, params=params, index_col='page_num')
                 text_rotated_df = pd.read_sql_query(stmt_rotated, conn, params=params, index_col='page_num')
 
@@ -343,7 +348,7 @@ def find_tag_title_table(data_id):
                             table_num = page_tables.loc[i+1, 'tableNumber']
                             stmt = '''UPDATE [DS_TEST].[BERDI].csvs SET titleTag = ? WHERE (pdfId = ?) and
                                         (page = ?) and (tableNumber = ?);'''
-                            params = [title, data_id, page_num, table_num]
+                            params = [title, data_id, page_num, int(table_num)]
                             result = cursor.execute(stmt, params)
                             cursor.commit()
                             if result.rowcount != 1:
@@ -375,8 +380,8 @@ def find_tag_title_fig(data_id):
             # df['Real Order'] = df.groupby(['page'])['tableNumber'].rank()
 
             # get text for this document
-            path = constants.pickles_path + str(data_id) + '.pkl'
-            path_rotated = constants.pickles_rotated_path + str(data_id) + '.pkl'
+            path = constants.pickles_path + '/' + str(data_id) + '.pkl'
+            path_rotated = constants.pickles_rotated_path + '/' + str(data_id) + '.pkl'
             with open(path, 'rb') as f:
                 data = pickle.load(f)
             soup = BeautifulSoup(data['content'], 'lxml')
@@ -413,7 +418,7 @@ def find_tag_title_fig(data_id):
                         stmt = '''UPDATE [DS_TEST].[BERDI].blocks SET titleTag = ? WHERE (pdfId = ?) and
                                     (page_num = ?) and (block_order = ?);'''
                         #params = {"pdf_id": data_id, "page_num": page_num, "block_num": block_num, "title_tag": title}
-                        params = [title, data_id, page_num, block_num]
+                        params = [title, data_id, page_num, int(block_num)] ## numpy data type error before
                         result = cursor.execute(stmt, params)
                         cursor.commit()
                         if result.rowcount != 1:
@@ -449,11 +454,19 @@ def table_checker(args):
         count = 0
         if len(table_pages) > 0:
             #params = {"pdf_id": doc_id, "table_list": table_pages}
-            params = [doc_id, table_pages]
-            stmt = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_normal_txt
-                        WHERE (pdfId = ?) and (page_num in ?);'''
+            params = [doc_id]
+            # stmt = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_normal_txt
+            #             WHERE (pdfId = ?) and (page_num in ?);'''
+
+            stmt = stmt = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_normal_txt
+            WHERE (pdfId = ?) and page_num in ({});'''.format('.'.join([str(p) for p in table_pages]))
+
+            # stmt_rotated = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_rotated90_txt
+            #                     WHERE (pdfId = ?) and (page_num in ?);'''
+
             stmt_rotated = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_rotated90_txt
-                                WHERE (pdfId = ?) and (page_num in ?);'''
+            WHERE (pdfId = ?) and page_num in ({});'''.format('.'.join([str(p) for p in table_pages]))
+
             text_df = pd.read_sql_query(stmt, conn, params=params, index_col='page_num')
             text_rotated_df = pd.read_sql_query(stmt_rotated, conn, params=params, index_col='page_num')
 

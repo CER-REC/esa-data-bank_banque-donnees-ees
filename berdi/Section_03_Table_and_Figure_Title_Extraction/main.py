@@ -36,7 +36,7 @@ conn = connect_to_db()
 
 get_toc = 1  # need to go through all docs to create lists of tables and figures in csvs
 toc_figure_titles = 1  # assign page number to TOC figure titles
-toc_table_titles = 1  # assign page number to TOC table titles
+toc_table_titles = 1 # assign page number to TOC table titles
 
 do_tag_title_table = 1  # assign table titles to each table using text search method
 do_toc_title_table = 1  # assign table titles to each table using TOC method
@@ -69,6 +69,7 @@ if __name__ == "__main__":
             stmt = '''DELETE FROM [DS_TEST].[BERDI].toc WHERE toc_pdfId = ?;'''
             params = [doc_id]
             result = cursor.execute(stmt, params)
+            cursor.commit()
 
             # get text of this document
             params = [doc_id]
@@ -104,8 +105,8 @@ if __name__ == "__main__":
 
     # get page numbers for all the figures found in TOC
     if toc_figure_titles:
-        # for project in projects:
-        #     project_figure_titles(project)
+        for project in projects:
+            project_figure_titles(project)
         with Pool() as pool:
             results = pool.map(project_figure_titles, projects, chunksize=1)
         with open("fig_errors.txt", "w", encoding="utf-8") as f:
