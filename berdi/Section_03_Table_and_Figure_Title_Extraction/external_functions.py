@@ -14,7 +14,6 @@ import json
 import numpy as np
 import sys
 
-#sys.path.append(str(Path(__file__).parents[2].resolve()))
 from berdi.Database_Connection_Files.connect_to_sqlserver_database import connect_to_db
 import berdi.Section_03_Table_and_Figure_Title_Extraction.constants as constants
 
@@ -119,36 +118,37 @@ def figure_checker(args):
         stmt = '''SELECT page FROM [DS_TEST].[BERDI].csvs WHERE (pdfId = ?)
                     and (titleFinal = '' or titleFinal is null) GROUP BY page;'''
         params = [doc_id]
-        print(stmt)
-        print(params)
+    
         extra_pages_df = pd.read_sql_query(stmt, conn, params=params)
         extra_pages = [p for p in extra_pages_df['page'].tolist() if p not in image_pages] # list of extra pages to check
 
         # get text
+        image_pages_str = ','.join([str(p) for p in image_pages])
+        extra_pages_str = ','.join([str(p) for p in extra_pages])
         if len(extra_pages) > 0 and len(image_pages) > 0:
-            params = [doc_id, image_pages, extra_pages]
+            params = [doc_id]
             stmt = '''SELECT page_num, clean_content FROM [DS_TEST].[BERDI].pages_normal_txt
-                        WHERE (pdfId = ?) and (page_num in ? or page_num in ?);'''
+                        WHERE (pdfId = ?) and (page_num in ({}) or page_num in ({}));'''.format(image_pages_str, extra_pages_str)
             stmt_rotated = '''SELECT page_num, clean_content FROM [DS_TEST].[BERDI].pages_rotated90_txt
-                                WHERE (pdfId = ?) and (page_num in ? or page_num in ?);'''
+                                WHERE (pdfId = ?) and (page_num in ({}) or page_num in ({}));'''.format(image_pages_str, extra_pages_str)
             text_df = pd.read_sql_query(stmt, conn, params=params, index_col='page_num')
             text_rotated_df = pd.read_sql_query(stmt_rotated, conn, params=params, index_col='page_num')
 
         elif len(image_pages) > 0:
-            params = [doc_id, image_pages]
+            params = [doc_id]
             stmt = '''SELECT page_num, clean_content FROM [DS_TEST].[BERDI].pages_normal_txt
-                        WHERE (pdfId = ?) and (page_num in ?);'''
+                        WHERE (pdfId = ?) and (page_num in ({}));'''.format(image_pages_str)
             stmt_rotated = '''SELECT page_num, clean_content FROM [DS_TEST].[BERDI].pages_rotated90_txt
-                                WHERE (pdfId = ?) and (page_num in ?);"'''
+                                WHERE (pdfId = ?) and (page_num in ({}));"'''.format(image_pages_str)
             text_df = pd.read_sql_query(stmt, conn, params=params, index_col='page_num')
             text_rotated_df = pd.read_sql_query(stmt_rotated, conn, params=params, index_col='page_num')
 
         elif len(extra_pages) > 0:
-            params = [doc_id, extra_pages]
+            params = [doc_id]
             stmt = '''SELECT page_num, clean_content FROM [DS_TEST].[BERDI].pages_normal_txt
-                        WHERE (pdfId = ?) and (page_num in ?);'''
+                        WHERE (pdfId = ?) and (page_num in ({}));'''.format(extra_pages_str)
             stmt_rotated = '''SELECT page_num, clean_content FROM [DS_TEST].[BERDI].pages_rotated90_txt
-                                WHERE (pdfId = ?) and (page_num in ?);'''
+                                WHERE (pdfId = ?) and (page_num in ({}));'''.format(extra_pages_str)
             text_df = pd.read_sql_query(stmt, conn, params=params, index_col='page_num')
             text_rotated_df = pd.read_sql_query(stmt_rotated, conn, params=params, index_col='page_num')
 
@@ -459,13 +459,14 @@ def table_checker(args):
             #             WHERE (pdfId = ?) and (page_num in ?);'''
 
             stmt = stmt = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_normal_txt
-            WHERE (pdfId = ?) and page_num in ({});'''.format('.'.join([str(p) for p in table_pages]))
+            WHERE (pdfId = ?) and page_num in ({});'''.format(','.join([str(p) for p in table_pages]))
 
             # stmt_rotated = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_rotated90_txt
             #                     WHERE (pdfId = ?) and (page_num in ?);'''
 
             stmt_rotated = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_rotated90_txt
-            WHERE (pdfId = ?) and page_num in ({});'''.format('.'.join([str(p) for p in table_pages]))
+            WHERE (pdfId = ?) and page_num in ({});'''.format(','.join([str(p) for p in table_pages]))
+
 
             text_df = pd.read_sql_query(stmt, conn, params=params, index_col='page_num')
             text_rotated_df = pd.read_sql_query(stmt_rotated, conn, params=params, index_col='page_num')
@@ -574,7 +575,7 @@ def project_table_titles(project):
                     with conn:
                         cursor = conn.cursor()
                         stmt = '''UPDATE [DS_TEST].[BERDI].toc SET assigned_count = 0, loc_pdfId = null, loc_page_list = null
-                            WHERE (toc_pdfId = :pdf_id) and (toc_page_num = :page_num) and (toc_title_order = :title_order);'''
+                            WHERE (toc_pdfId = ?) and (toc_page_num = ?) and (toc_title_order = ?);'''
                         #params = {"pdf_id": toc_id, "page_num": toc_page, "title_order": title_order}
                         params = [toc_id, toc_page, title_order]
                         result = cursor.execute(stmt, params)
@@ -617,8 +618,8 @@ def find_toc_title_table(data_id):
                         title = df_all_titles.loc[ts[order-1], 'titleTOC']
                         # update the db
                         cursor = conn.cursor()
-                        stmt = '''UPDATE [DS_TEST].[BERDI].csvs SET titleTOC = :title_toc WHERE (pdfId = :pdf_id) and
-                                    (page = :page_num) and (tableNumber = :table_num);'''
+                        stmt = '''UPDATE [DS_TEST].[BERDI].csvs SET titleTOC = ? WHERE (pdfId = ?) and
+                                    (page = ?) and (tableNumber = ?);'''
                         #params = {"pdf_id": data_id, "page_num": page_num, "table_num": table_num, "title_toc": title}
                         params = [title, data_id, page_num, table_num]
                         result = cursor.execute(stmt, params)
@@ -670,8 +671,8 @@ def find_toc_title_fig(data_id):
                     title = df_titles.loc[order-1, 'Name']
                     # update the db
                     cursor = conn.cursor()
-                    stmt = '''UPDATE [DS_TEST].[BERDI].csvs SET titleTOC = :title_toc WHERE (pdfId = :pdf_id) and
-                                (page = :page_num) and (tableNumber = :table_num);'''
+                    stmt = '''UPDATE [DS_TEST].[BERDI].csvs SET titleTOC = ? WHERE (pdfId = ?) and
+                                (page = ?) and (tableNumber = ?);'''
                     #params = {"pdf_id": data_id, "page_num": page_num, "table_num": table_num, "title_toc": title}
                     params = [title, data_id, page_num, table_num]
                     result = cursor.execute(stmt, params)
@@ -727,8 +728,8 @@ def find_final_title_table(data_id):
                             title = prev_title
                     # update database
                     cursor = conn.cursor()
-                    stmt = '''UPDATE [DS_TEST].[BERDI].csvs SET titleFinal = :title WHERE (pdfId = :pdf_id) and
-                                (page = :page_num) and (tableNumber = :table_num);'''
+                    stmt = '''UPDATE [DS_TEST].[BERDI].csvs SET titleFinal = ? WHERE (pdfId = ?) and
+                                (page = ?) and (tableNumber = ?);'''
                     #params = {"pdf_id": data_id, "page_num": page_num, "table_num": table_num, "title": title}
                     params = [title, data_id, page_num, table_num]
                     result = cursor.execute(stmt, params)

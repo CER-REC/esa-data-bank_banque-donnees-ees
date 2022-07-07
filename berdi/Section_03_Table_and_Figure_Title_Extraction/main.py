@@ -56,7 +56,6 @@ if __name__ == "__main__":
         all_projects = pd.read_sql_query(stmt, conn)
     projects = all_projects["short_name"].unique()
     list_ids = all_projects["pdfId"].tolist()
-    print(all_projects)
 
     # now get TOC from each document and create a list of all figs and tables (that were found in TOC's)
     if get_toc:
