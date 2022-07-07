@@ -34,20 +34,20 @@ load_dotenv(
 )
 conn = connect_to_db()
 
-get_toc = 1  # need to go through all docs to create lists of tables and figures in csvs
-toc_figure_titles = 1  # assign page number to TOC figure titles
-toc_table_titles = 1 # assign page number to TOC table titles
+get_toc = 0  # need to go through all docs to create lists of tables and figures in csvs
+toc_figure_titles = 0  # assign page number to TOC figure titles
+toc_table_titles = 0 # assign page number to TOC table titles
 
-do_tag_title_table = 1  # assign table titles to each table using text search method
-do_toc_title_table = 1  # assign table titles to each table using TOC method
-do_final_title_table = 1  # replace continued tables and create final table title
+do_tag_title_table = 0  # assign table titles to each table using text search method
+do_toc_title_table = 0  # assign table titles to each table using TOC method
+do_final_title_table = 0  # replace continued tables and create final table title
 
-do_tag_title_fig = 1  # assign figure titles to each figure using text search method
-do_toc_title_fig = 1  # assign figure titles to each figure using TOC method
-do_final_title_fig = 1  # replace continued figures and create final figure title
+do_tag_title_fig = 0  # assign figure titles to each figure using text search method
+do_toc_title_fig = 0  # assign figure titles to each figure using TOC method
+do_final_title_fig = 0  # replace continued figures and create final figure title
 
-create_tables_csv = 0
-create_figs_csv = 0
+create_tables_csv = 1
+create_figs_csv = 1
 
 if __name__ == "__main__":
     # get list of all documents, read from pdfs
@@ -197,9 +197,11 @@ if __name__ == "__main__":
     if create_tables_csv:
         # write to all_tables-final.csv from csvs
         with conn:
+            print(conn)
             stmt = '''SELECT csvFullPath, pdfId, page, tableNumber, topRowJson, titleTag, titleTOC, titleFinal FROM [DS_TEST].[BERDI].csvs 
                 WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78);'''
             df = pd.read_sql_query(stmt, conn)
+            print(df.head())
         df.to_csv(
             constants.save_dir + "all_tables-final.csv",
             index=False,
@@ -210,6 +212,7 @@ if __name__ == "__main__":
     if create_figs_csv:
         # get final figs csv files
         with conn:
+            print(conn)
             stmt = '''SELECT toc.titleTOC, toc.page_name, toc.toc_page_num, toc.toc_pdfId, toc.toc_title_order, toc.loc_pdfId, toc.loc_page_list, pdfs.short_name
                 FROM [DS_TEST].[BERDI].toc LEFT JOIN [DS_TEST].[BERDI].pdfs ON toc.toc_pdfId = pdfs.pdfId WHERE title_type='Figure'
                 ORDER BY pdfs.short_name, toc.toc_pdfId, toc.toc_page_num, toc.toc_title_order;'''
