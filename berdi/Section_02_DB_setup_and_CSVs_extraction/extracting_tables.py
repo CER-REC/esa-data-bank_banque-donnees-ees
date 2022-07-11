@@ -17,6 +17,7 @@ from dotenv import load_dotenv
 
 
 REPO_ROOT = Path(__file__).parents[2].resolve()
+print(REPO_ROOT)
 RAW_DATA = "data/raw"
 PROCESSED_DATA = "data/processed"
 
