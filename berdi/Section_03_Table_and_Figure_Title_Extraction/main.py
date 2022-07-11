@@ -203,7 +203,7 @@ if __name__ == "__main__":
             df = pd.read_sql_query(stmt, conn)
             print(df.head())
         df.to_csv(
-            constants.save_dir + "all_tables-final.csv",
+            constants.save_dir + "/" + "all_tables-final.csv",
             index=False,
             encoding="utf-8-sig",
         )
@@ -256,7 +256,7 @@ if __name__ == "__main__":
 
         # df.to_csv(constants.save_dir + 'final_figs_new.csv', index=False, encoding='utf-8-sig')
         df_pivoted.to_csv(
-            constants.save_dir + "final_figs_pivoted_new.csv",
+            constants.save_dir + "/" + "final_figs_pivoted_new.csv",
             index=False,
             encoding="utf-8-sig",
         )
