@@ -13,7 +13,7 @@ REPO_ROOT = Path(__file__).parents[2].resolve()
 RAW_DATA_PATH = REPO_ROOT / "data" / "raw"
 INTERMEDIATE_INDEX_PATH = REPO_ROOT / "data" / "interim" / "Intermediate_Index_Files"
 projects_path = str(INTERMEDIATE_INDEX_PATH / "Phase3_Index_of_PDFs_for_Major_Projects_with_ESAs.csv")
-save_dir = REPO_ROOT / "data" / "output"
+#save_dir = REPO_ROOT / "data" / "output"
 
 # Load environment variables (from .env file) for the database
 load_dotenv(
@@ -22,9 +22,9 @@ load_dotenv(
 conn = connect_to_db()
 
 
-table_info_csv_path = str(save_dir / "all_tables-final.csv")
-df_table_info = pd.read_csv(table_info_csv_path, encoding = 'cp1252')
-df_table_info = df_table_info[df_table_info['titleFinal'].notna()][['csvFullPath', 'pdfId', 'page', 'tableNumber', 'titleFinal']]
+table_info_csv_path = str(INTERMEDIATE_INDEX_PATH / "all_tables-final.csv")
+df_table_info = pd.read_csv(table_info_csv_path, encoding = 'utf-8-sig')
+df_table_info = df_table_info[df_table_info['titleFinal'].notna()][['csvFileName', 'csvFullPath', 'pdfId', 'page', 'tableNumber', 'titleFinal']]
 
 # Get the interim application index file (with columns topics, PDF Outline, PDF Size (bytes), PDF Page Count)
 df_app = pd.read_csv(projects_path)
@@ -33,7 +33,7 @@ df_app = pd.read_csv(projects_path)
 # Organize pdf attributes
 ['Application Name', 'Application Short Name', 'Application Filing Date',
  'Company Name', 'Commodity',
- 'File Name', 'ESA Folder URL', 'Document Number', 'PDF Download URL',
+ 'File Name', 'ESA Folder URL', 'Document Number', 'Data ID', 'PDF Download URL',
  'Application Type', 'Pipeline Location', 'Hearing Order', 'Consultant Name',
  'Pipeline Status', 'Regulatory Instrument(s)', 'Application URL', 'Decision URL',
  'ESA Section(s)', 'ESA Section(s) Index', 'ESA Section(s) Topics',
@@ -58,7 +58,7 @@ df_table_index = df_table_app[['Title', 'Application Name', 'Application Short N
                  'Company Name', 'Commodity', 'File Name', 'ESA Folder URL', 'Document Number', 'Data ID', 
                  'PDF Download URL', 'Application Type', 'Pipeline Location', 'Hearing Order', 'Consultant Name',
                  'Pipeline Status', 'Regulatory Instrument(s)', 'Application URL', 'Decision URL',
-                 'ESA Section(s)', 'ESA Section(s) Index', 'Topics', 'PDF Page Number', 'tableNumber','PDF Size (bytes)', 'PDF Page Count',
+                 'ESA Section(s)', 'ESA Section(s) Index', 'Topics', 'PDF Page Number', 'tableNumber', 'csvFileName', 'PDF Size (bytes)', 'PDF Page Count',
                 'Outline Present']]
 
 # Get Figure Titles
@@ -88,7 +88,7 @@ df_table_fig_index = df_table_index.append(df_figure_index, ignore_index=True)
 
 df_table_fig_index['Content Type'] = ['Table' if x.lower().startswith('table') else 'Figure' for x in df_table_fig_index['Title']]
 
-df_table_fig_index.to_csv(
+df_table_fig_index.to_csv(str(INTERMEDIATE_INDEX_PATH) + "/"
             "table_figs_index.csv",
             index=False,
             encoding="utf-8-sig",
