@@ -197,11 +197,9 @@ if __name__ == "__main__":
     if create_tables_csv:
         # write to all_tables-final.csv from csvs
         with conn:
-            print(conn)
-            stmt = '''SELECT csvFullPath, pdfId, page, tableNumber, topRowJson, titleTag, titleTOC, titleFinal FROM [DS_TEST].[BERDI].csvs 
+            stmt = '''SELECT csvFileName, csvFullPath, pdfId, page, tableNumber, topRowJson, titleTag, titleTOC, titleFinal FROM [DS_TEST].[BERDI].csvs 
                 WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78);'''
             df = pd.read_sql_query(stmt, conn)
-            print(df.head())
         df.to_csv(
             constants.save_dir + "/" + "all_tables-final.csv",
             index=False,
@@ -212,7 +210,6 @@ if __name__ == "__main__":
     if create_figs_csv:
         # get final figs csv files
         with conn:
-            print(conn)
             stmt = '''SELECT toc.titleTOC, toc.page_name, toc.toc_page_num, toc.toc_pdfId, toc.toc_title_order, toc.loc_pdfId, toc.loc_page_list, pdfs.short_name
                 FROM [DS_TEST].[BERDI].toc LEFT JOIN [DS_TEST].[BERDI].pdfs ON toc.toc_pdfId = pdfs.pdfId WHERE title_type='Figure'
                 ORDER BY pdfs.short_name, toc.toc_pdfId, toc.toc_page_num, toc.toc_title_order;'''
