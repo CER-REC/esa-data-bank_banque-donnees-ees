@@ -11,7 +11,7 @@ projects_path = str(INDEX_PATH / "Index 2 - PDFs for Major Projects with ESAs.xl
 pickles_path = str(PROCESSED_DATA_PATH / "pickle_files")
 pickles_rotated_path = str(PROCESSED_DATA_PATH / "pickle_files_rotated")
 csv_path = str(PROCESSED_DATA_PATH / "csvs" / "all_csvs")
-save_dir = str(ROOT_PATH / "data" / "output")
+save_dir = str(ROOT_PATH / "data" / "interim" / "Intermediate_Index_Files")
 
 # regexes
 empty_line_xml = re.compile(r"<\/p>\s*<p ?\/?>")
