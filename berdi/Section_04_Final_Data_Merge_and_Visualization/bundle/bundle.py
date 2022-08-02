@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import multiprocessing
 
-from Codes.Section_04_Final_Data_Merge_and_Visualization.bundle.bundle_utilites \
+from berdi.Section_04_Final_Data_Merge_and_Visualization.bundle.bundle_utilites \
     import bundle_for_project, bundle_for_table
 
 
