@@ -10,7 +10,7 @@ df_index['Download folder name'] = 'snclr'
 df_index_table = df_index[df_index['Content Type'] == 'Table']  # 473, 55
 
 # #################### add Good Quality column ##########################
-# add columns
+# read in csv files and calculate row count, column count, number of null cells and number of cells with 'cid'
 for col in ['csv_row_count', 'csv_column_count', 'csv_null_cell_count', 'csv_cid_cell_count']:
     df_index_table[col] = np.nan
 
@@ -33,6 +33,9 @@ for index, (csv_file_name) in df_index_table[['csvFileName']].itertuples():
         continue
 
 # Calculate qa metrics
+# - single row or col: if a csv file has only one row or one column
+# - blank cell percent: percentage of empty cells
+# - cid cell percent: percentage of cells with 'cid'
 df_index_table['qa_single_row_or_col'] = df_index_table[['csv_row_count', 'csv_column_count']].apply(
     lambda x: x['csv_row_count'] == 1 or x['csv_column_count'] == 1, axis=1
 )
@@ -43,7 +46,8 @@ df_index_table['qa_cid_cell_percent'] = df_index_table[['csv_row_count', 'csv_co
     lambda x: round(100 * x['csv_cid_cell_count'] / (x['csv_row_count'] * x['csv_column_count'] - x['csv_null_cell_count']), 2), axis=1
 )
 
-# Calculate duplicates
+# Calculate qa metric:
+# - duplicate: if this csv file is a duplicate (there are other csv files with the same title on the same pdf page)
 df_table_count = df_index_table.groupby(['Title', 'Data ID', 'PDF Page Number'])['csvFileName'].count()\
     .reset_index().rename(columns={'csvFileName': 'count'})
 df_duplicate = df_table_count[df_table_count['count'] > 1]
@@ -52,6 +56,7 @@ df_index_table = df_index_table.merge(df_duplicate, how='left', on=['Title', 'Da
 df_index_table['qa_duplicate'] = df_index_table['count'].notna()
 
 # Calculate metrics at PDF level
+# i.e. single_%: the percentage of csv files with  one row or one column out of all the csv files extracted from the PDF
 df_index_table['qa_blank'] = df_index_table['qa_blank_cell_percent'] > 72
 df_index_table['qa_cid'] = df_index_table['qa_cid_cell_percent'] > 80
 df_index_table['qa_any'] = df_index_table[['qa_blank', 'qa_cid', 'qa_duplicate', 'qa_single_row_or_col']].any(axis=1)
@@ -67,6 +72,7 @@ df_pdf['duplicate_%'] = df_pdf[['qa_duplicate', 'total_csv']].apply(lambda x: 10
 df_pdf['any_%'] = df_pdf[['qa_any', 'total_csv']].apply(lambda x: 100*round(x['qa_any']/x['total_csv'], 2), axis=1)
 
 # df_pdf.sort_values('any_%', ascending=False)
+# We will mark the csv files from one PDF as bad quality if the PDF generated over 20% problematic csv files
 bad_pdf_lst = df_pdf[df_pdf['any_%'] > 20]['PDF Download URL'].tolist()
 df_index['Good Quality'] = df_index.apply(lambda x:
                                           x['Content Type'] == 'Table' and x['PDF Download URL'] not in bad_pdf_lst, axis=1)
@@ -75,6 +81,7 @@ df_index[df_index['Good Quality'] == True].shape  # 378, 56
 
 # #################### rename csv file names ##########################
 df_index_table_good_quality = df_index[df_index['Good Quality'] == True]
+# Create a column csvFileNameRenamed for the new csv file name
 df_index_table_good_quality['csvFileNameRenamedTemp'] = \
     df_index_table_good_quality.apply(lambda x: x['Download folder name'] + '_' +
                                       x['Title'].lower().replace('(', '').replace(')', '').replace(' ', '-')\
@@ -87,19 +94,20 @@ df_index_table_good_quality['csvFileNameRenamed'] = \
                                                 '_pg-' + str(x['PDF Page Number']) +
                                                 '_num-du-doc-' + str(x['Document Number']) + '.csv', axis=1)
 
-csv_folder = 'data/sinclair/csv_sinclair/'
+csv_folder = 'data/sinclair/csv_sinclair/'  # the folder where the original csv files are stored
 for index, row in df_index_table_good_quality.iterrows():
     if os.path.isfile(csv_folder + row['csvFileName']):
         shutil.move(csv_folder + row['csvFileName'], csv_folder + row['csvFileNameRenamed'])
 
-df_index_all = pd.concat([df_index_table_good_quality,   # 378, 60
-                     df_index[df_index['Content Type'] != 'Table'],  # 29, 57
-                     df_index[(df_index['Content Type'] == 'Table') & (df_index['Good Quality'] == False)]])  # 95, 57
+df_index_all = pd.concat([df_index_table_good_quality,   # 378, 60  good quality table
+                          df_index[df_index['Content Type'] != 'Table'],  # 29, 57  figures & alignment sheets
+                          df_index[(df_index['Content Type'] == 'Table') & (df_index['Good Quality'] == False)]]
+                         # 95, 57 bad quality table
+                         )
 
 df_index_all.to_csv('data/sinclair/index_csv_renamed.csv', index=False)
 
-# #################################### create bundles ####################################
-# Add column: Page Count
+# #################################### Preprocess before creating bundles ####################################
 # Remove columns
 # o	Document Number
 # o	Regulatory Instrument(s)
@@ -127,7 +135,7 @@ new_folder_tables = os.path.join(new_folder, 'tables')
 if not os.path.exists(new_folder_tables):
     os.mkdir(new_folder_tables)
 
-# Create a temporary column in the index dataframe as table identification
+# Create a temporary column in the index dataframe as table identification - Table ID
 df_index_all = pd.read_csv('data/sinclair/index_csv_renamed.csv')
 df_index_all = df_index_all.drop(columns=['ID'])
 df_index_all = df_index_all.rename(columns={'Application Type (NEB Act)': 'Application Type'})
@@ -143,6 +151,7 @@ df_index_all_table = df_index_all_table.merge(df_table_id, left_on=['Title', 'Da
 df_index_all_table_good = df_index_all_table[df_index_all_table['Good Quality'] == True]
 df_index_all_table_good['Project Download Path'] = df_index_all_table_good['Download folder name']\
     .apply(lambda x: '/projects/{}.zip'.format(x))
+
 # Add a new column - Table Download Path
 df_table_filename = df_index_all_table_good.sort_values(['PDF Page Number'])\
     .groupby('Table ID')['csvFileNameRenamed'].first()\
@@ -152,7 +161,8 @@ df_table_filename['Table Name'] = df_table_filename['Table Name']\
 df_index_all_table_good = df_index_all_table_good.merge(df_table_filename, left_on='Table ID', right_on='Table ID')
 df_index_all_table_good['Table Download Path'] = df_index_all_table_good['Table Name']\
     .apply(lambda x: '/tables/{}.zip'.format(x))
-# Columns
+
+# Columns: the data of these columns will be added to read files and project index files
 columns = ['Title',
            'Content Type',
            'Application Name',
@@ -183,12 +193,14 @@ df_index_all_table_good['Hearing order'] = None
 import multiprocessing
 from berdi.Section_04_Final_Data_Merge_and_Visualization.bundle.bundle_utilites import bundle_for_project, bundle_for_table
 
+# Create project download zip files
 args = [(df_index_all_table_good, project_folder_name, new_folder_projects, csv_folder, columns, readme_project_filepath)
         for project_folder_name in sorted(df_index_all_table_good['Download folder name'].unique().tolist())]
 pool = multiprocessing.Pool()
 pool.starmap(bundle_for_project, args)
 pool.close()
 
+# Create table download zip files
 args_table = [(df_index_all_table_good, table_id, new_folder_tables, csv_folder, columns, readme_table_filepath)
               for table_id in sorted(df_index_all_table_good['Table ID'].unique().tolist())]
 pool = multiprocessing.Pool()
@@ -222,11 +234,15 @@ vec_columns = [
     'Treaty and Indigenous Rights'
 ]
 
+# Create column Page Count per table
 df_page_count = df_index_all_table.groupby('Table ID')\
     .apply(lambda x: x['PDF Page Number'].max() - x['PDF Page Number'].min() + 1)\
     .reset_index().rename(columns={0: 'Page Count'})
+
+# Create vec values per table (aggregating vec values of the csvs belonging to the same table)
 df_vec = df_index_all_table.groupby('Table ID')[vec_columns].sum().reset_index()
 
+# Create a dataframe for the bad quality tables
 df_index_table_bad = df_index_all_table[(df_index_all_table['Content Type'] == 'Table') &
                                         (df_index_all_table['Good Quality'] == False)]\
     .sort_values(['Table ID', 'PDF Page Number']).groupby('Table ID').first().reset_index()
@@ -239,10 +255,12 @@ columns_table_bad.append('Page Count')
 columns_table_bad.extend(vec_columns)
 df_index_table_bad = df_index_table_bad[columns_table_bad]
 
+# Create a dataframe for figure & alignment sheets
 df_index_figure = df_index_all[df_index_all['Content Type'] != 'Table']
 df_index_figure['Page Count'] = 1
 df_index_figure = df_index_figure[columns_table_bad]
 
+# Create a dataframe for the good quality tables
 df_index_table_good = df_index_all_table_good \
     .sort_values(['Table ID', 'PDF Page Number']).groupby('Table ID').first().reset_index()
 df_index_table_good = df_index_table_good.merge(df_page_count, on='Table ID')
@@ -251,12 +269,15 @@ df_index_table_good = df_index_table_good.merge(df_vec, on='Table ID')
 columns_table_good = columns_table_bad + ['Project Download Path', 'Table Download Path']
 df_index_table_good = df_index_table_good[columns_table_good]
 
+# Concatenate three dataframes
 df_index_final = pd.concat([df_index_table_good, df_index_table_bad, df_index_figure])
 
-# ID, Data ID, Thumbnail Location, ID Internal
+# Add columns ID, Data ID, Thumbnail Location
 df_index_final['ID'] = df_index_final.index + 21425
 df_index_final['Data ID'] = df_index_final['PDF Download URL'].apply(lambda x: x.split('/')[-1])
 df_index_final['Thumbnail Location'] = df_index_final.apply(lambda x: 'thumbnails/{}_{}.jpg'.format(x['Data ID'], x['PDF Page Number']), axis=1)
+
+# Save the final index file (per row per table)
 df_index_final.to_csv('data/download_internal_Aug2022/en/ESA_website_ENG.csv', index=False)
 
 
@@ -281,6 +302,7 @@ df_index_last = pd.read_csv('data/download_internal_July2022/en/ESA_website_ENG_
 df_index_last = df_index_last.rename(columns={'Application Type (NEB Act)': 'Application Type'})
 df_index_last_tmp = df_index_last[columns]
 
+# Clean the project index files to only include the required columns
 for project_file in df_index_last[df_index_last['Project Download Path'].notna()]['Project Download Path'].unique().tolist():
     print(project_file)
     project_zipfile = 'data/download_internal_July2022/en' + project_file
@@ -291,15 +313,16 @@ for project_file in df_index_last[df_index_last['Project Download Path'].notna()
             zout.comment = zin.comment
             for item in zin.infolist():
                 if not item.filename.endswith('.csv'):
+                    # copy all the files to the temp zip file except the project index csv file
                     zout.writestr(item, zin.read(item.filename))
-    os.remove(project_zipfile)
-    os.rename(tmpfile, project_zipfile)
+    os.remove(project_zipfile)  # delete the old project zip file
+    os.rename(tmpfile, project_zipfile)  # rename the temp file to the project zip file
     project = project_zipfile.split('/')[-1].replace('.zip', '')
     with zipfile.ZipFile(project_zipfile, mode='a', compression=zipfile.ZIP_DEFLATED) as zf:
         csvdata = df_index_last_tmp[df_index_last_tmp['Project Download Path'] == project_file].to_csv(index=False)
-        zf.writestr(project + '/INDEX_PROJECT.csv', csvdata)
+        zf.writestr(project + '/INDEX_PROJECT.csv', csvdata)  # save a new index file to the project zip file
 
-
+# Clean the table read files to only include the required columns
 for table_file in df_index_last[df_index_last['Table Download Path'].notna()]['Table Download Path'].unique().tolist():
     print(table_file)
     table_zipfile = 'data/download_internal_July2022/en' + table_file
@@ -310,10 +333,12 @@ for table_file in df_index_last[df_index_last['Table Download Path'].notna()]['T
             zout.comment = zin.comment
             for item in zin.infolist():
                 if not item.filename.endswith('.txt'):
+                    # copy all the files to the temp zip file except the readme.txt file
                     zout.writestr(item, zin.read(item.filename))
-    os.remove(table_zipfile)
-    os.rename(tmpfile, table_zipfile)
+    os.remove(table_zipfile)  # delete the old table zip file
+    os.rename(tmpfile, table_zipfile)  # rename the temp file to the table zip file
 
+    # create the table readme.txt
     df_table = df_index_last_tmp[df_index_last_tmp['Table Download Path'] == table_file]
     metadata = open(readme_table_filepath, 'r').read()
     for col in columns:
@@ -321,16 +346,18 @@ for table_file in df_index_last[df_index_last['Table Download Path'].notna()]['T
             metadata += '{}: {} - {}\n'.format(col, df_table[col].min(), df_table[col].max())
         else:
             metadata += '{}: {}\n'.format(col, df_table.iloc[0][col])
+    # save the table readme file to the new table zip file
     with zipfile.ZipFile(table_zipfile, mode='a', compression=zipfile.ZIP_DEFLATED) as zf:
         zf.writestr('readme.txt', metadata)
 
 columns_indexfile = pd.read_csv('data/download_internal_Aug2022/en/ESA_website_ENG.csv').columns.tolist()
+# Save only the required columns for the index file of data update #1&2
 df_index_last[columns_indexfile].to_csv('data/download_internal_July2022/en/ESA_website_ENG_20220727_final.csv', index=False)
 
 
 # ############################# Combine the merged index files #############################
+# Concatenate the index file of date update #1&2 and data update #3
 pd.concat([
     pd.read_csv('data/download_internal_July2022/en/ESA_website_ENG_20220727_final.csv'),
     pd.read_csv('data/download_internal_Aug2022/en/ESA_website_ENG.csv')]).sort_values('ID')\
     .to_csv('data/download_internal_Aug2022_merged/en/ESA_website_ENG.csv', index=False)
-
