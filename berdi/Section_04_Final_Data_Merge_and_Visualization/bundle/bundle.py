@@ -2,18 +2,18 @@ import pandas as pd
 import os
 import multiprocessing
 
-from Codes.Section_04_Final_Data_Merge_and_Visualization.bundle.bundle_utilites \
+from berdi.Section_04_Final_Data_Merge_and_Visualization.bundle.bundle_utilites \
     import bundle_for_project, bundle_for_table
 
 
 index_filepath_eng = \
-    '//luxor/data/Branch/Environmental Baseline Data/Version 4 - Final/Indices/ESA_website_ENG_2021_01_28.csv'
+    '//luxor/data/Branch/Environmental Baseline Data/Version 4 - Final/Indices/export_IK_index.csv'
 csv_file_folder = '//luxor/data/Branch/Environmental Baseline Data/Version 4 - Final/all_csvs_cleaned_latest_ENG'
 readme_project_filepath = '//luxor/data/Board/ESA_downloads/README-ENG-projects.txt'
 readme_table_filepath = '//luxor/data/Board/ESA_downloads/README-ENG-tables.txt'
 
 # Create a new folder as the destination for downloading files
-new_folder = os.path.join('//luxor/data/Board/ESA_downloads/', 'download_Bingjie_Mar262021')
+new_folder = os.path.join('//luxor/data/Board/ESA_downloads/', 'ESA_download_NG_External')
 if not os.path.exists(new_folder):
     os.mkdir(new_folder)
 
@@ -33,32 +33,32 @@ df_index_raw = pd.read_csv(index_filepath_eng)
 # Create a temporary column in the index dataframe as table identification
 df_table_id = df_index_raw.groupby(['Title', 'Data ID']).size()\
     .reset_index().drop(columns=[0])\
-    .reset_index().rename(columns={'index': 'ID'})
+    .reset_index().rename(columns={'index': 'Table_ID'})
 df_index_raw = df_index_raw.merge(df_table_id, left_on=['Title', 'Data ID'], right_on=['Title', 'Data ID'])
 
 # Remove bad csvs
-df_index = df_index_raw[~df_index_raw['bad_csv']]
+df_index = df_index_raw[~df_index_raw['Good Quality']]  ## exclude false cases
 
 # Add a new column - Project Download Path
-df_index['Project Download Path'] = df_index['Download folder name']\
-    .apply(lambda x: '/projects/{}.zip'.format(x))
+# df_index['Project Download Path'] = df_index['Download folder name']\
+#     .apply(lambda x: '/projects/{}.zip'.format(x))
 
 # Add a new column - Table Download Path
-df_table_filename = df_index.sort_values(['PDF Page Number'])\
-    .groupby('ID')['filename'].first().reset_index().rename(columns={'filename': 'Table Name'})
-df_table_filename['Table Name'] = df_table_filename['Table Name']\
-    .apply(lambda x: x.replace('.csv', '').replace('--', '-'))
-df_index = df_index.merge(df_table_filename, left_on='ID', right_on='ID')
-df_index['Table Download Path'] = df_index['Table Name']\
-    .apply(lambda x: '/tables/{}.zip'.format(x))
+# df_table_filename = df_index.sort_values(['PDF Page Number'])\
+#     .groupby('ID')['filename'].first().reset_index().rename(columns={'filename': 'Table Name'})
+# df_table_filename['Table Name'] = df_table_filename['Table Name']\
+#     .apply(lambda x: x.replace('.csv', '').replace('--', '-'))
+# df_index = df_index.merge(df_table_filename, left_on='ID', right_on='ID')
+# df_index['Table Download Path'] = df_index['Table Name']\
+#     .apply(lambda x: '/tables/{}.zip'.format(x))
 
 # Remove ',All' from Pipeline Location, ESA Section(s) Topics
-df_index['Pipeline Location'] = df_index['Pipeline Location']\
-    .apply(lambda x: ', '.join([location for location in x.split(', ') if location != 'All']))
-df_index['ESA Section(s) Topics'] = df_index['ESA Section(s) Topics']\
-    .apply(lambda x: ', '.join([section for section in x.split(', ') if section != 'All']) if type(x) is str else x)
-# Update ESA Download URls
-df_index['ESA Folder URL'] = df_index['ESA Folder URL'].apply(lambda x: x.replace('LoadResult', 'View'))
+# df_index['Pipeline Location'] = df_index['Pipeline Location']\
+#     .apply(lambda x: ', '.join([location for location in x.split(', ') if location != 'All']))
+# df_index['ESA Section(s) Topics'] = df_index['ESA Section(s) Topics']\
+#     .apply(lambda x: ', '.join([section for section in x.split(', ') if section != 'All']) if type(x) is str else x)
+# # Update ESA Download URls
+# df_index['ESA Folder URL'] = df_index['ESA Folder URL'].apply(lambda x: x.replace('LoadResult', 'View'))
 
 # Prepare a list of column names for the final index files
 columns_index = [col for col in df_index.columns.to_list() if col not in (
