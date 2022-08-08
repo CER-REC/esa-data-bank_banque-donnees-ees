@@ -48,7 +48,7 @@ def bundle_for_project(df_index, project_folder_name, new_folder_projects, csv_f
 
     # Create index file for the project
     df_project_index = df_project.sort_values(['Table ID', column_name_pdf_page_number])\
-        .groupby('Table_ID').first().reset_index()[columns_index]
+        .groupby('Table ID').first().reset_index()[columns_index]
     df_project_index.to_csv(os.path.join(new_project_folder, index_filename), index=False, encoding=encode)
 
     # Create readme.txt
