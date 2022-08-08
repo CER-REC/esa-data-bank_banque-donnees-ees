@@ -5634,7 +5634,11 @@ print(
     keywords[8],
 )
 
-vc_pkl_path = os.path.join(os.getcwd(), "data/raw/index_for_projects/vc_keywords.pkl")
+#vc_pkl_path = os.path.join(os.getcwd(), "data/raw/index_for_projects/vc_keywords.pkl")
+from pathlib import Path
 
+# paths to data
+ROOT_PATH = Path(__file__).parents[2].resolve()
+vc_pkl_path = str(ROOT_PATH / "data" / "processed" / "keywords_pickle" / "vc_keywords.pkl")
 with open(vc_pkl_path, "wb") as f:
     pickle.dump(keywords, f)

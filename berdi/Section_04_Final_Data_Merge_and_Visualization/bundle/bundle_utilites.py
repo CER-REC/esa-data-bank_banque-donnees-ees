@@ -12,7 +12,7 @@ def bundle_for_project(df_index, project_folder_name, new_folder_projects, csv_f
         encode = 'latin-1'
     else:
         column_name_download_folder_name = 'Download folder name'
-        column_name_filename = 'filename'
+        column_name_filename = 'csvFileNameRenamed'
         column_name_pdf_page_number = 'PDF Page Number'
         index_filename = 'INDEX_PROJECT.csv'
         encode = 'utf-8'
@@ -25,14 +25,14 @@ def bundle_for_project(df_index, project_folder_name, new_folder_projects, csv_f
         os.mkdir(new_project_folder)
 
     # Iterate over the table ids and create zip files of tables
-    for table_id in df_project['ID'].unique():
+    for table_id in df_project['Table ID'].unique():
         # Create a temporary folder in the new project folder for zipping csv files
         temp_folder_for_bundling = os.path.join(new_project_folder, 'temp-{}'.format(table_id))
         if not os.path.exists(temp_folder_for_bundling):
             os.mkdir(temp_folder_for_bundling)
 
         # Copy the csv files of one table to the temporary folder in the new project folder
-        df_table = df_project[df_project['ID'] == table_id]
+        df_table = df_project[df_project['Table ID'] == table_id]
         for csv in df_table[column_name_filename]:
             if os.path.exists(os.path.join(csv_file_folder, csv)):
                 shutil.copy(os.path.join(csv_file_folder, csv), os.path.join(temp_folder_for_bundling, csv))
@@ -47,8 +47,8 @@ def bundle_for_project(df_index, project_folder_name, new_folder_projects, csv_f
         shutil.rmtree(temp_folder_for_bundling, ignore_errors=True)
 
     # Create index file for the project
-    df_project_index = df_project.sort_values(['ID', column_name_pdf_page_number])\
-        .groupby('ID').first().reset_index()[columns_index]
+    df_project_index = df_project.sort_values(['Table ID', column_name_pdf_page_number])\
+        .groupby('Table ID').first().reset_index()[columns_index]
     df_project_index.to_csv(os.path.join(new_project_folder, index_filename), index=False, encoding=encode)
 
     # Create readme.txt
@@ -67,10 +67,10 @@ def bundle_for_table(df_index, table_id, new_folder_tables, csv_file_folder, col
         column_name_filename = 'Nom du CSV'
         column_name_pdf_page_number = 'Numéro de page PDF'
     else:
-        column_name_filename = 'filename'
+        column_name_filename = 'csvFileNameRenamed'
         column_name_pdf_page_number = 'PDF Page Number'
 
-    df_table = df_index[df_index['ID'] == table_id]
+    df_table = df_index[df_index['Table ID'] == table_id]
 
     # Create a temporary folder in the new tables folder for zipping csv files
     temp_folder_for_bundling = os.path.join(new_folder_tables, 'temp-{}'.format(table_id))
