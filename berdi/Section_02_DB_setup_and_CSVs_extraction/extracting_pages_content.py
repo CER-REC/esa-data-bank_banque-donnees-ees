@@ -2,7 +2,7 @@ import sys
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).parents[2].resolve()))
-from berdi.Database_Connection_Files.connect_to_database import connect_to_db
+from berdi.Database_Connection_Files.connect_to_sqlserver_database import connect_to_db
 import os
 import pandas as pd
 import PyPDF2
@@ -23,7 +23,7 @@ RAW_DATA = "data/raw"
 load_dotenv(
     dotenv_path=REPO_ROOT / "berdi/Database_Connection_Files" / ".env", override=True
 )
-engine = connect_to_db()
+conn = connect_to_db()
 
 # Load environment variables (from .env file) for the PDF folder path
 # In order to extract the content from the PDFs, it is important to
@@ -31,14 +31,14 @@ engine = connect_to_db()
 # The rotate_pdf function will rotate those PDFs to a normal structure.
 pdf_files_folder_normal = REPO_ROOT / RAW_DATA / "pdfs"
 pdf_files_folder_rotated90 = REPO_ROOT / RAW_DATA / "rotated_pdfs"
-pdf_files_folder_rotated270 = REPO_ROOT / RAW_DATA / "rotated_pdfs"
+#pdf_files_folder_rotated270 = REPO_ROOT / RAW_DATA / "rotated_pdfs"
 
 if not pdf_files_folder_normal.exists():
     print(pdf_files_folder_normal, "does not exist!")
 if not pdf_files_folder_rotated90.exists():
     print(pdf_files_folder_rotated90, "does not exist!")
-if not pdf_files_folder_rotated270.exists():
-    print(pdf_files_folder_rotated270, "does not exist!")
+# if not pdf_files_folder_rotated270.exists():
+#     print(pdf_files_folder_rotated270, "does not exist!")
 
 # Tika configuration
 
@@ -72,13 +72,14 @@ def clear_db():
     stmt4 = "DELETE FROM pages_rotated90_xml;"
     stmt5 = "DELETE FROM pages_rotated270_txt;"
     stmt6 = "DELETE FROM pages_rotated270_xml;"
-    with engine.connect() as conn:
-        conn.execute(stmt1)
-        conn.execute(stmt2)
-        conn.execute(stmt3)
-        conn.execute(stmt4)
-        conn.execute(stmt5)
-        conn.execute(stmt6)
+    with conn:
+        cursor = conn.cursor()
+        cursor.execute(stmt1)
+        cursor.execute(stmt2)
+        cursor.execute(stmt3)
+        cursor.execute(stmt4)
+        cursor.execute(stmt5)
+        cursor.execute(stmt6)
     print("DB is cleared")
 
 
@@ -112,14 +113,15 @@ def insert_content(row):
             pdf = pdf_folder.joinpath(f"{pdf_id}.pdf")
         if not pdf.exists():
             raise Exception(f"{pdf} does not exist! :(")
-        with pdf.open(mode="rb") as infile, engine.connect() as conn:
+        with pdf.open(mode="rb") as infile, connect_to_db() as conn:
+            cursor = conn.cursor()
             reader = PyPDF2.PdfFileReader(infile)
             if reader.isEncrypted:
                 reader.decrypt("")
             # Looping for every PDF page and storing page contents into database table
             for p in range(1, total_pages + 1):
-                check = f"SELECT pdfId FROM {table_name} WHERE pdfId = %s AND page_num = %s;"
-                result = conn.execute(check, (pdf_id, p))
+                check = f"SELECT pdfId FROM [DS_TEST].BERDI.{table_name} WHERE pdfId = ? AND page_num = ?"
+                result = cursor.execute(check, (pdf_id, p))
                 if result.rowcount > 0:
                     continue
                 print(f"Working through {pdf_id} - page {p}")
@@ -141,39 +143,39 @@ def insert_content(row):
 
                 random_file.unlink()
 
-                stmt = f"INSERT INTO {table_name} (pdfId, page_num, content, clean_content) VALUES (%s,%s,%s,%s);"
-                result = conn.execute(stmt, (pdf_id, p, content, cleaned_content))
+                stmt = f"INSERT INTO [DS_TEST].BERDI.{table_name} (pdfId, page_num, content, clean_content) VALUES (?, ?, ?, ?);"
+                result = cursor.execute(stmt, (pdf_id, p, content, cleaned_content))
                 if result.rowcount != 1:
                     raise Exception(
                         f"{pdf_id}-{p}: ERROR! Updated {result.rowcount} rows!"
                     )
 
-    process_pdf(
-        pdf_folder=pdf_files_folder_normal, table_name="pages_normal_xml", xml=True
-    )
+    # process_pdf(
+    #     pdf_folder=pdf_files_folder_normal, table_name="pages_normal_xml", xml=True
+    # )
     process_pdf(
         pdf_folder=pdf_files_folder_normal, table_name="pages_normal_txt", xml=False
     )
-    process_pdf(
-        pdf_folder=pdf_files_folder_rotated90,
-        table_name="pages_rotated90_xml",
-        xml=True,
-    )
+    # process_pdf(
+    #     pdf_folder=pdf_files_folder_rotated90,
+    #     table_name="pages_rotated90_xml",
+    #     xml=True,
+    # )
     process_pdf(
         pdf_folder=pdf_files_folder_rotated90,
         table_name="pages_rotated90_txt",
         xml=False,
     )
-    process_pdf(
-        pdf_folder=pdf_files_folder_rotated270,
-        table_name="pages_rotated270_xml",
-        xml=True,
-    )
-    process_pdf(
-        pdf_folder=pdf_files_folder_rotated270,
-        table_name="pages_rotated270_txt",
-        xml=False,
-    )
+    # process_pdf(
+    #     pdf_folder=pdf_files_folder_rotated270,
+    #     table_name="pages_rotated270_xml",
+    #     xml=True,
+    # )
+    # process_pdf(
+    #     pdf_folder=pdf_files_folder_rotated270,
+    #     table_name="pages_rotated270_txt",
+    #     xml=False,
+    # )
 
 
 def insert_contents(multiprocessing=False):
@@ -185,8 +187,8 @@ def insert_contents(multiprocessing=False):
     t = time.time()
 
     # Reading from the MySQL Database and creating dataframe from query
-    stmt = "SELECT pdfId, totalPages FROM pdfs ORDER BY totalPages;"
-    with engine.connect() as conn:
+    stmt = "SELECT pdfId, totalPages FROM [DS_TEST].BERDI.pdfs ORDER BY totalPages;"
+    with conn:
         df = pd.read_sql(stmt, conn)
     data = df.to_dict("records")
 
@@ -237,14 +239,15 @@ def insert_clean_content(table):
 
     t = time.time()
 
-    stmt = f"SELECT pdfId, page_num, content FROM {table} WHERE clean_content IS NULL;"
-    with engine.connect() as conn:
+    stmt = f"SELECT pdfId, page_num, content FROM [DS_TEST].BERDI.{table} WHERE clean_content IS NULL;"
+    with conn:
+        cursor = conn.cursor()
         df = pd.read_sql(stmt, conn)
         data = df.to_dict("records")
         for item in data:
             cleaned_text = clean_text(item["content"])
-            query = f"UPDATE {table} SET clean_content = %s WHERE pdfId = %s AND page_num = %s"
-            result = conn.execute(
+            query = f"UPDATE [DS_TEST].BERDI.{table} SET clean_content = ? WHERE pdfId = ? AND page_num = ?"
+            result = cursor.execute(
                 query, (cleaned_text, item["pdfId"], item["page_num"])
             )
             if result.rowcount != 1:
@@ -260,7 +263,7 @@ def insert_clean_content(table):
 def insert_clean_contents():
     insert_clean_content("pages_normal_txt")
     insert_clean_content("pages_rotated90_txt")
-    insert_clean_content("pages_rotated270_txt")
+    # insert_clean_content("pages_rotated270_txt")
 
 
 def rotate_pdf(pdf):
@@ -279,9 +282,9 @@ def rotate_pdf(pdf):
             writer.write(out_file)
 
     pdf_path90 = pdf_files_folder_rotated90.joinpath(f"{pdf.stem}.pdf")
-    pdf_path270 = pdf_files_folder_rotated270.joinpath(f"{pdf.stem}.pdf")
+    # pdf_path270 = pdf_files_folder_rotated270.joinpath(f"{pdf.stem}.pdf")
     rotate(pdf_path90, 90)
-    rotate(pdf_path270, 270)
+    # rotate(pdf_path270, 270)
 
 
 def rotate_pdfs(multiprocessing=False):
@@ -335,7 +338,6 @@ if __name__ == "__main__":
     # clear_database = False
     # if clear_database == True:
     #     clear_db()
-
-    rotate_pdfs(multiprocessing=True)
+    #rotate_pdfs(multiprocessing=True)
     insert_contents(multiprocessing=False)
     insert_clean_contents()

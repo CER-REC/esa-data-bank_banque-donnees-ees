@@ -7,12 +7,14 @@ from bs4 import BeautifulSoup
 from io import StringIO
 from contextlib import redirect_stdout, redirect_stderr
 import traceback
+from pathlib import Path
 from sqlalchemy import text
 from fuzzywuzzy import fuzz
 import json
 import numpy as np
+import sys
 
-from berdi.Database_Connection_Files.connect_to_database import connect_to_db
+from berdi.Database_Connection_Files.connect_to_sqlserver_database import connect_to_db
 import berdi.Section_03_Table_and_Figure_Title_Extraction.constants as constants
 
 
@@ -20,8 +22,7 @@ import berdi.Section_03_Table_and_Figure_Title_Extraction.constants as constants
 load_dotenv(
     dotenv_path=constants.ROOT_PATH / "berdi/Database_Connection_Files" / ".env", override=True
 )
-engine = connect_to_db()
-
+conn = connect_to_db()
 
 # take a project and assign all Figure titles from toc to a pdf id and page
 def project_figure_titles(project):
@@ -29,15 +30,15 @@ def project_figure_titles(project):
     with redirect_stdout(buf), redirect_stderr(buf):
         try:
             # get all fig titles for this project from db
-            with engine.connect() as conn:
-                params = {"project": project}
-                stmt = text("SELECT toc.titleTOC, toc.page_name, toc.toc_page_num, toc.toc_pdfId, toc.toc_title_order "
-                            "FROM toc LEFT JOIN pdfs ON toc.toc_pdfId = pdfs.pdfId "
-                            "WHERE title_type='Figure' and short_name = :project "
-                            "ORDER BY pdfs.short_name, toc.toc_pdfId, toc.toc_page_num, toc.toc_title_order;")
+            with conn:
+                params = [project]
+                stmt = '''SELECT toc.titleTOC, toc.page_name, toc.toc_page_num, toc.toc_pdfId, toc.toc_title_order
+                            FROM [DS_TEST].[BERDI].toc LEFT JOIN [DS_TEST].[BERDI].pdfs ON toc.toc_pdfId = pdfs.pdfId
+                            WHERE title_type='Figure' and short_name = ?
+                            ORDER BY pdfs.short_name, toc.toc_pdfId, toc.toc_page_num, toc.toc_title_order;'''
                 df_figs = pd.read_sql_query(stmt, conn, params=params)
 
-                stmt = text("SELECT pdfId FROM pdfs WHERE short_name = :project;")
+                stmt = '''SELECT pdfId FROM [DS_TEST].[BERDI].pdfs WHERE short_name = ?;'''
                 project_df = pd.read_sql_query(stmt, conn, params=params)
 
             prev_id = 0
@@ -80,12 +81,13 @@ def project_figure_titles(project):
                         break
                 if count == 0:
                     # write 0 count to db
-                    with engine.connect() as conn:
-                        stmt = text(
-                            "UPDATE toc SET assigned_count = 0, loc_pdfId = null, loc_page_list = null  "
-                            "WHERE (toc_pdfId = :pdf_id) and (toc_page_num = :page_num) and (toc_title_order = :title_order);")
-                        params = {"pdf_id": toc_id, "page_num": toc_page, "title_order": title_order}
-                        result = conn.execute(stmt, params)
+                    with conn:
+                        cursor = conn.cursor()
+                        stmt = '''UPDATE [DS_TEST].[BERDI].toc SET assigned_count = 0, loc_pdfId = null, loc_page_list = null
+                            WHERE (toc_pdfId = ?) and (toc_page_num = ?) and (toc_title_order = ?);'''
+                        params = [toc_id, toc_page, title_order]
+                        result = cursor.execute(stmt, params)
+                        cursor.commit()
                     if result.rowcount != 1:
                         print('could not assign 0 count to: ', toc_id, toc_page, title_order)
             return True, buf.getvalue()
@@ -96,14 +98,14 @@ def project_figure_titles(project):
 
 # For a Figure TOC title, find a pdf id and page where that figure lives
 def figure_checker(args):
-    conn = engine.connect()
+    conn = connect_to_db()
     try:
         doc_id, toc_id, toc_page, toc_order, word1_rex, word2_rex, s2, page_rex, title = args
 
         # get pages where we have images for this document (from db)
-        stmt = text("SELECT page_num, block_order, type as 'images', bbox_area_image, bbox_area FROM blocks "
-                    "WHERE (pdfId = :pdf_id) and (bbox_x0 >= 0) and (bbox_y0 >= 0) and (bbox_x1 >= 0) and (bbox_y1 >= 0);")
-        params = {"pdf_id": doc_id}
+        stmt = '''SELECT page_num, block_order, type as 'images', bbox_area_image, bbox_area FROM [DS_TEST].[BERDI].blocks
+                    WHERE (pdfId = ?) and (bbox_x0 >= 0) and (bbox_y0 >= 0) and (bbox_x1 >= 0) and (bbox_y1 >= 0);'''
+        params = [doc_id]
         df = pd.read_sql_query(stmt, conn, params=params)
         df_pages = df[['page_num', 'bbox_area_image', 'bbox_area', 'images']].groupby('page_num', as_index=False).sum()
         df_pages['imageProportion'] = df_pages['bbox_area_image'] / df_pages['bbox_area']
@@ -113,37 +115,40 @@ def figure_checker(args):
         image_pages = df_pages['page_num'].unique().tolist()
         # df['Real Order'] = df.groupby(['page'])['tableNumber'].rank()
 
-        stmt = text("SELECT page FROM csvs WHERE (pdfId = :pdf_id) "
-                    "and (titleFinal = '' or titleFinal is null) GROUP BY page;")
-        params = {"pdf_id": doc_id}
+        stmt = '''SELECT page FROM [DS_TEST].[BERDI].csvs WHERE (pdfId = ?)
+                    and (titleFinal = '' or titleFinal is null) GROUP BY page;'''
+        params = [doc_id]
+    
         extra_pages_df = pd.read_sql_query(stmt, conn, params=params)
         extra_pages = [p for p in extra_pages_df['page'].tolist() if p not in image_pages] # list of extra pages to check
 
         # get text
+        image_pages_str = ','.join([str(p) for p in image_pages])
+        extra_pages_str = ','.join([str(p) for p in extra_pages])
         if len(extra_pages) > 0 and len(image_pages) > 0:
-            params = {"pdf_id": doc_id, "image_list": image_pages, "extra_list": extra_pages}
-            stmt = text("SELECT page_num, clean_content FROM pages_normal_txt "
-                        "WHERE (pdfId = :pdf_id) and (page_num in :image_list or page_num in :extra_list);")
-            stmt_rotated = text("SELECT page_num, clean_content FROM pages_rotated90_txt "
-                                "WHERE (pdfId = :pdf_id) and (page_num in :image_list or page_num in :extra_list);")
+            params = [doc_id]
+            stmt = '''SELECT page_num, clean_content FROM [DS_TEST].[BERDI].pages_normal_txt
+                        WHERE (pdfId = ?) and (page_num in ({}) or page_num in ({}));'''.format(image_pages_str, extra_pages_str)
+            stmt_rotated = '''SELECT page_num, clean_content FROM [DS_TEST].[BERDI].pages_rotated90_txt
+                                WHERE (pdfId = ?) and (page_num in ({}) or page_num in ({}));'''.format(image_pages_str, extra_pages_str)
             text_df = pd.read_sql_query(stmt, conn, params=params, index_col='page_num')
             text_rotated_df = pd.read_sql_query(stmt_rotated, conn, params=params, index_col='page_num')
 
         elif len(image_pages) > 0:
-            params = {"pdf_id": doc_id, "image_list": image_pages}
-            stmt = text("SELECT page_num, clean_content FROM pages_normal_txt "
-                        "WHERE (pdfId = :pdf_id) and (page_num in :image_list);")
-            stmt_rotated = text("SELECT page_num, clean_content FROM pages_rotated90_txt "
-                                "WHERE (pdfId = :pdf_id) and (page_num in :image_list);")
+            params = [doc_id]
+            stmt = '''SELECT page_num, clean_content FROM [DS_TEST].[BERDI].pages_normal_txt
+                        WHERE (pdfId = ?) and (page_num in ({}));'''.format(image_pages_str)
+            stmt_rotated = '''SELECT page_num, clean_content FROM [DS_TEST].[BERDI].pages_rotated90_txt
+                                WHERE (pdfId = ?) and (page_num in ({}));"'''.format(image_pages_str)
             text_df = pd.read_sql_query(stmt, conn, params=params, index_col='page_num')
             text_rotated_df = pd.read_sql_query(stmt_rotated, conn, params=params, index_col='page_num')
 
         elif len(extra_pages) > 0:
-            params = {"pdf_id": doc_id, "extra_list": extra_pages}
-            stmt = text("SELECT page_num, clean_content FROM pages_normal_txt "
-                        "WHERE (pdfId = :pdf_id) and (page_num in :extra_list);")
-            stmt_rotated = text("SELECT page_num, clean_content FROM pages_rotated90_txt "
-                                "WHERE (pdfId = :pdf_id) and (page_num in :extra_list);")
+            params = [doc_id]
+            stmt = '''SELECT page_num, clean_content FROM [DS_TEST].[BERDI].pages_normal_txt
+                        WHERE (pdfId = ?) and (page_num in ({}));'''.format(extra_pages_str)
+            stmt_rotated = '''SELECT page_num, clean_content FROM [DS_TEST].[BERDI].pages_rotated90_txt
+                                WHERE (pdfId = ?) and (page_num in ({}));'''.format(extra_pages_str)
             text_df = pd.read_sql_query(stmt, conn, params=params, index_col='page_num')
             text_rotated_df = pd.read_sql_query(stmt_rotated, conn, params=params, index_col='page_num')
 
@@ -220,10 +225,12 @@ def figure_checker(args):
         count = len(final_list)
 
         if count > 0:
-            stmt = text("UPDATE toc SET assigned_count = :count, loc_pdfId = :loc_id, loc_page_list = :loc_pages "
-                        "WHERE (toc_pdfId = :pdf_id) and (toc_page_num = :page_num) and (toc_title_order = :title_order);")
-            params = {"count": count, "loc_id": doc_id, "loc_pages": json.dumps(final_list), "pdf_id": toc_id, "page_num": toc_page, "title_order": toc_order}
-            result = conn.execute(stmt, params)
+            cursor = conn.cursor()
+            stmt = '''UPDATE [DS_TEST].[BERDI].toc SET assigned_count = ?, loc_pdfId = ?, loc_page_list = ?
+                        WHERE (toc_pdfId = ?) and (toc_page_num = ?) and (toc_title_order = ?);'''
+            params = [count, doc_id, json.dumps(final_list), toc_id, toc_page, toc_order]
+            result = cursor.execute(stmt, params)
+            cursor.commit()
             if result.rowcount != 1:
                 print('could not assign TOC count to: ', toc_id, toc_page, toc_order)
 
@@ -261,14 +268,14 @@ def get_category(title):
 
 def find_tag_title_table(data_id):
     buf = StringIO()
-    conn = engine.connect()
+    conn = connect_to_db()
     with redirect_stdout(buf), redirect_stderr(buf):
         try:
             # get tables for this document
-            stmt = text("SELECT page, tableNumber FROM csvs "
-                        "WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78) "
-                        "and (pdfId = :pdf_id);")
-            params = {"pdf_id": data_id}
+            stmt = '''SELECT page, tableNumber FROM [DS_TEST].[BERDI].csvs
+                        WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78)
+                        and (pdfId = ?);'''
+            params = [data_id]
             df = pd.read_sql_query(stmt, conn, params=params)
             if df.empty:
                 df['Real Order'] = None
@@ -277,11 +284,13 @@ def find_tag_title_table(data_id):
             table_pages = df['page'].unique().tolist()
 
             if len(table_pages) > 0:
-                params = {"pdf_id": data_id, "table_list": table_pages}
-                stmt = text("SELECT page_num, content FROM pages_normal_txt "
-                            "WHERE (pdfId = :pdf_id) and (page_num in :table_list);")
-                stmt_rotated = text("SELECT page_num, content FROM pages_rotated90_txt "
-                                    "WHERE (pdfId = :pdf_id) and (page_num in :table_list);")
+                params = [data_id]
+                stmt = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_normal_txt
+            WHERE (pdfId = ?) and page_num in {};'''.format('({})'.format(','.join([str(p) for p in table_pages])))
+                stmt_rotated = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_rotated90_txt
+            WHERE (pdfId = ?) and page_num in {};'''.format('({})'.format(','.join([str(p) for p in table_pages])))
+                # stmt_rotated = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_rotated90_txt
+                #                     WHERE (pdfId = ?) and (page_num in ?);'''
                 text_df = pd.read_sql_query(stmt, conn, params=params, index_col='page_num')
                 text_rotated_df = pd.read_sql_query(stmt_rotated, conn, params=params, index_col='page_num')
 
@@ -335,11 +344,13 @@ def find_tag_title_table(data_id):
                     for i, title in enumerate(final_table_titles):
                         if i < count_tables:
                             # update the db
+                            cursor = conn.cursor()
                             table_num = page_tables.loc[i+1, 'tableNumber']
-                            stmt = text("UPDATE csvs SET titleTag = :title_tag WHERE (pdfId = :pdf_id) and "
-                                        "(page = :page_num) and (tableNumber = :table_num);")
-                            params = {"pdf_id": data_id, "page_num": page_num, "table_num": table_num, "title_tag": title}
-                            result = conn.execute(stmt, params)
+                            stmt = '''UPDATE [DS_TEST].[BERDI].csvs SET titleTag = ? WHERE (pdfId = ?) and
+                                        (page = ?) and (tableNumber = ?);'''
+                            params = [title, data_id, page_num, int(table_num)]
+                            result = cursor.execute(stmt, params)
+                            cursor.commit()
                             if result.rowcount != 1:
                                 print('Did not go to database:', data_id, '_', page_num, '_', table_num, '_', i+1, ':', title,
                                       ': error:', result)
@@ -355,13 +366,13 @@ def find_tag_title_table(data_id):
 
 def find_tag_title_fig(data_id):
     buf = StringIO()
-    conn = engine.connect()
+    conn = connect_to_db()
     with redirect_stdout(buf), redirect_stderr(buf):
         try:
             # get tables for this document
-            stmt = text("SELECT page_num, block_order, type, bbox_area_image, bbox_area FROM blocks "
-                        "WHERE (pdfId = :pdf_id);")
-            params = {"pdf_id": data_id}
+            stmt = '''SELECT page_num, block_order, type, bbox_area_image, bbox_area FROM [DS_TEST].[BERDI].blocks
+                        WHERE (pdfId = ?);'''
+            params = [data_id]
             df = pd.read_sql_query(stmt, conn, params=params)
             df_pages = df[['page_num', 'bbox_area_image', 'bbox_area']].groupby('page_num', as_index=False).sum()
             df_pages['imageProportion'] = df_pages['bbox_area_image'] / df_pages['bbox_area']
@@ -369,8 +380,8 @@ def find_tag_title_fig(data_id):
             # df['Real Order'] = df.groupby(['page'])['tableNumber'].rank()
 
             # get text for this document
-            path = constants.pickles_path + str(data_id) + '.pkl'
-            path_rotated = constants.pickles_rotated_path + str(data_id) + '.pkl'
+            path = constants.pickles_path + '/' + str(data_id) + '.pkl'
+            path_rotated = constants.pickles_rotated_path + '/' + str(data_id) + '.pkl'
             with open(path, 'rb') as f:
                 data = pickle.load(f)
             soup = BeautifulSoup(data['content'], 'lxml')
@@ -402,11 +413,14 @@ def find_tag_title_fig(data_id):
                 for i, title in enumerate(final_table_titles):
                     if i < count_figs:
                         # update the db
+                        cursor = conn.cursor()
                         block_num = page_figs.loc[i, 'block_order']
-                        stmt = text("UPDATE blocks SET titleTag = :title_tag WHERE (pdfId = :pdf_id) and "
-                                    "(page_num = :page_num) and (block_order = :block_num);")
-                        params = {"pdf_id": data_id, "page_num": page_num, "block_num": block_num, "title_tag": title}
-                        result = conn.execute(stmt, params)
+                        stmt = '''UPDATE [DS_TEST].[BERDI].blocks SET titleTag = ? WHERE (pdfId = ?) and
+                                    (page_num = ?) and (block_order = ?);'''
+                        #params = {"pdf_id": data_id, "page_num": page_num, "block_num": block_num, "title_tag": title}
+                        params = [title, data_id, page_num, int(block_num)] ## numpy data type error before
+                        result = cursor.execute(stmt, params)
+                        cursor.commit()
                         if result.rowcount != 1:
                             print('Did not go to database:', data_id, '_', page_num, '_', block_num, '_', i+1, ':', title,
                                   ': error:', result)
@@ -421,14 +435,15 @@ def find_tag_title_fig(data_id):
 
 
 def table_checker(args):
-    conn = engine.connect()
+    conn = connect_to_db()
     try:
         doc_id, toc_id, toc_page, toc_order, word1_rex, word2_rex, s2_rex, page_rex, title = args
         # get tables for this document
-        stmt = text("SELECT page, tableNumber FROM csvs "
-                    "WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78) "
-                    "and (pdfId = :pdf_id);")
-        params = {"pdf_id": doc_id}
+        stmt = '''SELECT page, tableNumber FROM [DS_TEST].[BERDI].csvs
+                    WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78)
+                    and (pdfId = ?);'''
+        #params = {"pdf_id": doc_id}
+        params = [doc_id]
         df = pd.read_sql_query(stmt, conn, params=params)
         if df.empty:
             df['Real Order'] = None
@@ -438,11 +453,21 @@ def table_checker(args):
 
         count = 0
         if len(table_pages) > 0:
-            params = {"pdf_id": doc_id, "table_list": table_pages}
-            stmt = text("SELECT page_num, content FROM pages_normal_txt "
-                        "WHERE (pdfId = :pdf_id) and (page_num in :table_list);")
-            stmt_rotated = text("SELECT page_num, content FROM pages_rotated90_txt "
-                                "WHERE (pdfId = :pdf_id) and (page_num in :table_list);")
+            #params = {"pdf_id": doc_id, "table_list": table_pages}
+            params = [doc_id]
+            # stmt = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_normal_txt
+            #             WHERE (pdfId = ?) and (page_num in ?);'''
+
+            stmt = stmt = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_normal_txt
+            WHERE (pdfId = ?) and page_num in ({});'''.format(','.join([str(p) for p in table_pages]))
+
+            # stmt_rotated = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_rotated90_txt
+            #                     WHERE (pdfId = ?) and (page_num in ?);'''
+
+            stmt_rotated = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_rotated90_txt
+            WHERE (pdfId = ?) and page_num in ({});'''.format(','.join([str(p) for p in table_pages]))
+
+
             text_df = pd.read_sql_query(stmt, conn, params=params, index_col='page_num')
             text_rotated_df = pd.read_sql_query(stmt_rotated, conn, params=params, index_col='page_num')
 
@@ -467,10 +492,13 @@ def table_checker(args):
             count = len(p_list)
             # assign pages to the title in toc table
             if (count > 0):
-                stmt = text("UPDATE toc SET assigned_count = :count, loc_pdfId = :loc_id, loc_page_list = :loc_pages "
-                            "WHERE (toc_pdfId = :pdf_id) and (toc_page_num = :page_num) and (toc_title_order = :title_order);")
-                params = {"count": count, "loc_id": doc_id, "loc_pages": json.dumps(p_list), "pdf_id": toc_id, "page_num": toc_page, "title_order": toc_order}
-                result = conn.execute(stmt, params)
+                cursor = conn.cursor()
+                stmt = '''UPDATE [DS_TEST].[BERDI].toc SET assigned_count = ?, loc_pdfId = ?, loc_page_list = ?
+                            WHERE (toc_pdfId = ?) and (toc_page_num = ?) and (toc_title_order = ?);'''
+                #params = {"count": count, "loc_id": doc_id, "loc_pages": json.dumps(p_list), "pdf_id": toc_id, "page_num": toc_page, "title_order": toc_order}
+                params = [count, doc_id, json.dumps(p_list), toc_id, toc_page, toc_order]
+                result = cursor.execute(stmt, params)
+                cursor.commit()
                 if result.rowcount != 1:
                     print('could not assign TOC count to: ', toc_id, toc_page, toc_order)
         conn.close()
@@ -486,15 +514,15 @@ def project_table_titles(project):
     buf = StringIO()
     with redirect_stdout(buf), redirect_stderr(buf):
         try:
-            with engine.connect() as conn:
-                params = {"project": project}
-                stmt = text("SELECT toc.titleTOC, toc.page_name, toc.toc_page_num, toc.toc_pdfId, toc.toc_title_order "
-                            "FROM toc LEFT JOIN pdfs ON toc.toc_pdfId = pdfs.pdfId "
-                            "WHERE title_type='Table' and short_name = :project "
-                            "ORDER BY pdfs.short_name, toc.toc_pdfId, toc.toc_page_num, toc.toc_title_order;")
+            with connect_to_db() as conn:
+                params = [project]
+                stmt = '''SELECT toc.titleTOC, toc.page_name, toc.toc_page_num, toc.toc_pdfId, toc.toc_title_order
+                            FROM [DS_TEST].[BERDI].toc LEFT JOIN [DS_TEST].[BERDI].pdfs ON toc.toc_pdfId = pdfs.pdfId
+                            WHERE title_type='Table' and short_name = ?
+                            ORDER BY pdfs.short_name, toc.toc_pdfId, toc.toc_page_num, toc.toc_title_order;'''
                 df_tables = pd.read_sql_query(stmt, conn, params=params)
 
-                stmt = text("SELECT pdfId FROM pdfs WHERE short_name = :project;")
+                stmt = '''SELECT pdfId FROM [DS_TEST].[BERDI].pdfs WHERE short_name = ?;'''
                 project_df = pd.read_sql_query(stmt, conn, params=params)
 
             prev_id = 0
@@ -544,12 +572,14 @@ def project_table_titles(project):
                         break
                 if count == 0:
                     # write 0 count to db
-                    with engine.connect() as conn:
-                        stmt = text(
-                            "UPDATE toc SET assigned_count = 0, loc_pdfId = null, loc_page_list = null  "
-                            "WHERE (toc_pdfId = :pdf_id) and (toc_page_num = :page_num) and (toc_title_order = :title_order);")
-                        params = {"pdf_id": toc_id, "page_num": toc_page, "title_order": title_order}
-                        result = conn.execute(stmt, params)
+                    with conn:
+                        cursor = conn.cursor()
+                        stmt = '''UPDATE [DS_TEST].[BERDI].toc SET assigned_count = 0, loc_pdfId = null, loc_page_list = null
+                            WHERE (toc_pdfId = ?) and (toc_page_num = ?) and (toc_title_order = ?);'''
+                        #params = {"pdf_id": toc_id, "page_num": toc_page, "title_order": title_order}
+                        params = [toc_id, toc_page, title_order]
+                        result = cursor.execute(stmt, params)
+                        cursor.commit()
                     if result.rowcount != 1:
                         print('could not assign 0 count to: ', toc_id, toc_page, title_order)
             return True, buf.getvalue()
@@ -560,21 +590,21 @@ def project_table_titles(project):
 
 def find_toc_title_table(data_id):
     buf = StringIO()
-    conn = engine.connect()
+    conn = connect_to_db()
     with redirect_stdout(buf), redirect_stderr(buf):
         try:
-            stmt = text("SELECT page, tableNumber FROM csvs "
-                        "WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78) "
-                        "and (pdfId = :pdf_id);")
-            params = {"pdf_id": data_id}
+            stmt = '''SELECT page, tableNumber FROM [DS_TEST].[BERDI].csvs
+                        WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78)
+                        and (pdfId = ?);'''
+            params = [data_id]
             df = pd.read_sql_query(stmt, conn, params=params)
             if not df.empty:
                 df['Real Order'] = df.groupby(['page'])['tableNumber'].rank()
                 # get all tocs titles for this doc
-                stmt = text("SELECT titleTOC, loc_page_list FROM toc "
-                            "WHERE (loc_pdfId = :pdf_id) and (title_type='Table') and (assigned_count > 0) "
-                            "ORDER BY toc_pdfId, toc_page_num, toc_title_order;")
-                params = {"pdf_id": data_id}
+                stmt = '''SELECT titleTOC, loc_page_list FROM [DS_TEST].[BERDI].toc
+                            WHERE toc_pdfId = ? and title_type='Table' and assigned_count > 0
+                            ORDER BY toc_pdfId, toc_page_num, toc_title_order;'''
+                params = [data_id]
                 df_all_titles = pd.read_sql_query(stmt, conn, params=params)
 
                 for index, row in df.iterrows():
@@ -587,10 +617,13 @@ def find_toc_title_table(data_id):
                     if len(ts) >= order:
                         title = df_all_titles.loc[ts[order-1], 'titleTOC']
                         # update the db
-                        stmt = text("UPDATE csvs SET titleTOC = :title_toc WHERE (pdfId = :pdf_id) and "
-                                    "(page = :page_num) and (tableNumber = :table_num);")
-                        params = {"pdf_id": data_id, "page_num": page_num, "table_num": table_num, "title_toc": title}
-                        result = conn.execute(stmt, params)
+                        cursor = conn.cursor()
+                        stmt = '''UPDATE [DS_TEST].[BERDI].csvs SET titleTOC = ? WHERE (pdfId = ?) and
+                                    (page = ?) and (tableNumber = ?);'''
+                        #params = {"pdf_id": data_id, "page_num": page_num, "table_num": table_num, "title_toc": title}
+                        params = [title, data_id, page_num, table_num]
+                        result = cursor.execute(stmt, params)
+                        cursor.commit()
                         if result.rowcount != 1:
                             print('Did not go to database:', data_id, '_', page_num, '_', table_num, '_', order, ':', title,
                                   ': error:', result)
@@ -604,13 +637,13 @@ def find_toc_title_table(data_id):
 
 def find_toc_title_fig(data_id):
     buf = StringIO()
-    conn = engine.connect()
+    conn = connect_to_db()
     with redirect_stdout(buf), redirect_stderr(buf):
         try:
             # get tables for this document
-            stmt = text("SELECT page_num, block_order, type, bbox_area_image, bbox_area FROM blocks "
-                        "WHERE (pdfId = :pdf_id);")
-            params = {"pdf_id": data_id}
+            stmt = '''SELECT page_num, block_order, type, bbox_area_image, bbox_area FROM [DS_TEST].[BERDI].blocks
+                        WHERE (pdfId = ?);'''
+            params = [data_id]
             df = pd.read_sql_query(stmt, conn, params=params)
             df_pages = df[['page_num', 'bbox_area_image', 'bbox_area']].groupby('page_num', as_index=False).sum()
             df_pages['imageProportion'] = df_pages['bbox_area_image'] / df_pages['bbox_area']
@@ -637,10 +670,13 @@ def find_toc_title_fig(data_id):
                 if df_titles.shape[0] >= order:
                     title = df_titles.loc[order-1, 'Name']
                     # update the db
-                    stmt = text("UPDATE csvs SET titleTOC = :title_toc WHERE (pdfId = :pdf_id) and "
-                                "(page = :page_num) and (tableNumber = :table_num);")
-                    params = {"pdf_id": data_id, "page_num": page_num, "table_num": table_num, "title_toc": title}
-                    result = conn.execute(stmt, params)
+                    cursor = conn.cursor()
+                    stmt = '''UPDATE [DS_TEST].[BERDI].csvs SET titleTOC = ? WHERE (pdfId = ?) and
+                                (page = ?) and (tableNumber = ?);'''
+                    #params = {"pdf_id": data_id, "page_num": page_num, "table_num": table_num, "title_toc": title}
+                    params = [title, data_id, page_num, table_num]
+                    result = cursor.execute(stmt, params)
+                    cursor.commit()
                     if result.rowcount != 1:
                         print('Did not go to database:', data_id, '_', page_num, '_', table_num, '_', order, ':', title,
                               ': error:', result)
@@ -658,14 +694,14 @@ def find_toc_title_fig(data_id):
 
 def find_final_title_table(data_id):
     buf = StringIO()
-    conn = engine.connect()
+    conn = connect_to_db()
     with redirect_stdout(buf), redirect_stderr(buf):
         try:
             # get tables for this document
-            stmt = text("SELECT page, tableNumber, titleTag, titleTOC, topRowJson FROM csvs "
-                        "WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78) "
-                        "and (pdfId = :pdf_id);")
-            params = {"pdf_id": data_id}
+            stmt = '''SELECT page, tableNumber, titleTag, titleTOC, topRowJson FROM [DS_TEST].[BERDI].csvs
+                        WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78)
+                        and (pdfId = ?);'''
+            params = [data_id]
             df = pd.read_sql_query(stmt, conn, params=params)
             if not df.empty:
                 df['Real Order'] = df.groupby(['page'])['tableNumber'].rank()
@@ -691,10 +727,13 @@ def find_final_title_table(data_id):
                                 or ratio_similarity > 89:
                             title = prev_title
                     # update database
-                    stmt = text("UPDATE csvs SET titleFinal = :title WHERE (pdfId = :pdf_id) and "
-                                "(page = :page_num) and (tableNumber = :table_num);")
-                    params = {"pdf_id": data_id, "page_num": page_num, "table_num": table_num, "title": title}
-                    result = conn.execute(stmt, params)
+                    cursor = conn.cursor()
+                    stmt = '''UPDATE [DS_TEST].[BERDI].csvs SET titleFinal = ? WHERE (pdfId = ?) and
+                                (page = ?) and (tableNumber = ?);'''
+                    #params = {"pdf_id": data_id, "page_num": page_num, "table_num": table_num, "title": title}
+                    params = [title, data_id, page_num, table_num]
+                    result = cursor.execute(stmt, params)
+                    cursor.commit()
                     if result.rowcount != 1:
                         print('Could not find:', data_id, '_', page_num, '_', table_num, ':', title, ': error:', result)
                     prev_title = title
@@ -710,14 +749,14 @@ def find_final_title_table(data_id):
 
 def find_final_title_fig(data_id):
     buf = StringIO()
-    conn = engine.connect()
+    conn = connect_to_db()
     with redirect_stdout(buf), redirect_stderr(buf):
         try:
             # get tables for this document
-            stmt = text("SELECT page, tableNumber, titleTag, titleTOC, topRowJson FROM csvs "
-                        "WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78) "
-                        "and (pdfId = :pdf_id);")
-            params = {"pdf_id": data_id}
+            stmt = '''SELECT page, tableNumber, titleTag, titleTOC, topRowJson FROM [DS_TEST].[BERDI].csvs
+                        WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78)
+                        and (pdfId = ?);'''
+            params = [data_id]
             df = pd.read_sql_query(stmt, conn, params=params)
             df['Real Order'] = df.groupby(['page'])['tableNumber'].rank()
             df['titleFinal'] = df['titleTag'].fillna(df['titleTOC']).fillna('')
@@ -742,10 +781,12 @@ def find_final_title_fig(data_id):
                             or ratio_similarity > 89:
                         title = prev_title
                 # update database
-                stmt = text("UPDATE csvs SET titleFinal = :title WHERE (pdfId = :pdf_id) and "
-                            "(page = :page_num) and (tableNumber = :table_num);")
-                params = {"pdf_id": data_id, "page_num": page_num, "table_num": table_num, "title": title}
-                result = conn.execute(stmt, params)
+                cursor = conn.cursor()
+                stmt = '''UPDATE [DS_TEST].[BERDI].csvs SET titleFinal = ? WHERE (pdfId = ?) and
+                            (page = ?) and (tableNumber = ?);'''
+                params = [title, data_id, page_num, table_num]
+                result = cursor.execute(stmt, params)
+                cursor.commit()
                 if result.rowcount != 1:
                     print('Could not find:', data_id, '_', page_num, '_', table_num, ':', title, ': error:', result)
                 prev_title = title

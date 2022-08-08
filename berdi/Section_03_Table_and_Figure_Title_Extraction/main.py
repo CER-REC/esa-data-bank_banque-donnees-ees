@@ -5,7 +5,12 @@ from sqlalchemy import text
 import json
 from dotenv import load_dotenv
 
-from berdi.Database_Connection_Files.connect_to_database import connect_to_db
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).parents[2].resolve()))
+
+from berdi.Database_Connection_Files.connect_to_sqlserver_database import connect_to_db
 from berdi.Section_03_Table_and_Figure_Title_Extraction.external_functions import (
     project_figure_titles,
     find_toc_title_table,
@@ -27,27 +32,27 @@ load_dotenv(
     dotenv_path=constants.ROOT_PATH / "berdi/Database_Connection_Files" / ".env",
     override=True,
 )
-engine = connect_to_db()
+conn = connect_to_db()
 
 get_toc = 0  # need to go through all docs to create lists of tables and figures in csvs
-toc_figure_titles = 1  # assign page number to TOC figure titles
-toc_table_titles = 1  # assign page number to TOC table titles
+toc_figure_titles = 0  # assign page number to TOC figure titles
+toc_table_titles = 0 # assign page number to TOC table titles
 
-do_tag_title_table = 1  # assign table titles to each table using text search method
-do_toc_title_table = 1  # assign table titles to each table using TOC method
-do_final_title_table = 1  # replace continued tables and create final table title
+do_tag_title_table = 0  # assign table titles to each table using text search method
+do_toc_title_table = 0  # assign table titles to each table using TOC method
+do_final_title_table = 0  # replace continued tables and create final table title
 
-do_tag_title_fig = 1  # assign figure titles to each figure using text search method
-do_toc_title_fig = 1  # assign figure titles to each figure using TOC method
-do_final_title_fig = 1  # replace continued figures and create final figure title
+do_tag_title_fig = 0  # assign figure titles to each figure using text search method
+do_toc_title_fig = 0  # assign figure titles to each figure using TOC method
+do_final_title_fig = 0  # replace continued figures and create final figure title
 
-create_tables_csv = 0
-create_figs_csv = 0
+create_tables_csv = 1
+create_figs_csv = 1
 
 if __name__ == "__main__":
     # get list of all documents, read from pdfs
-    with engine.connect() as conn:
-        stmt = text("SELECT pdfId, hearingOrder, short_name FROM pdfs;")
+    with conn:
+        stmt = '''SELECT pdfId, hearingOrder, short_name FROM [DS_TEST].[BERDI].pdfs;'''
         all_projects = pd.read_sql_query(stmt, conn)
     projects = all_projects["short_name"].unique()
     list_ids = all_projects["pdfId"].tolist()
@@ -55,21 +60,20 @@ if __name__ == "__main__":
     # now get TOC from each document and create a list of all figs and tables (that were found in TOC's)
     if get_toc:
         print("Searching for TOC tables and figures")
-        conn = engine.connect()
+        cursor = conn.cursor()
         for index, row in all_projects.iterrows():
             doc_id = row["pdfId"]
 
             # delete any existing TOC from this document
-            stmt = text("DELETE FROM toc WHERE toc_pdfId = :pdfId;")
-            params = {"pdfId": doc_id}
-            result = conn.execute(stmt, params)
+            stmt = '''DELETE FROM [DS_TEST].[BERDI].toc WHERE toc_pdfId = ?;'''
+            params = [doc_id]
+            result = cursor.execute(stmt, params)
+            cursor.commit()
 
             # get text of this document
-            params = {"pdf_id": doc_id}
-            stmt = text(
-                "SELECT page_num, content FROM pages_normal_txt "
-                "WHERE (pdfId = :pdf_id);"
-            )
+            params = [doc_id]
+            stmt = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_normal_txt
+                WHERE (pdfId = ?);'''
             text_df = pd.read_sql_query(stmt, conn, params=params, index_col="page_num")
 
             # stmt_rotated = text("SELECT page_num, content FROM pages_rotated90_txt "
@@ -88,28 +92,20 @@ if __name__ == "__main__":
                     page_name = toc[1].strip()
                     type = title.split(" ", 1)[0].capitalize()
                     if type in constants.accepted_toc:  # if accepted type
-                        stmt = text(
-                            "INSERT INTO toc (assigned_count, title_type, titleTOC, page_name, "
-                            "toc_page_num, toc_pdfId, toc_title_order) "
-                            "VALUE (null, :type, :title, :page_name, :page_num, :pdfId, :order);"
-                        )
-                        params = {
-                            "type": type,
-                            "title": title,
-                            "page_name": page_name,
-                            "page_num": page_num,
-                            "pdfId": doc_id,
-                            "order": i + 1,
-                        }
-                        result = conn.execute(stmt, params)
+                        stmt = '''INSERT INTO [DS_TEST].[BERDI].toc (assigned_count, title_type, titleTOC, page_name,
+                            toc_page_num, toc_pdfId, toc_title_order)
+                            VALUES (null, ?,?,?,?,?,?);'''
+                        params = [type, title, page_name, page_num, doc_id, i+1]
+                        result = cursor.execute(stmt, params)
                         if result.rowcount != 1:
                             print("Did not go to database:", doc_id, page_num, toc)
+                        cursor.commit()
         conn.close()
 
     # get page numbers for all the figures found in TOC
     if toc_figure_titles:
-        # for project in projects:
-        #     project_figure_titles(project)
+        for project in projects:
+            project_figure_titles(project)
         with Pool() as pool:
             results = pool.map(project_figure_titles, projects, chunksize=1)
         with open("fig_errors.txt", "w", encoding="utf-8") as f:
@@ -200,14 +196,12 @@ if __name__ == "__main__":
 
     if create_tables_csv:
         # write to all_tables-final.csv from csvs
-        with engine.connect() as conn:
-            stmt = text(
-                """SELECT csvFullPath, pdfId, page, tableNumber, topRowJson, titleTag, titleTOC, titleFinal FROM csvs 
-                WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78);"""
-            )
+        with conn:
+            stmt = '''SELECT csvFileName, csvFullPath, pdfId, page, tableNumber, topRowJson, titleTag, titleTOC, titleFinal FROM [DS_TEST].[BERDI].csvs 
+                WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78);'''
             df = pd.read_sql_query(stmt, conn)
         df.to_csv(
-            constants.save_dir + "all_tables-final.csv",
+            constants.save_dir + "/" + "all_tables-final.csv",
             index=False,
             encoding="utf-8-sig",
         )
@@ -215,10 +209,10 @@ if __name__ == "__main__":
 
     if create_figs_csv:
         # get final figs csv files
-        with engine.connect() as conn:
-            stmt = """SELECT toc.titleTOC, toc.page_name, toc.toc_page_num, toc.toc_pdfId, toc.toc_title_order, toc.loc_pdfId, toc.loc_page_list, pdfs.short_name
-                FROM toc LEFT JOIN pdfs ON toc.toc_pdfId = pdfs.pdfId WHERE title_type='Figure'
-                ORDER BY pdfs.short_name, toc.toc_pdfId, toc.toc_page_num, toc.toc_title_order;"""
+        with conn:
+            stmt = '''SELECT toc.titleTOC, toc.page_name, toc.toc_page_num, toc.toc_pdfId, toc.toc_title_order, toc.loc_pdfId, toc.loc_page_list, pdfs.short_name
+                FROM [DS_TEST].[BERDI].toc LEFT JOIN [DS_TEST].[BERDI].pdfs ON toc.toc_pdfId = pdfs.pdfId WHERE title_type='Figure'
+                ORDER BY pdfs.short_name, toc.toc_pdfId, toc.toc_page_num, toc.toc_title_order;'''
             df = pd.read_sql_query(stmt, conn)
 
         new_list = []
@@ -259,7 +253,7 @@ if __name__ == "__main__":
 
         # df.to_csv(constants.save_dir + 'final_figs_new.csv', index=False, encoding='utf-8-sig')
         df_pivoted.to_csv(
-            constants.save_dir + "final_figs_pivoted_new.csv",
+            constants.save_dir + "/" + "final_figs_pivoted_new.csv",
             index=False,
             encoding="utf-8-sig",
         )

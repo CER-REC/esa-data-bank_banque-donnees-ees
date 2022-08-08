@@ -53,7 +53,6 @@ def insert_pdfs():
 
     with conn:
         cursor = conn.cursor()
-        print(cursor)
         for row in df.itertuples():
             try:
                 r = cursor.execute("SELECT * FROM [DS_TEST].BERDI.pdfs WHERE pdfId = ?;", (row.pdfId))
