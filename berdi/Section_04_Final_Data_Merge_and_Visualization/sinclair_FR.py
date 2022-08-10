@@ -14,6 +14,7 @@ CSVS_PATH = REPO_ROOT / "data" / "processed" / "csvs" / "new_projects"
 RENAMED_CSVS_PATH = "G:/ESA_downloads/BERDI_FR/rename_csv/"
 
 df_index = pd.read_csv(str(INTERMEDIATE_INDEX_PATH / "esa_vecs_labeled_FR.csv"), encoding = 'cp1252')  # 502, 55
+
 df_index['Download folder name'] = 'snclr'
 
 df_index_table = df_index[df_index['Content Type'] == 'Table']  # 473, 56
@@ -129,8 +130,8 @@ df_index_all.to_csv(RENAMED_CSVS_PATH + 'index_csv_renamed.csv', encoding = 'utf
 # o	PDF Outline
 # o	Good Quality
 
-readme_project_filepath = 'G:/ESA_downloads/BERDI_FR/README-FR-projects.txt'
-readme_table_filepath = 'G:/ESA_downloads/BERDI_FR/README-FR-tables.txt'
+readme_project_filepath = 'G:/ESA_downloads/README-FRA-projects.txt'
+readme_table_filepath = 'G:/ESA_downloads/README-FRA-tables.txt'
 
 new_folder = os.path.join('G:/ESA_downloads/BERDI_FR/', 'fr')
 if not os.path.exists(new_folder):
@@ -149,79 +150,149 @@ if not os.path.exists(new_folder_tables):
 # Create a temporary column in the index dataframe as table identification - Table ID
 df_index_all = pd.read_csv('G:/ESA_downloads/BERDI_FR/rename_csv/index_csv_renamed.csv')
 df_index_all = df_index_all.drop(columns=['ID'])
-#df_index_all = df_index_all.rename(columns={'Application Type (NEB Act)': 'Application Type'})
-#df_index_all['Hearing order'] = None
+df_index_all['Hearing Order'] = None
+df_index_all.rename(columns={
+    'Content Type': 'Type de contenu',
+    'Application Name': 'Nom de la demande',
+    'Application Short Name': 'Nom abrégé de la demande',
+    'Application Filing Date': 'Dépôt de la demande',
+    'Company Name': 'Nom de la société',
+    'Commodity': 'Produit de base',
+    'File Name': 'Nom de fichier',
+    'ESA Folder URL': 'URL du dossier de l\'ÉES',
+    'Document Number': 'Numéro de document',
+    'Data ID': 'Identificateur de données',
+    'PDF Download URL': 'URL de téléchargement PDF',
+    'Application Type': 'Type de demande',
+    'Pipeline Location': 'Emplacement du pipeline',
+    'Hearing Order': 'Ordonnance d\'audience',
+    'Consultant Name': 'Nom du consultant',
+    'Pipeline Status': 'État d\'avancement',
+    'Regulatory Instrument(s)': 'Instruments réglementaires',
+    'Application URL': 'URL de la demande',
+    'Decision URL': 'URL de la décision',
+    'ESA Section(s) Index': 'Index des sections de l\'ÉES',
+    'Topics': 'Sujets des sections de l\'ÉES',
+    'PDF Page Number': 'Numéro de page PDF',
+    'PDF Page Count': 'Nombre de pages PDF',
+    'PDF Size (bytes)': 'Taille PDF',
+    'Outline Present': 'Aperçu PDF',
+    'Landscape, terrain, and weather': 'Paysage, terrain et conditions météorologiques',
+    'Soil': 'Sol',
+    'Plants': 'Plantes',
+    'Water': 'Eau',
+    'Fish': 'Poissons',
+    'Wetlands': 'Milieux humides',
+    'Wildlife': 'Faune',
+    'Species at Risk': 'Espèces en péril',
+    'Greenhouse gas emissions': 'Émissions de gaz à effet de serre',
+    'Air emissions': 'Émissions atmosphériques',
+    'Noise': 'Bruit',
+    'Electricity and electromagnetism': 'Électricité et électromagnétisme',
+    'Proximity to people': 'Lieux habités à proximité',
+    'Archaeological, paleontological, historical, and culturally significant sites and resources': 'Sites et ressources archéologiques, paléontologiques, historiques ou importants sur le plan culturel',
+    'Human access to boats and waterways': 'Activités à bord d\'embarcation ou sur des voies navigables',
+    'Indigenous land, water, and air use': 'Utilisation des terres, de l\'eau et du plein air par les Autochtones',
+    'Impact to social and cultural well-being': 'Incidences sur le bien-être social et culturel',
+    'Impact to human health and viewscapes': 'Incidence sur la santé humaine et le panorama',
+    'Social, cultural, economic infrastructure and services': 'Infrastructure et services sociaux, culturels et économiques',
+    'Economic Offsets and Impact': 'Compensations et répercussions économiques',
+    'Environmental Obligations': 'Obligations en matière d\'environnement',
+    'Treaty and Indigenous Rights': 'Droits ancestraux et issus de traités',
+    'Download folder name': 'Télécharger le nom du dossier'
+}, inplace = True)
+# Update French ESA Folder URL
+df_index_all['URL du dossier de l\'ÉES'] = df_index_all['URL du dossier de l\'ÉES']\
+    .apply(lambda x: x.replace('https://apps.cer-rec.gc.ca/REGDOCS/Item/View/','https://apps.cer-rec.gc.ca/REGDOCS/Élément/Afficher/'))
 
-df_index_all_table = df_index_all[df_index_all['Content Type'] == 'Table']
-df_table_id = df_index_all_table.groupby(['Titre', 'Data ID']).size()\
+# Update French Application URL
+df_index_all['URL de la demande'] = df_index_all['URL de la demande']\
+    .apply(lambda x: x.replace('https://apps.cer-rec.gc.ca/REGDOCS/Item/View/','https://apps.cer-rec.gc.ca/REGDOCS/Élément/Afficher/'))
+
+# Update French Decision URL
+df_index_all['URL de la décision'] = df_index_all['URL de la décision']\
+    .apply(lambda x: x.replace('https://apps.cer-rec.gc.ca/REGDOCS/Item/View/','https://apps.cer-rec.gc.ca/REGDOCS/Élément/Afficher/'))
+
+# Update Commodity Labels
+df_index_all['Produit de base'].replace({'Gas': 'Gaz', 'Oil': 'Pétrole'}, inplace = True)
+
+# Update Content Type Labels
+df_index_all['Type de contenu'].replace({'Table': 'Tableau', 'Alignment Sheet': 'Carte-tracé'}, inplace = True)
+print(df_index_all.columns)
+
+df_index_all_table = df_index_all[df_index_all['Type de contenu'] == 'Tableau']
+df_table_id = df_index_all_table.groupby(['Titre', 'Identificateur de données']).size()\
     .reset_index().drop(columns=[0])\
     .reset_index().rename(columns={'index': 'Table ID'})
-df_index_all_table = df_index_all_table.merge(df_table_id, left_on=['Titre', 'Data ID'], right_on=['Titre', 'Data ID'])
+df_index_all_table = df_index_all_table.merge(df_table_id, left_on=['Titre', 'Identificateur de données'], right_on=['Titre', 'Identificateur de données'])
 
 # Add a new column - Project Download Path
 df_index_all_table_good = df_index_all_table[df_index_all_table['Good Quality'] == True]
-df_index_all_table_good['Project Download Path'] = df_index_all_table_good['Download folder name']\
+df_index_all_table_good['Chemin d\'accès pour télécharger le projet'] = df_index_all_table_good['Télécharger le nom du dossier']\
     .apply(lambda x: '/projects/{}.zip'.format(x))
 
 # Add a new column - Table Download Path
-df_table_filename = df_index_all_table_good.sort_values(['PDF Page Number'])\
+df_table_filename = df_index_all_table_good.sort_values(['Numéro de page PDF'])\
     .groupby('Table ID')['csvFileNameRenamed'].first()\
     .reset_index().rename(columns={'csvFileNameRenamed': 'Table Name'})
 df_table_filename['Table Name'] = df_table_filename['Table Name']\
     .apply(lambda x: x.replace('.csv', '').replace('--', '-'))
 df_index_all_table_good = df_index_all_table_good.merge(df_table_filename, left_on='Table ID', right_on='Table ID')
-df_index_all_table_good['Table Download Path'] = df_index_all_table_good['Table Name']\
+df_index_all_table_good['Chemin d\'accès pour télécharger le tableau'] = df_index_all_table_good['Table Name']\
     .apply(lambda x: '/tables/{}.zip'.format(x))
 
-df_index_all_table_good.rename(columns={"Download folder name": "Télécharger le nom du dossier", "csvFileNameRenamed":\
-     "Nom du CSV", "PDF Page Number": "Numéro de page PDF"}, inplace = True)
+df_index_all_table_good.rename(columns={"csvFileNameRenamed": "Nom du CSV"}, inplace = True)
 
 print(df_index_all_table_good.columns)
 
 # Columns: the data of these columns will be added to read files and project index files
 columns = ['Titre',
-           'Content Type',
-           'Application Name',
-           'Application Short Name',
-           'Application Filing Date',
-           'Company Name',
-           'Commodity',
-           'File Name',
-           'ESA Folder URL',
-           'PDF Download URL',
-           'Application Type',
-           'Pipeline Location',
-           'Hearing Order',
-           'Consultant Name',
-           'Pipeline Status',
-           'Application URL',
-           'Decision URL',
-           "Sections de l'EES",
+           'Type de contenu',
+           'Nom de la demande',
+           'Nom abrégé de la demande',
+           'Dépôt de la demande',
+           'Nom de la société',
+           'Produit de base',
+           'Nom de fichier',
+           'URL du dossier de l\'ÉES',
+           'URL de téléchargement PDF',
+           'Type de demande',
+           'Emplacement du pipeline',
+           'Ordonnance d\'audience',
+           'Nom du consultant',
+           'État d\'avancement',
+           'URL de la demande',
+           'URL de la décision',
+           'Sections de l\'EES',
            'Numéro de page PDF',
-           'Project Download Path',
-           'Table Download Path']
-
-# df_index_all_table_good = df_index_all_table_good.rename(columns={'Application Type (NEB Act)': 'Application Type'})
-# df_index_all_table_good['Hearing order'] = None
+           'Chemin d\'accès pour télécharger le projet',
+           'Chemin d\'accès pour télécharger le tableau']
 
 
 #################### Create Project and Table Download Files ####################
-import multiprocessing
+# import multiprocessing
 from berdi.Section_04_Final_Data_Merge_and_Visualization.bundle.bundle_utilites import bundle_for_project, bundle_for_table
 
 # Create project download zip files
-args = [(df_index_all_table_good, project_folder_name, new_folder_projects, RENAMED_CSVS_PATH, columns, readme_project_filepath)
-        for project_folder_name in sorted(df_index_all_table_good['Télécharger le nom du dossier'].unique().tolist())]
-pool = multiprocessing.Pool()
-pool.starmap(bundle_for_project, args)
-pool.close()
+# is_french = True
+# args = [(df_index_all_table_good, project_folder_name, new_folder_projects, RENAMED_CSVS_PATH, columns, readme_project_filepath, is_french)
+#          for project_folder_name in sorted(df_index_all_table_good['Télécharger le nom du dossier'].unique().tolist())]
+# pool = multiprocessing.Pool()
+# pool.starmap(bundle_for_project, args)
+# pool.close()
+
+for project_folder_name in sorted(df_index_all_table_good['Télécharger le nom du dossier'].unique().tolist()):
+    bundle_for_project(df_index_all_table_good, project_folder_name, new_folder_projects, RENAMED_CSVS_PATH, columns, readme_project_filepath, is_french = True)
 
 # Create table download zip files
-args_table = [(df_index_all_table_good, table_id, new_folder_tables, RENAMED_CSVS_PATH, columns, readme_table_filepath)
-              for table_id in sorted(df_index_all_table_good['Table ID'].unique().tolist())]
-pool = multiprocessing.Pool()
-pool.starmap(bundle_for_table, args_table)
-pool.close()
+# args_table = [(df_index_all_table_good, table_id, new_folder_tables, RENAMED_CSVS_PATH, columns, readme_table_filepath, is_french)
+#              for table_id in sorted(df_index_all_table_good['Table ID'].unique().tolist())]
+# pool = multiprocessing.Pool()
+# pool.starmap(bundle_for_table, args_table)
+# pool.close()
+
+for table_id in sorted(df_index_all_table_good['Table ID'].unique().tolist()):
+    bundle_for_table(df_index_all_table_good, table_id, new_folder_tables, RENAMED_CSVS_PATH, columns, readme_table_filepath, is_french = True)
 
 
 # #################### Prepare final index file ###########################
@@ -250,26 +321,26 @@ vec_columns = [
     'Treaty and Indigenous Rights'
 ]
 
-# # Create column Page Count per table
-# df_page_count = df_index_all_table.groupby('Table ID')\
-#     .apply(lambda x: x['PDF Page Number'].max() - x['PDF Page Number'].min() + 1)\
-#     .reset_index().rename(columns={0: 'Page Count'})
+# Create column Page Count per table
+df_page_count = df_index_all_table.groupby('Table ID')\
+    .apply(lambda x: x['PDF Page Number'].max() - x['PDF Page Number'].min() + 1)\
+    .reset_index().rename(columns={0: 'Page Count'})
 
-# # Create vec values per table (aggregating vec values of the csvs belonging to the same table)
-# df_vec = df_index_all_table.groupby('Table ID')[vec_columns].sum().reset_index()
+# Create vec values per table (aggregating vec values of the csvs belonging to the same table)
+df_vec = df_index_all_table.groupby('Table ID')[vec_columns].sum().reset_index()
 
-# # Create a dataframe for the bad quality tables
-# df_index_table_bad = df_index_all_table[(df_index_all_table['Content Type'] == 'Table') &
-#                                         (df_index_all_table['Good Quality'] == False)]\
-#     .sort_values(['Table ID', 'PDF Page Number']).groupby('Table ID').first().reset_index()
-# df_index_table_bad = df_index_table_bad.merge(df_page_count, on='Table ID')
-# df_index_table_bad = df_index_table_bad.drop(columns=vec_columns)
-# df_index_table_bad = df_index_table_bad.merge(df_vec, on='Table ID')
+# Create a dataframe for the bad quality tables
+df_index_table_bad = df_index_all_table[(df_index_all_table['Content Type'] == 'Table') &
+                                        (df_index_all_table['Good Quality'] == False)]\
+    .sort_values(['Table ID', 'PDF Page Number']).groupby('Table ID').first().reset_index()
+df_index_table_bad = df_index_table_bad.merge(df_page_count, on='Table ID')
+df_index_table_bad = df_index_table_bad.drop(columns=vec_columns)
+df_index_table_bad = df_index_table_bad.merge(df_vec, on='Table ID')
 
-# columns_table_bad = [col for col in columns if col not in ('Project Download Path', 'Table Download Path')]
-# columns_table_bad.append('Page Count')
-# columns_table_bad.extend(vec_columns)
-# df_index_table_bad = df_index_table_bad[columns_table_bad]
+columns_table_bad = [col for col in columns if col not in ('Project Download Path', 'Table Download Path')]
+columns_table_bad.append('Page Count')
+columns_table_bad.extend(vec_columns)
+df_index_table_bad = df_index_table_bad[columns_table_bad]
 
 # # Create a dataframe for figure & alignment sheets
 # df_index_figure = df_index_all[df_index_all['Content Type'] != 'Table']
@@ -289,7 +360,7 @@ vec_columns = [
 # df_index_final = pd.concat([df_index_table_good, df_index_table_bad, df_index_figure])
 
 # # Add columns ID, Data ID, Thumbnail Location
-# df_index_final['ID'] = df_index_final.index + 21425
+# df_index_final['ID'] = df_index_final.index + 21425 ## make sure index matches with english
 # df_index_final['Data ID'] = df_index_final['PDF Download URL'].apply(lambda x: x.split('/')[-1])
 # df_index_final['Thumbnail Location'] = df_index_final.apply(lambda x: 'thumbnails/{}_{}.jpg'.format(x['Data ID'], x['PDF Page Number']), axis=1)
 
