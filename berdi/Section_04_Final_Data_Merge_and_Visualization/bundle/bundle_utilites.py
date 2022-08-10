@@ -9,13 +9,15 @@ def bundle_for_project(df_index, project_folder_name, new_folder_projects, csv_f
         column_name_filename = 'Nom du CSV'
         column_name_pdf_page_number = 'Numéro de page PDF'
         index_filename = 'INDEX_PROJET.csv'
-        encode = 'latin-1'
+        encode = 'cp1252'
+        readme_filename = 'LISEZMOI.txt'
     else:
         column_name_download_folder_name = 'Download folder name'
         column_name_filename = 'csvFileNameRenamed'
         column_name_pdf_page_number = 'PDF Page Number'
         index_filename = 'INDEX_PROJECT.csv'
         encode = 'utf-8'
+        readme_filename = 'readme.txt'
 
     df_project = df_index[df_index[column_name_download_folder_name] == project_folder_name]
 
@@ -52,10 +54,8 @@ def bundle_for_project(df_index, project_folder_name, new_folder_projects, csv_f
     df_project_index.to_csv(os.path.join(new_project_folder, index_filename), index=False, encoding=encode)
 
     # Create readme.txt
-    if is_french:
-        shutil.copy(readme_project_filepath, os.path.join(new_project_folder, 'LISEZMOI.txt'))
-    else:
-        shutil.copy(readme_project_filepath, os.path.join(new_project_folder, 'readme.txt'))
+    shutil.copy(readme_project_filepath, os.path.join(new_project_folder, readme_filename))
+
     # Create project zip file
     shutil.make_archive(new_project_folder, 'zip', new_folder_projects, project_folder_name)
 
@@ -68,9 +68,11 @@ def bundle_for_table(df_index, table_id, new_folder_tables, csv_file_folder, col
     if is_french:
         column_name_filename = 'Nom du CSV'
         column_name_pdf_page_number = 'Numéro de page PDF'
+        readme_filename = 'LISEZMOI.txt'
     else:
         column_name_filename = 'csvFileNameRenamed'
         column_name_pdf_page_number = 'PDF Page Number'
+        readme_filename = 'readme.txt'
 
     df_table = df_index[df_index['Table ID'] == table_id]
 
@@ -89,10 +91,7 @@ def bundle_for_table(df_index, table_id, new_folder_tables, csv_file_folder, col
             print('File missing: {}'.format(os.path.join(csv_file_folder, csv)))
 
     # Create readme.txt by append table metadata to the generic readme file
-    if is_french:
-        readme_table_filepath = os.path.join(temp_folder_for_bundling, 'LISEZMOI.txt')
-    else:
-        readme_table_filepath = os.path.join(temp_folder_for_bundling, 'readme.txt')
+    readme_table_filepath = os.path.join(temp_folder_for_bundling, readme_filename)
     shutil.copy(readme_project_filepath, readme_table_filepath)
     with open(readme_table_filepath, 'a', encoding="utf-8") as file:
         metadata = ''
