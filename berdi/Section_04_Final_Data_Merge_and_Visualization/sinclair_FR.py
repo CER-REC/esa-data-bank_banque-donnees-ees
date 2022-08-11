@@ -243,8 +243,6 @@ df_index_all_table_good['Chemin d\'accès pour télécharger le tableau'] = df_i
 
 df_index_all_table_good.rename(columns={"csvFileNameRenamed": "Nom du CSV"}, inplace = True)
 
-print(df_index_all_table_good.columns)
-
 # Columns: the data of these columns will be added to read files and project index files
 columns = ['Titre',
            'Type de contenu',
@@ -297,75 +295,76 @@ for table_id in sorted(df_index_all_table_good['Table ID'].unique().tolist()):
 
 # #################### Prepare final index file ###########################
 vec_columns = [
-    'Landscape, terrain, and weather',
-    'Soil',
-    'Plants',
-    'Water',
-    'Fish',
-    'Wetlands',
-    'Wildlife',
-    'Species at Risk',
-    'Greenhouse gas emissions',
-    'Air emissions',
-    'Noise',
-    'Electricity and electromagnetism',
-    'Proximity to people',
-    'Archaeological, paleontological, historical, and culturally significant sites and resources',
-    'Human access to boats and waterways',
-    'Indigenous land, water, and air use',
-    'Impact to social and cultural well-being',
-    'Impact to human health and viewscapes',
-    'Social, cultural, economic infrastructure and services',
-    'Economic Offsets and Impact',
-    'Environmental Obligations',
-    'Treaty and Indigenous Rights'
+    'Paysage, terrain et conditions météorologiques',
+    'Sol',
+    'Plantes',
+    'Eau',
+    'Poissons',
+    'Milieux humides',
+    'Faune',
+    'Espèces en péril',
+    'Émissions de gaz à effet de serre',
+    'Émissions atmosphériques',
+    'Bruit',
+    'Électricité et électromagnétisme',
+    'Lieux habités à proximité',
+    'Sites et ressources archéologiques, paléontologiques, historiques ou importants sur le plan culturel',
+    'Activités à bord d\'embarcation ou sur des voies navigables',
+    'Utilisation des terres, de l\'eau et du plein air par les Autochtones',
+    'Incidences sur le bien-être social et culturel',
+    'Incidence sur la santé humaine et le panorama',
+    'Infrastructure et services sociaux, culturels et économiques',
+    'Compensations et répercussions économiques',
+    'Obligations en matière d\'environnement',
+    'Droits ancestraux et issus de traités'
 ]
 
 # Create column Page Count per table
 df_page_count = df_index_all_table.groupby('Table ID')\
-    .apply(lambda x: x['PDF Page Number'].max() - x['PDF Page Number'].min() + 1)\
+    .apply(lambda x: x['Numéro de page PDF'].max() - x['Numéro de page PDF'].min() + 1)\
     .reset_index().rename(columns={0: 'Page Count'})
 
 # Create vec values per table (aggregating vec values of the csvs belonging to the same table)
 df_vec = df_index_all_table.groupby('Table ID')[vec_columns].sum().reset_index()
 
 # Create a dataframe for the bad quality tables
-df_index_table_bad = df_index_all_table[(df_index_all_table['Content Type'] == 'Table') &
+df_index_table_bad = df_index_all_table[(df_index_all_table['Type de contenu'] == 'Tableau') &
                                         (df_index_all_table['Good Quality'] == False)]\
-    .sort_values(['Table ID', 'PDF Page Number']).groupby('Table ID').first().reset_index()
+    .sort_values(['Table ID', 'Numéro de page PDF']).groupby('Table ID').first().reset_index()
 df_index_table_bad = df_index_table_bad.merge(df_page_count, on='Table ID')
 df_index_table_bad = df_index_table_bad.drop(columns=vec_columns)
 df_index_table_bad = df_index_table_bad.merge(df_vec, on='Table ID')
 
-columns_table_bad = [col for col in columns if col not in ('Project Download Path', 'Table Download Path')]
+columns_table_bad = [col for col in columns if col not in ('Chemin d\'accès pour télécharger le projet', 'Chemin d\'accès pour télécharger le tableau')]
 columns_table_bad.append('Page Count')
 columns_table_bad.extend(vec_columns)
 df_index_table_bad = df_index_table_bad[columns_table_bad]
 
-# # Create a dataframe for figure & alignment sheets
-# df_index_figure = df_index_all[df_index_all['Content Type'] != 'Table']
-# df_index_figure['Page Count'] = 1
-# df_index_figure = df_index_figure[columns_table_bad]
+# Create a dataframe for figure & alignment sheets
+df_index_figure = df_index_all[df_index_all['Type de contenu'] != 'Tableau']
+df_index_figure['Page Count'] = 1
+df_index_figure = df_index_figure[columns_table_bad]
 
-# # Create a dataframe for the good quality tables
-# df_index_table_good = df_index_all_table_good \
-#     .sort_values(['Table ID', 'PDF Page Number']).groupby('Table ID').first().reset_index()
-# df_index_table_good = df_index_table_good.merge(df_page_count, on='Table ID')
-# df_index_table_good = df_index_table_good.drop(columns=vec_columns)
-# df_index_table_good = df_index_table_good.merge(df_vec, on='Table ID')
-# columns_table_good = columns_table_bad + ['Project Download Path', 'Table Download Path']
-# df_index_table_good = df_index_table_good[columns_table_good]
+# Create a dataframe for the good quality tables
+df_index_table_good = df_index_all_table_good \
+    .sort_values(['Table ID', 'Numéro de page PDF']).groupby('Table ID').first().reset_index()
+df_index_table_good = df_index_table_good.merge(df_page_count, on='Table ID')
+df_index_table_good = df_index_table_good.drop(columns=vec_columns)
+df_index_table_good = df_index_table_good.merge(df_vec, on='Table ID')
+columns_table_good = columns_table_bad + ['Chemin d\'accès pour télécharger le projet', 'Chemin d\'accès pour télécharger le tableau']
+df_index_table_good = df_index_table_good[columns_table_good]
 
-# # Concatenate three dataframes
-# df_index_final = pd.concat([df_index_table_good, df_index_table_bad, df_index_figure])
+# Concatenate three dataframes
+df_index_final = pd.concat([df_index_table_good, df_index_table_bad, df_index_figure])
+print(df_index_final.columns)
 
-# # Add columns ID, Data ID, Thumbnail Location
-# df_index_final['ID'] = df_index_final.index + 21425 ## make sure index matches with english
-# df_index_final['Data ID'] = df_index_final['PDF Download URL'].apply(lambda x: x.split('/')[-1])
-# df_index_final['Thumbnail Location'] = df_index_final.apply(lambda x: 'thumbnails/{}_{}.jpg'.format(x['Data ID'], x['PDF Page Number']), axis=1)
+# Add columns ID, Data ID, Thumbnail Location
+df_index_final['ID'] = df_index_final.index + 21425 ## make sure index matches with english
+df_index_final['Data ID'] = df_index_final['URL de téléchargement PDF'].apply(lambda x: x.split('/')[-1])
+df_index_final['Thumbnail Location'] = df_index_final.apply(lambda x: 'thumbnails/{}_{}.jpg'.format(x['Data ID'], x['Numéro de page PDF']), axis=1)
 
-# # Save the final index file (per row per table)
-# df_index_final.to_csv('data/download_internal_Aug2022/en/ESA_website_ENG.csv', index=False)
+# Save the final index file (per row per table)
+df_index_final.to_csv('G:/ESA_downloads/BERDI_FR/fr/ESA_website_FRA.csv', index=False, encoding = 'utf-8-sig')
 
 
 # # ############################# create thumbnails #############################
@@ -380,34 +379,34 @@ df_index_table_bad = df_index_table_bad[columns_table_bad]
 #         pix.save('data/download_internal_Aug2022/thumbnails/{}_{}.jpg'.format(data_id, page_number))
 
 
-# # ############################# Clean the old project files #############################
-# import zipfile
-# import tempfile
+# ############################# Clean the old project files #############################
+import zipfile
+import tempfile
 
-# df_index_last = pd.read_csv('data/download_internal_July2022/en/ESA_website_ENG_20220721.csv')
+df_index_last = pd.read_csv('G:/ESA_downloads/ESA_website_FRA_20210923.csv')
 
-# df_index_last = df_index_last.rename(columns={'Application Type (NEB Act)': 'Application Type'})
-# df_index_last_tmp = df_index_last[columns]
+df_index_last = df_index_last.rename(columns={'Type de demande (Loi sur l\'Office national de l\'énergie)': 'Type de demande'})
+df_index_last_tmp = df_index_last[columns]
 
-# # Clean the project index files to only include the required columns
-# for project_file in df_index_last[df_index_last['Project Download Path'].notna()]['Project Download Path'].unique().tolist():
-#     print(project_file)
-#     project_zipfile = 'data/download_internal_July2022/en' + project_file
-#     tmpfd, tmpfile = tempfile.mkstemp(dir=os.path.dirname(project_zipfile))
-#     os.close(tmpfd)
-#     with zipfile.ZipFile(project_zipfile, 'r') as zin:
-#         with zipfile.ZipFile(tmpfile, 'w') as zout:
-#             zout.comment = zin.comment
-#             for item in zin.infolist():
-#                 if not item.filename.endswith('.csv'):
-#                     # copy all the files to the temp zip file except the project index csv file
-#                     zout.writestr(item, zin.read(item.filename))
-#     os.remove(project_zipfile)  # delete the old project zip file
-#     os.rename(tmpfile, project_zipfile)  # rename the temp file to the project zip file
-#     project = project_zipfile.split('/')[-1].replace('.zip', '')
-#     with zipfile.ZipFile(project_zipfile, mode='a', compression=zipfile.ZIP_DEFLATED) as zf:
-#         csvdata = df_index_last_tmp[df_index_last_tmp['Project Download Path'] == project_file].to_csv(index=False)
-#         zf.writestr(project + '/INDEX_PROJECT.csv', csvdata)  # save a new index file to the project zip file
+# Clean the project index files to only include the required columns
+for project_file in df_index_last[df_index_last['Chemin d\'accès pour télécharger le projet'].notna()]['Chemin d\'accès pour télécharger le projet'].unique().tolist():
+    print(project_file)
+    project_zipfile = 'data/download_internal_July2022/en' + project_file
+    tmpfd, tmpfile = tempfile.mkstemp(dir=os.path.dirname(project_zipfile))
+    os.close(tmpfd)
+    with zipfile.ZipFile(project_zipfile, 'r') as zin:
+        with zipfile.ZipFile(tmpfile, 'w') as zout:
+            zout.comment = zin.comment
+            for item in zin.infolist():
+                if not item.filename.endswith('.csv'):
+                    # copy all the files to the temp zip file except the project index csv file
+                    zout.writestr(item, zin.read(item.filename))
+    os.remove(project_zipfile)  # delete the old project zip file
+    os.rename(tmpfile, project_zipfile)  # rename the temp file to the project zip file
+    project = project_zipfile.split('/')[-1].replace('.zip', '')
+    with zipfile.ZipFile(project_zipfile, mode='a', compression=zipfile.ZIP_DEFLATED) as zf:
+        csvdata = df_index_last_tmp[df_index_last_tmp['Project Download Path'] == project_file].to_csv(index=False)
+        zf.writestr(project + '/INDEX_PROJECT.csv', csvdata)  # save a new index file to the project zip file
 
 # # Clean the table read files to only include the required columns
 # for table_file in df_index_last[df_index_last['Table Download Path'].notna()]['Table Download Path'].unique().tolist():
