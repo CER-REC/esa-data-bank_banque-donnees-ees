@@ -322,7 +322,7 @@ vec_columns = [
 # Create column Page Count per table
 df_page_count = df_index_all_table.groupby('Table ID')\
     .apply(lambda x: x['Numéro de page PDF'].max() - x['Numéro de page PDF'].min() + 1)\
-    .reset_index().rename(columns={0: 'Page Count'})
+    .reset_index().rename(columns={0: 'Nombre de pages'})
 
 # Create vec values per table (aggregating vec values of the csvs belonging to the same table)
 df_vec = df_index_all_table.groupby('Table ID')[vec_columns].sum().reset_index()
@@ -336,13 +336,13 @@ df_index_table_bad = df_index_table_bad.drop(columns=vec_columns)
 df_index_table_bad = df_index_table_bad.merge(df_vec, on='Table ID')
 
 columns_table_bad = [col for col in columns if col not in ('Chemin d\'accès pour télécharger le projet', 'Chemin d\'accès pour télécharger le tableau')]
-columns_table_bad.append('Page Count')
+columns_table_bad.append('Nombre de pages')
 columns_table_bad.extend(vec_columns)
 df_index_table_bad = df_index_table_bad[columns_table_bad]
 
 # Create a dataframe for figure & alignment sheets
 df_index_figure = df_index_all[df_index_all['Type de contenu'] != 'Tableau']
-df_index_figure['Page Count'] = 1
+df_index_figure['Nombre de pages'] = 1
 df_index_figure = df_index_figure[columns_table_bad]
 
 # Create a dataframe for the good quality tables
@@ -383,15 +383,14 @@ df_index_final.to_csv('G:/ESA_downloads/BERDI_FR/fr/ESA_website_FRA.csv', index=
 import zipfile
 import tempfile
 
-df_index_last = pd.read_csv('G:/ESA_downloads/ESA_website_FRA_20210923.csv')
+df_index_last = pd.read_csv('G:/ESA_downloads/fr/ESA_website_FRA_20220721.csv', encoding = 'utf-8-sig')
 
 df_index_last = df_index_last.rename(columns={'Type de demande (Loi sur l\'Office national de l\'énergie)': 'Type de demande'})
 df_index_last_tmp = df_index_last[columns]
 
 # Clean the project index files to only include the required columns
 for project_file in df_index_last[df_index_last['Chemin d\'accès pour télécharger le projet'].notna()]['Chemin d\'accès pour télécharger le projet'].unique().tolist():
-    print(project_file)
-    project_zipfile = 'data/download_internal_July2022/en' + project_file
+    project_zipfile = 'G:/ESA_downloads/fr' + project_file
     tmpfd, tmpfile = tempfile.mkstemp(dir=os.path.dirname(project_zipfile))
     os.close(tmpfd)
     with zipfile.ZipFile(project_zipfile, 'r') as zin:
@@ -405,45 +404,45 @@ for project_file in df_index_last[df_index_last['Chemin d\'accès pour télécha
     os.rename(tmpfile, project_zipfile)  # rename the temp file to the project zip file
     project = project_zipfile.split('/')[-1].replace('.zip', '')
     with zipfile.ZipFile(project_zipfile, mode='a', compression=zipfile.ZIP_DEFLATED) as zf:
-        csvdata = df_index_last_tmp[df_index_last_tmp['Project Download Path'] == project_file].to_csv(index=False)
-        zf.writestr(project + '/INDEX_PROJECT.csv', csvdata)  # save a new index file to the project zip file
+        csvdata = df_index_last_tmp[df_index_last_tmp['Chemin d\'accès pour télécharger le projet'] == project_file].to_csv(index=False, encoding ='utf-8-sig')
+        zf.writestr(project + '/INDEX_PROJET.csv', csvdata)  # save a new index file to the project zip file
 
-# # Clean the table read files to only include the required columns
-# for table_file in df_index_last[df_index_last['Table Download Path'].notna()]['Table Download Path'].unique().tolist():
-#     print(table_file)
-#     table_zipfile = 'data/download_internal_July2022/en' + table_file
-#     tmpfd, tmpfile = tempfile.mkstemp(dir=os.path.dirname(table_zipfile))
-#     os.close(tmpfd)
-#     with zipfile.ZipFile(table_zipfile, 'r') as zin:
-#         with zipfile.ZipFile(tmpfile, 'w') as zout:
-#             zout.comment = zin.comment
-#             for item in zin.infolist():
-#                 if not item.filename.endswith('.txt'):
-#                     # copy all the files to the temp zip file except the readme.txt file
-#                     zout.writestr(item, zin.read(item.filename))
-#     os.remove(table_zipfile)  # delete the old table zip file
-#     os.rename(tmpfile, table_zipfile)  # rename the temp file to the table zip file
+# Clean the table read files to only include the required columns
+for table_file in df_index_last[df_index_last['Chemin d\'accès pour télécharger le tableau'].notna()]['Chemin d\'accès pour télécharger le tableau'].unique().tolist():
+    print(table_file)
+    table_zipfile = 'G:/ESA_downloads/fr' + table_file
+    tmpfd, tmpfile = tempfile.mkstemp(dir=os.path.dirname(table_zipfile))
+    os.close(tmpfd)
+    with zipfile.ZipFile(table_zipfile, 'r') as zin:
+        with zipfile.ZipFile(tmpfile, 'w') as zout:
+            zout.comment = zin.comment
+            for item in zin.infolist():
+                if not item.filename.endswith('.txt'):
+                    # copy all the files to the temp zip file except the readme.txt file
+                    zout.writestr(item, zin.read(item.filename))
+    os.remove(table_zipfile)  # delete the old table zip file
+    os.rename(tmpfile, table_zipfile)  # rename the temp file to the table zip file
 
-#     # create the table readme.txt
-#     df_table = df_index_last_tmp[df_index_last_tmp['Table Download Path'] == table_file]
-#     metadata = open(readme_table_filepath, 'r').read()
-#     for col in columns:
-#         if col == 'PDF Page Number' and df_table[col].min() != df_table[col].max():
-#             metadata += '{}: {} - {}\n'.format(col, df_table[col].min(), df_table[col].max())
-#         else:
-#             metadata += '{}: {}\n'.format(col, df_table.iloc[0][col])
-#     # save the table readme file to the new table zip file
-#     with zipfile.ZipFile(table_zipfile, mode='a', compression=zipfile.ZIP_DEFLATED) as zf:
-#         zf.writestr('readme.txt', metadata)
+    # create the table readme.txt
+    df_table = df_index_last_tmp[df_index_last_tmp['Chemin d\'accès pour télécharger le tableau'] == table_file]
+    metadata = open(readme_table_filepath, 'r').read()
+    for col in columns:
+        if col == 'Numéro de page PDF' and df_table[col].min() != df_table[col].max():
+            metadata += '{}: {} - {}\n'.format(col, df_table[col].min(), df_table[col].max())
+        else:
+            metadata += '{}: {}\n'.format(col, df_table.iloc[0][col])
+    # save the table readme file to the new table zip file
+    with zipfile.ZipFile(table_zipfile, mode='a', compression=zipfile.ZIP_DEFLATED) as zf:
+        zf.writestr('LISEZMOI.txt', metadata)
 
-# columns_indexfile = pd.read_csv('data/download_internal_Aug2022/en/ESA_website_ENG.csv').columns.tolist()
-# # Save only the required columns for the index file of data update #1&2
-# df_index_last[columns_indexfile].to_csv('data/download_internal_July2022/en/ESA_website_ENG_20220727_final.csv', index=False)
+columns_indexfile = pd.read_csv('G:/ESA_downloads/BERDI_FR/fr/ESA_website_FRA.csv', encoding = 'utf-8-sig').columns.tolist()  ## sinclair csv file
+# Save only the required columns for the index file of data update #1&2
+df_index_last[columns_indexfile].to_csv('G:/ESA_downloads/ESA_website_ENG_20220812_final.csv', index=False, encoding = 'utf-8-sig')
 
 
-# # ############################# Combine the merged index files #############################
-# # Concatenate the index file of date update #1&2 and data update #3
-# pd.concat([
-#     pd.read_csv('data/download_internal_July2022/en/ESA_website_ENG_20220727_final.csv'),
-#     pd.read_csv('data/download_internal_Aug2022/en/ESA_website_ENG.csv')]).sort_values('ID')\
-#     .to_csv('data/download_internal_Aug2022_merged/en/ESA_website_ENG.csv', index=False)
+# ############################# Combine the merged index files #############################
+# Concatenate the index file of date update #1&2 and data update #3
+pd.concat([
+    pd.read_csv('G:/ESA_downloads/ESA_website_ENG_20220812_final.csv'),
+    pd.read_csv('G:/ESA_downloads/BERDI_FR/fr/ESA_website_FRA.csv')]).sort_values('ID')\
+    .to_csv('G:/ESA_downloads/ESA_website_FRA.csv', index=False, encoding = 'utf-8-sig')
