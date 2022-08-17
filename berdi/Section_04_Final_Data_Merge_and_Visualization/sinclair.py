@@ -105,7 +105,7 @@ df_index_all = pd.concat([df_index_table_good_quality,   # 378, 60  good quality
                          # 95, 57 bad quality table
                          )
 
-df_index_all.to_csv('data/sinclair/index_csv_renamed.csv', index=False)
+df_index_all.to_csv('data/sinclair/index_csv_renamed.csv', index=False, encoding = 'utf-8-sig')
 
 # #################################### Preprocess before creating bundles ####################################
 # Remove columns
@@ -278,7 +278,7 @@ df_index_final['Data ID'] = df_index_final['PDF Download URL'].apply(lambda x: x
 df_index_final['Thumbnail Location'] = df_index_final.apply(lambda x: 'thumbnails/{}_{}.jpg'.format(x['Data ID'], x['PDF Page Number']), axis=1)
 
 # Save the final index file (per row per table)
-df_index_final.to_csv('data/download_internal_Aug2022/en/ESA_website_ENG.csv', index=False)
+df_index_final.to_csv('data/download_internal_Aug2022/en/ESA_website_ENG.csv', index=False, encoding = 'utf-8-sig')
 
 
 # ############################# create thumbnails #############################
@@ -319,7 +319,7 @@ for project_file in df_index_last[df_index_last['Project Download Path'].notna()
     os.rename(tmpfile, project_zipfile)  # rename the temp file to the project zip file
     project = project_zipfile.split('/')[-1].replace('.zip', '')
     with zipfile.ZipFile(project_zipfile, mode='a', compression=zipfile.ZIP_DEFLATED) as zf:
-        csvdata = df_index_last_tmp[df_index_last_tmp['Project Download Path'] == project_file].to_csv(index=False)
+        csvdata = df_index_last_tmp[df_index_last_tmp['Project Download Path'] == project_file].to_csv(index=False, encoding = 'utf-8-sig')
         zf.writestr(project + '/INDEX_PROJECT.csv', csvdata)  # save a new index file to the project zip file
 
 # Clean the table read files to only include the required columns
@@ -352,7 +352,7 @@ for table_file in df_index_last[df_index_last['Table Download Path'].notna()]['T
 
 columns_indexfile = pd.read_csv('data/download_internal_Aug2022/en/ESA_website_ENG.csv').columns.tolist()
 # Save only the required columns for the index file of data update #1&2
-df_index_last[columns_indexfile].to_csv('data/download_internal_July2022/en/ESA_website_ENG_20220727_final.csv', index=False)
+df_index_last[columns_indexfile].to_csv('data/download_internal_July2022/en/ESA_website_ENG_20220727_final.csv', index=False, encoding = 'utf-8-sig')
 
 
 # ############################# Combine the merged index files #############################
@@ -360,4 +360,4 @@ df_index_last[columns_indexfile].to_csv('data/download_internal_July2022/en/ESA_
 pd.concat([
     pd.read_csv('data/download_internal_July2022/en/ESA_website_ENG_20220727_final.csv'),
     pd.read_csv('data/download_internal_Aug2022/en/ESA_website_ENG.csv')]).sort_values('ID')\
-    .to_csv('data/download_internal_Aug2022_merged/en/ESA_website_ENG.csv', index=False)
+    .to_csv('data/download_internal_Aug2022_merged/en/ESA_website_ENG.csv', index=False, encoding = 'utf-8-sig')
