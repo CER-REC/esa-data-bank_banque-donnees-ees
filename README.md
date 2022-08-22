@@ -37,6 +37,8 @@ Based on visual inspection, we assumed that we might classify a particular page 
 ### Step 7: Extract VEC labels
 ****** Work-in-progress *******
 
+![VEC Labels](imgs/VEC_labels.png)
+
 ### Acknowledgments
 The data science team at the University of British Columbia was instrumental in guiding this project in its early days. The Canada Energy Regulator acknowledges the work of Nipun Goyal, Louis (Xiang) Luo, and Prakhar Sinha (with support from Martha Essak, Erin Martin-Serrano, Stuart Donald, and Gene Moo Lee) at the [Centre for Operations Excellence](https://www.sauder.ubc.ca/thought-leadership/research-outreach-centres/centre-operations-excellence), UBC Sauder School of Business.
 
