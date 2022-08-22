@@ -3,10 +3,10 @@ At CER, we receive applications from companies containing thousands of pages of 
 
 ##### Sample Maps:
 
-<img src="https://github.com/iVibudh/CER-classify-maps/blob/main/images/map_1.PNG" alt="map_1.png" width="150" height = "200" />   <img src="https://github.com/iVibudh/CER-classify-maps/blob/main/images/map_2.PNG" alt="map_2.png" width="200" height = "150" />   <img src="https://github.com/iVibudh/CER-classify-maps/blob/main/images/map_3.PNG" alt="map_3.png" width="200" height = "150" />
+<img src="https://github.com/CER-REC/esa-data-bank_banque-donnees-ees/tree/master/imgs/map_1.PNG" alt="map_1.png" width="150" height = "200" />   <img src="https://github.com/CER-REC/esa-data-bank_banque-donnees-ees/tree/master/imgs/map_2.PNG" alt="map_2.png" width="200" height = "150" />   <img src="https://github.com/CER-REC/esa-data-bank_banque-donnees-ees/tree/master/imgs/map_3.PNG" alt="map_3.png" width="200" height = "150" />
 
 ##### Sample Non-Maps:
-<img src="https://github.com/iVibudh/CER-classify-maps/blob/main/images/page_1.PNG" alt="page_1.png" width="150" height = "200" />   <img src="https://github.com/iVibudh/CER-classify-maps/blob/main/images/page_2.PNG" alt="page_2.png" width="150" height = "200" />   <img src="https://github.com/iVibudh/CER-classify-maps/blob/main/images/page_3.PNG" alt="page_3.png" width="150" height = "200" />
+<img src="https://github.com/CER-REC/esa-data-bank_banque-donnees-ees/tree/master/imgs/page_1.PNG" alt="page_1.png" width="150" height = "200" />   <img src="https://github.com/CER-REC/esa-data-bank_banque-donnees-ees/tree/master/imgs/page_2.PNG" alt="page_2.png" width="150" height = "200" />   <img src="https://github.com/CER-REC/esa-data-bank_banque-donnees-ees/tree/master/imgs/page_3.PNG" alt="page_3.png" width="150" height = "200" />
 
 
 ## Approach 
