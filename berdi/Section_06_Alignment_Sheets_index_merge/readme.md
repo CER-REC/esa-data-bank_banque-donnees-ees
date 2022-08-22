@@ -3,6 +3,12 @@ At CER, we receive applications from companies containing thousands of pages of 
 
 ##### Sample Maps:
 
+<p float="left">
+  <img src="https://github.com/CER-REC/esa-data-bank_banque-donnees-ees/tree/master/imgs/map_1.PNG" width="100" />
+  <img src="https://github.com/CER-REC/esa-data-bank_banque-donnees-ees/tree/master/imgs/map_2.PNG" width="100" /> 
+  <img src="https://github.com/CER-REC/esa-data-bank_banque-donnees-ees/tree/master/imgs/map_3.PNG" width="100" />
+</p>
+
 <img src="https://github.com/CER-REC/esa-data-bank_banque-donnees-ees/tree/master/imgs/map_1.PNG" alt="map_1.PNG" width="150" height = "200" />   <img src="https://github.com/CER-REC/esa-data-bank_banque-donnees-ees/tree/master/imgs/map_2.PNG" alt="map_2.png" width="200" height = "150" />   <img src="https://github.com/CER-REC/esa-data-bank_banque-donnees-ees/tree/master/imgs/map_3.PNG" alt="map_3.png" width="200" height = "150" />
 
 ##### Sample Non-Maps:
