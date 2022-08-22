@@ -31,6 +31,12 @@ All images were inspected and it was found that 92.1% of images had correct page
 
 While it is not a perfect process due to inconsistency in formatting, tables and figures can now be searched quickly, and tables can be downloaded in a machine-readable format - both possibilities that did not exist previously.
 
+### Step 6: Extract alignment sheets
+Based on visual inspection, we assumed that we might classify a particular page of a PDF as an alignment sheet or not based on certain features present on the page. Some of the important features chosen for this classification task are area of the images, number of images on a page, number of words on a page, and presence of some keywords (such as scale, kilometers or meters, figure, or north, etc.). We then trained several classification models using k-nearest neighbor, support vector machine, random forest, and Xgboost on a sample dataset of PDFs and calculated the accuracy of these models. The optimum classification model was selected based on the accuracy and the process time. The final model can be found in the [models](https://github.com/CER-REC/esa-data-bank_banque-donnees-ees/tree/master/models) repo. Since we got an accuracy level of >95% for the optimal model, we then used this model to classify all the PDF pages in the BERDI databank to classify alignment sheets.
+
+### Step 7: Extract VEC labels
+****** Work-in-progress *******
+
 ### Acknowledgments
 The data science team at the University of British Columbia was instrumental in guiding this project in its early days. The Canada Energy Regulator acknowledges the work of Nipun Goyal, Louis (Xiang) Luo, and Prakhar Sinha (with support from Martha Essak, Erin Martin-Serrano, Stuart Donald, and Gene Moo Lee) at the [Centre for Operations Excellence](https://www.sauder.ubc.ca/thought-leadership/research-outreach-centres/centre-operations-excellence), UBC Sauder School of Business.
 
