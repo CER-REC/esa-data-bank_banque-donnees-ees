@@ -5,8 +5,8 @@ At CER, we receive applications from companies containing thousands of pages of 
 
 <p float="left">
   <img src="imgs/map_1.PNG" width= 100 />
-  <img src="https://raw.githubusercontent.com/CER-REC/esa-data-bank_banque-donnees-ees/tree/master/imgs/map_2.PNG" width="100" /> 
-  <img src="https://raw.githubusercontent.com/CER-REC/esa-data-bank_banque-donnees-ees/tree/master/imgs/map_3.PNG" width="100" />
+  <img src="https://raw.githubusercontent.com/CER-REC/esa-data-bank_banque-donnees-ees/tree/master/imgs/map_2.PNG" width= 100 /> 
+  <img src="https://raw.githubusercontent.com/CER-REC/esa-data-bank_banque-donnees-ees/tree/master/imgs/map_3.PNG" width= 100 />
 </p>
 
 
