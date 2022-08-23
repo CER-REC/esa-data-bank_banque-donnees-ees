@@ -3,9 +3,9 @@ At CER, we receive applications from companies containing thousands of pages of 
 
 ##### Sample Maps:
 
-[<img src="/imgs/map_1.PNG" width="100" />](/imgs/map_1.PNG)
-![map_2](/imgs/map_2.PNG)
-![map_3](/imgs/map_3.PNG)
+[<img src="/imgs/map_1.PNG" width="100" height="200" />](/imgs/map_1.PNG)
+[<img src="/imgs/map_2.PNG" width="100" height="200" />](/imgs/map_2.PNG)
+[<img src="/imgs/map_2.PNG" width="100" height="200" />](/imgs/map_3.PNG)
 
 
 ##### Sample Non-Maps:
