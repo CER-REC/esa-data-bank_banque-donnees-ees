@@ -4,6 +4,7 @@ At CER, we receive applications from companies containing thousands of pages of 
 ##### Sample Maps:
 
 ![map_1](/imgs/map_1.PNG)
+[<img src="./imgs/map_1.PNG" width="100" />](/imgs/map_1.PNG)
 ![map_2](/imgs/map_2.PNG)
 ![map_3](/imgs/map_3.PNG)
 
