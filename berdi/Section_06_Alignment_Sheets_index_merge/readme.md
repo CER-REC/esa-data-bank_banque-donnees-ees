@@ -7,10 +7,11 @@ At CER, we receive applications from companies containing thousands of pages of 
 [<img src="/imgs/map_2.PNG" width="200" height="150" />](/imgs/map_2.PNG)
 [<img src="/imgs/map_3.PNG" width="200" height="150" />](/imgs/map_3.PNG)
 
-
 ##### Sample Non-Maps:
-<img src="https://github.com/CER-REC/esa-data-bank_banque-donnees-ees/tree/master/imgs/page_1.PNG" alt="page_1.png" width="150" height = "200" />   <img src="https://github.com/CER-REC/esa-data-bank_banque-donnees-ees/tree/master/imgs/page_2.PNG" alt="page_2.png" width="150" height = "200" />   <img src="https://github.com/CER-REC/esa-data-bank_banque-donnees-ees/tree/master/imgs/page_3.PNG" alt="page_3.png" width="150" height = "200" />
 
+[<img src="/imgs/page_1.PNG" width="150" height="200" />](/imgs/page_1.PNG)
+[<img src="/imgs/page_2.PNG" width="150" height="200" />](/imgs/page_2.PNG)
+[<img src="/imgs/page_3.PNG" width="150" height="200" />](/imgs/page_3.PNG)
 
 ## Approach 
 
