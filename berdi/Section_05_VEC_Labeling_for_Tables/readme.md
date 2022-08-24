@@ -14,5 +14,7 @@
 - Install required python packages from [requirements.txt](https://github.com/CER-REC/esa-data-bank_banque-donnees-ees/blob/master/requirements.txt) file by creating virtual environment
 - Activate the virtual environment
 - Open Jupyter notebook and run the files in the following order and observe results:
-    - `0. Download PDFs and extract features of Alignment Sheets.ipynb`
-    - `1. Save Alignment Sheets.ipynb`
+    - `01_creating_index_file_with_vecs_vscs.ipynb`
+    - `keywords.py`
+    - `02_keywords_to_labels.ipynb`
+    - `03_labeling_figs_align_sheets.ipynb`
