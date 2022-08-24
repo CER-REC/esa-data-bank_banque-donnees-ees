@@ -32,7 +32,7 @@ The model training part has not been discussed in depth here. Rather, we present
 ## How to use the files in this repo?
 
 - Clone or download github files into a local directory
-- Install required python packages using virtual environment and `requirements.txt` file
+- Install required python packages from [requirements.txt](https://github.com/CER-REC/esa-data-bank_banque-donnees-ees/blob/master/requirements.txt) file by creating virtual environment
 - Activate the virtual environment
 - Open Jupyter notebook and run the files in the following order and observe results:
     - `0. Download PDFs and extract features of Alignment Sheets.ipynb`
