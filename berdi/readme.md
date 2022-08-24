@@ -15,6 +15,7 @@ You can run the code in the following order:
 
 5. In Section_05_VEC_Labeling_for_Tables, run the files in the following order:
     * `01_creating_index_file_with_vecs_vscs.ipynb`
+    * `keywords.py`
     * `02_keywords_to_labels.ipynb`
     * `03_labeling_figs_align_sheets.ipynb`
 
