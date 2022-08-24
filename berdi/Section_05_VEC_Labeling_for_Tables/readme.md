@@ -1,10 +1,12 @@
 ## Description of the folder structure
 
-1. `01_creating_index_file_with_vecs_vscs.ipynb:` This file contains the funtions to download the PDF documents and to extract the features from each page of a PDF file. The ouput from this jupyter notebook file is a CSV containing all the extracted features
+1. `01_creating_index_file_with_vecs_vscs.ipynb:` In order to label VECs and VSCs with each of the table, first we need to extract the text from each of these tables. This jupyter notebook extracts the contents of the CSV file from the `csvs` table that we created in [Section_02_DB_setup_and_CSVs_extraction](https://github.com/CER-REC/esa-data-bank_banque-donnees-ees/tree/master/berdi/Section_02_DB_setup_and_CSVs_extraction) and save it in a tab-separated file named `esa_csvs_raw.txt`. The length of the extracted text is then trimmed to only include 30,000 characters due to excel cell character limit of 32,767 characters
 
-2. `02_keywords_to_labels.ipynb:` This file takes feature CSV as input and classify whether a PDF page is an alignment sheet or not by using the best performing classifier that we saved in repo [models](https://github.com/CER-REC/esa-data-bank_banque-donnees-ees/tree/master/models). The later section of this jupyter notebook file contains the functions to extract and assign the titles for alignment sheets
+2. `keywords.py`: 
 
-3. `03_labeling_figs_align_sheets.ipynb:` 
+3. `02_keywords_to_labels.ipynb:` This jupyter notebook look for VECs and VSCs keywords, saved in the file 
+
+4. `03_labeling_figs_align_sheets.ipynb:` 
 
 ## How to use the files in this repo?
 
