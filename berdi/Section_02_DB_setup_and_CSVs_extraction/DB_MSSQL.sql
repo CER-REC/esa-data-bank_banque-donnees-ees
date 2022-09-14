@@ -6,6 +6,8 @@ DROP TABLE IF EXISTS BERDI.pages;
 DROP TABLE IF EXISTS BERDI.csvs;
 DROP TABLE IF EXISTS BERDI.blocks;
 DROP TABLE IF EXISTS BERDI.pdfs;
+DROP TABLE IF EXISTS BERDI.pages_normal_txt;
+DROP TABLE IF EXISTS BERDI.pages_rotated90_txt;
 
 DROP SCHEMA IF EXISTS BERDI;
 GO
@@ -21,7 +23,7 @@ CREATE TABLE BERDI.pdfs (
 	hearingOrder			TEXT,
 	application_name		TEXT,
 	application_title_short	TEXT,
-	short_name				TEXT,
+	short_name				VARCHAR(255) DEFAULT NULL,
 	commodity				TEXT,
 	pagesBlocksExtracted	INT DEFAULT 0,
 	folder_name				TEXT
@@ -36,6 +38,8 @@ CREATE TABLE BERDI.toc (
 	toc_page_num			INT NOT NULL,
 	toc_pdfId				INT NOT NULL,
 	toc_title_order			INT NOT NULL,
+	loc_pdfId               INT,
+	loc_page_list           TEXT,
 	PRIMARY KEY (toc_page_num, toc_pdfId, toc_title_order),
 	CONSTRAINT BERDI_pdf_toc FOREIGN KEY (toc_pdfId) REFERENCES BERDI.pdfs (pdfId) ON DELETE CASCADE ON UPDATE CASCADE
 );
