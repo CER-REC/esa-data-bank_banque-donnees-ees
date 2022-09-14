@@ -113,3 +113,23 @@ CREATE TABLE BERDI.blocks (
 	PRIMARY KEY (pdfId,page_num,block_order),
 	CONSTRAINT BERDI_pdfId_and_page FOREIGN KEY (pdfId, page_num) REFERENCES BERDI.pages (pdfId, page_num) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+
+CREATE TABLE BERDI.pages_normal_txt (
+	pdfId                   INT NOT NULL,
+	page_num                INT NOT NULL,
+	content                 TEXT NULL,
+	clean_content           TEXT NULL,
+	PRIMARY KEY (pdfId,page_num),
+	CONSTRAINT BERDI_pdf_pages_normal_txt FOREIGN KEY (pdfId) REFERENCES BERDI.pdfs (pdfId) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+CREATE TABLE BERDI.pages_rotated90_txt (
+	pdfId                   INT NOT NULL,
+	page_num                INT NOT NULL,
+	content                 TEXT NULL,
+	clean_content           TEXT NULL,
+	PRIMARY KEY (pdfId,page_num),
+	CONSTRAINT BERDI_pdf_pages_rotated90_txt FOREIGN KEY (pdfId) REFERENCES BERDI.pdfs (pdfId) ON DELETE CASCADE ON UPDATE CASCADE
+);
