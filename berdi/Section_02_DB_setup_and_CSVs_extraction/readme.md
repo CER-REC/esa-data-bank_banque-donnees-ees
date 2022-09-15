@@ -2,9 +2,9 @@
 
 ## Overview
 
-The table extraction process utilizes a MySQL Database to store the results of the extraction process. The steps of the process:
-1. Create the DB (e.g. with MySQL Workbench) to store data in.
-2. Create two tables in it:
+The table extraction process utilizes a MSSQL Database to store the results of the extraction process. The setup instructions and SQL scripts for MySQL database has also been provided in case you choose to utilize an open source MySQL Community Edition. The steps of the process are as follows:
+1. Create the DB (e.g. with either MSSQL or MySQL Workbench) to store data in
+2. Create two tables in it (refer schema in `DB.sql` in case you are using MySQL else use `DB_MSSQL.sql` for MSSQL database):
     * `pdfs` for storing information about the CSVs
     * `csvs` for storing information about extracted csvs
 
@@ -30,13 +30,13 @@ IV. Run: `java -d64 -jar -Xms40g -Xmx40g tika-server-standard-2.1.0.jar`. Adjust
 Note: the code runs slower on Windows if you use Docker because Windows needs to create a linux virtual environment.
 
 5. Run the scripts in this order:
-    * `DB.sql` creates some of the tables in the database
+    * `DB.sql` (for MySQL) or `DB_MSSQL.sql` (for MSSQL) creates some of the tables in the database
     * `pdfs_db_seeding.py` populates `pdfs` table
     * `pages_and_blocks_db_seeding.py` populates `pages` and `blocks` tables
-    * `extracting_pages_content.py` populates a series of pages tables with pdf content
+    * `extracting_pages_content.py` populates a `pages_normal_txt` and `pages_rotated90_txt` tables with pdf content
     * `extracting_tables.py` populates `csvs` table
 
-## Setting up the DB
+## Setting up the MySQL DB
 
 1. Download and install the open source MySQL Community Edition for your platform from the official website: https://dev.mysql.com/downloads/.
 
