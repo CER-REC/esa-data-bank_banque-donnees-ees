@@ -14,7 +14,7 @@ scikit-learn==1.0.1
 transformers==4.12.3
 tqdm==4.62.3
 torch==1.10.0
-numpy==1.21.4
+numpy==1.22.0
 spacy==3.2.0
 ipython==7.30.0
 fuzzywuzzy==0.18.0
