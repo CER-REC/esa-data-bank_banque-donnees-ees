@@ -58,6 +58,8 @@ berdi/Section_05_VEC_Labeling_for_Tables/mydata/*.*
 /data/sinclair
 /data/misc
 /Data_Files
+/data/output/final_index_files/*
+
 #############################
 # Cookiecutter Data Science #
 #############################
