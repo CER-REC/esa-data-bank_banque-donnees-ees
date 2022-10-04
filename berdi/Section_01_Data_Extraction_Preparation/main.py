@@ -25,11 +25,11 @@ if __name__ == "__main__":
         / "data"
         / "raw"
         / "index_for_projects"
-        / "Phase3_Index_of_PDFs_for_Major_Projects_with_ESAs.csv"
+        / "Index_of_PDFs_for_Fall_2022_application_refresh.csv"
     )
 
     # Load the list of projects
-    Index0 = pd.read_csv(Index0_path, encoding ='cp1252')
+    Index0 = pd.read_csv(Index0_path, encoding ='utf-8-sig')
 
     # Download files
     count = download_file(str(ROOT_PATH), Index0)
@@ -71,6 +71,6 @@ if __name__ == "__main__":
     Index1 = get_pdf_metadata(str(ROOT_PATH), Index0)
     metadata_file_path = os.path.join(
         str(ROOT_PATH),
-        "data/interim/Intermediate_Index_Files/Phase3_Index_of_PDFs_for_Major_Projects_with_ESAs.csv",
+        "data/interim/Intermediate_Index_Files/Index_of_PDFs_for_Fall_2022_application_refresh_processed.csv",
     )
     Index1.to_csv(metadata_file_path, index=False, encoding="utf-8-sig")
