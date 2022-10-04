@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 REPO_ROOT = Path(__file__).parents[2].resolve()
 RAW_DATA = "data/raw"
 OLD_PROJECTS = "Index_of_PDFs_for_Major_Projects_with_ESAs.csv"
-NEW_PROJECTS = "Phase3_Index_of_PDFs_for_Major_Projects_with_ESAs.csv"
+NEW_PROJECTS = "Index_of_PDFs_for_Fall_2022_application_refresh.csv"
 
 # Load environment variables (from .env file) for the database
 load_dotenv(
@@ -31,7 +31,7 @@ if not index.exists():
 
 
 def insert_pdfs():
-    df = pd.read_csv(index, encoding = 'cp1252')  # getting permission error on Windows
+    df = pd.read_csv(index, encoding = 'utf-8-sig')  # getting permission error on Windows
     df = df[
         [
             "Data ID",
