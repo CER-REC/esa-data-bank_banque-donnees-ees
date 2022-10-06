@@ -46,8 +46,8 @@ do_tag_title_fig = 0  # assign figure titles to each figure using text search me
 do_toc_title_fig = 0  # assign figure titles to each figure using TOC method
 do_final_title_fig = 0  # replace continued figures and create final figure title
 
-create_tables_csv = 1
-create_figs_csv = 1
+create_tables_csv = 0
+create_figs_csv = 0
 
 if __name__ == "__main__":
     # get list of all documents, read from pdfs
@@ -100,7 +100,7 @@ if __name__ == "__main__":
                         if result.rowcount != 1:
                             print("Did not go to database:", doc_id, page_num, toc)
                         cursor.commit()
-        conn.close()
+        #conn.close()
 
     # get page numbers for all the figures found in TOC
     if toc_figure_titles:
@@ -257,3 +257,4 @@ if __name__ == "__main__":
             index=False,
             encoding="utf-8-sig",
         )
+
