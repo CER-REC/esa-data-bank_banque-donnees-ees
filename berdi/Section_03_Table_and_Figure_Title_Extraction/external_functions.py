@@ -116,7 +116,7 @@ def figure_checker(args):
         # df['Real Order'] = df.groupby(['page'])['tableNumber'].rank()
 
         stmt = '''SELECT page FROM [DS_TEST].[BERDI].csvs WHERE (pdfId = ?)
-                    and (titleFinal = '' or titleFinal is null) GROUP BY page;'''
+                    and ISNULL(CAST(titleFinal AS VARCHAR(MAX)),'') = '' GROUP BY page;'''
         params = [doc_id]
     
         extra_pages_df = pd.read_sql_query(stmt, conn, params=params)
@@ -237,7 +237,6 @@ def figure_checker(args):
         conn.close()
         return count
     except Exception as e:
-        conn.close()
         print('Error in', doc_id)
         print(traceback.print_tb(e.__traceback__))
         return 0
