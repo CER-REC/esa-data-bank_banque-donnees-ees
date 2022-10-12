@@ -42,8 +42,8 @@ yarn-error.log*
 /data/processed/pickle_files/*.pkl
 /data/processed/pickle_files_rotated/*.pkl
 /data/output/**/*.*
-/data/interim/**/Intermediate_Index_Files/*.csv
-/data/interim/**/alignment_sheet_files/*.csv
+/data/interim/Intermediate_Index_Files/*.csv
+/data/interim/alignment_sheet_files/*.csv
 /error_logs/**/
 tag_errors.txt
 toc_errors.txt
