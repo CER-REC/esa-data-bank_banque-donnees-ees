@@ -12,7 +12,7 @@ from berdi.Database_Connection_Files.connect_to_sqlserver_database import connec
 REPO_ROOT = Path(__file__).parents[2].resolve()
 RAW_DATA_PATH = REPO_ROOT / "data" / "raw"
 INTERMEDIATE_INDEX_PATH = REPO_ROOT / "data" / "interim" / "Intermediate_Index_Files"
-projects_path = str(INTERMEDIATE_INDEX_PATH / "Phase3_Index_of_PDFs_for_Major_Projects_with_ESAs.csv")
+projects_path = str(INTERMEDIATE_INDEX_PATH / "Index_of_PDFs_for_Fall_2022_application_refresh_processed.csv")
 #save_dir = REPO_ROOT / "data" / "output"
 
 # Load environment variables (from .env file) for the database
@@ -32,21 +32,19 @@ df_app = pd.read_csv(projects_path)
 
 # Organize pdf attributes
 ['Application Name', 'Application Short Name', 'Application Filing Date',
- 'Company Name', 'Commodity',
- 'File Name', 'ESA Folder URL', 'Document Number', 'Data ID', 'PDF Download URL',
- 'Application Type', 'Pipeline Location', 'Hearing Order', 'Consultant Name',
- 'Pipeline Status', 'Regulatory Instrument(s)', 'Application URL', 'Decision URL',
- 'ESA Section(s)', 'ESA Section(s) Index', 'ESA Section(s) Topics',
- 'PDF Page Count', 'PDF Size', 'PDF Outline']
+ 'Company Name', 'Commodity', 'File Name', 'ESA Folder URL', 'Document Number', 
+ 'Data ID', 'PDF Download URL', 'Application Type', 'Pipeline Location', 'Hearing Order',
+ 'Consultant Name', 'Pipeline Status', 'Regulatory Instrument(s)', 'Application URL',
+ 'Decision URL', 'ESA Section(s)', 'Application ID', 'Topics',
+ 'Number of Pages']
 
 
 df_app = df_app[['Application Name', 'Application Short Name', 'Application Filing Date',
-                 'Company Name', 'Commodity',
-                 'File Name', 'ESA Folder URL', 'Document Number', 'Data ID', 'PDF Download URL',
-                 'Application Type', 'Pipeline Location', 'Hearing Order', 'Consultant Name',
-                 'Pipeline Status', 'Regulatory Instrument(s)', 'Application URL', 'Decision URL',
-                 'ESA Section(s)', 'ESA Section(s) Index', 'Topics', 'PDF Size (bytes)', 'Number of Pages',
-                'Outline Present']]
+ 'Company Name', 'Commodity', 'File Name', 'ESA Folder URL', 'Document Number', 
+ 'Data ID', 'PDF Download URL', 'Application Type', 'Pipeline Location', 'Hearing Order',
+ 'Consultant Name', 'Pipeline Status', 'Regulatory Instrument(s)', 'Application URL',
+ 'Decision URL', 'ESA Section(s)', 'Application ID', 'Topics',
+ 'Number of Pages']]
 df_app = df_app.rename(columns={'Number of Pages': 'PDF Page Count'})
 
 # Compose pdf and csv table attributes
@@ -58,33 +56,33 @@ df_table_index = df_table_app[['Title', 'Application Name', 'Application Short N
                  'Company Name', 'Commodity', 'File Name', 'ESA Folder URL', 'Document Number', 'Data ID', 
                  'PDF Download URL', 'Application Type', 'Pipeline Location', 'Hearing Order', 'Consultant Name',
                  'Pipeline Status', 'Regulatory Instrument(s)', 'Application URL', 'Decision URL',
-                 'ESA Section(s)', 'ESA Section(s) Index', 'Topics', 'PDF Page Number', 'tableNumber', 'csvFileName', 'PDF Size (bytes)', 'PDF Page Count',
-                'Outline Present']]
+                 'ESA Section(s)', 'Application ID', 'Topics', 'PDF Page Number', 'tableNumber', 'csvFileName', 'PDF Page Count']]
 
 # Get Figure Titles
-df_fig_titles = pd.read_sql('''SELECT pdfId, page_num, block_order, titleTag FROM [DS_TEST].[BERDI].blocks
-                    WHERE (bbox_area_image/bbox_area) > 0.1 and titleTag is not null ;''', conn)
+figures_info_csv_path = str(INTERMEDIATE_INDEX_PATH / "final_figs_pivoted_new.csv")
+df_fig_titles = pd.read_csv(figures_info_csv_path, encoding = 'utf-8-sig')
+df_fig_titles = df_fig_titles[df_fig_titles['Name'].notna()][['loc_pdfId', 'page_num', 'Name']]
+df_fig_titles['figureNumber'] = 1
 # Compose pdf and figure attributes
-df_figure_app = df_fig_titles.merge(df_app, left_on='pdfId', right_on='Data ID')
-df_figure_app = df_figure_app.rename(columns={'page_num': 'PDF Page Number', 'block_order': 'figureNumber', 'titleTag': 'Title'})
-df_figure_app = df_figure_app.drop(labels=['pdfId'], axis=1)
+df_figure_app = df_fig_titles.merge(df_app, left_on='loc_pdfId', right_on='Data ID')
+df_figure_app = df_figure_app.rename(columns={'page_num': 'PDF Page Number', 'Name': 'Title'})
+df_figure_app = df_figure_app.drop(labels=['loc_pdfId'], axis=1)
 
 df_figure_index = df_figure_app[['Title', 'Application Name', 'Application Short Name', 'Application Filing Date',
                  'Company Name', 'Commodity', 'File Name', 'ESA Folder URL', 'Document Number', 'Data ID', 
                  'PDF Download URL', 'Application Type', 'Pipeline Location', 'Hearing Order', 'Consultant Name',
                  'Pipeline Status', 'Regulatory Instrument(s)', 'Application URL', 'Decision URL',
-                 'ESA Section(s)', 'ESA Section(s) Index', 'Topics', 'PDF Page Number', 'figureNumber','PDF Size (bytes)', 'PDF Page Count',
-                'Outline Present']]
+                 'ESA Section(s)', 'Application ID', 'Topics', 'PDF Page Number', 'figureNumber', 'PDF Page Count']]
 
-# df_table_index.columns
-# df_table_index.shape (473, 27)
-# df_figure_index.columns
-# df_figure_index.shape (19, 27)
+# print(df_table_index.columns)
+# print(df_table_index.shape)
+# print(df_figure_index.columns)
+# print(df_figure_index.shape)
 
 df_table_fig_index = df_table_index.append(df_figure_index, ignore_index=True)
 
-# df_table_fig_index.columns
-# df_table_fig_index.shape (492, 28)
+# print(df_table_fig_index.columns)
+# print(df_table_fig_index.shape) # Expected shape: (706, 27)
 
 df_table_fig_index['Content Type'] = ['Table' if x.lower().startswith('table') else 'Figure' for x in df_table_fig_index['Title']]
 

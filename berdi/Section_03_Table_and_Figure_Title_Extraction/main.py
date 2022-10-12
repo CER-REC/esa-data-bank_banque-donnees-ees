@@ -34,20 +34,20 @@ load_dotenv(
 )
 conn = connect_to_db()
 
-get_toc = 0  # need to go through all docs to create lists of tables and figures in csvs
-toc_figure_titles = 0  # assign page number to TOC figure titles
-toc_table_titles = 0 # assign page number to TOC table titles
+get_toc = 1  # need to go through all docs to create lists of tables and figures in csvs
+toc_figure_titles = 1  # assign page number to TOC figure titles
+toc_table_titles = 1 # assign page number to TOC table titles
 
-do_tag_title_table = 0  # assign table titles to each table using text search method
-do_toc_title_table = 0  # assign table titles to each table using TOC method
-do_final_title_table = 0  # replace continued tables and create final table title
+do_tag_title_table = 1  # assign table titles to each table using text search method
+do_toc_title_table = 1  # assign table titles to each table using TOC method
+do_final_title_table = 1  # replace continued tables and create final table title
 
-do_tag_title_fig = 0  # assign figure titles to each figure using text search method
-do_toc_title_fig = 0  # assign figure titles to each figure using TOC method
-do_final_title_fig = 0  # replace continued figures and create final figure title
+do_tag_title_fig = 1  # assign figure titles to each figure using text search method
+do_toc_title_fig = 1  # assign figure titles to each figure using TOC method
+do_final_title_fig = 1  # replace continued figures and create final figure title
 
-create_tables_csv = 0
-create_figs_csv = 0
+create_tables_csv = 1
+create_figs_csv = 1
 
 if __name__ == "__main__":
     # get list of all documents, read from pdfs

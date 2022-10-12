@@ -139,7 +139,7 @@ def figure_checker(args):
             stmt = '''SELECT page_num, clean_content FROM [DS_TEST].[BERDI].pages_normal_txt
                         WHERE (pdfId = ?) and (page_num in ({}));'''.format(image_pages_str)
             stmt_rotated = '''SELECT page_num, clean_content FROM [DS_TEST].[BERDI].pages_rotated90_txt
-                                WHERE (pdfId = ?) and (page_num in ({}));"'''.format(image_pages_str)
+                                WHERE (pdfId = ?) and (page_num in ({}));'''.format(image_pages_str)
             text_df = pd.read_sql_query(stmt, conn, params=params, index_col='page_num')
             text_rotated_df = pd.read_sql_query(stmt_rotated, conn, params=params, index_col='page_num')
 
