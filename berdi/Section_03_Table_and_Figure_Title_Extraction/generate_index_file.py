@@ -59,6 +59,11 @@ df_table_index = df_table_app[['Title', 'Application Name', 'Application Short N
                  'ESA Section(s)', 'Application ID', 'Topics', 'PDF Page Number', 'tableNumber', 'csvFileName', 'PDF Page Count']]
 
 # Get Figure Titles
+
+df_fig_titles = pd.read_sql('''SELECT pdfId, page_num, block_order, titleTag FROM [DS_TEST].[BERDI].blocks
+                    WHERE (bbox_area_image/bbox_area) > 0.1 and titleTag is not null ;''', conn)
+
+                    
 figures_info_csv_path = str(INTERMEDIATE_INDEX_PATH / "final_figs_pivoted_new.csv")
 df_fig_titles = pd.read_csv(figures_info_csv_path, encoding = 'utf-8-sig')
 df_fig_titles = df_fig_titles[df_fig_titles['Name'].notna()][['loc_pdfId', 'page_num', 'Name']]
