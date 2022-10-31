@@ -3,11 +3,12 @@ import os
 import shutil
 
 
-new_folder = 'data/download_external_Aug2022_merged/en'
+new_folder = 'G:/Board/ESA_downloads/NEBC/external/en'
 
 # Manually copy over the projects and tables folders from internal download package the internal folder
 
-df_index = pd.read_csv('data/download_internal_Aug2022_merged/en/ESA_website_ENG.csv', encoding='utf-8-sig')  # 21643, 49
+df_index = pd.read_csv('G:/Board/ESA_downloads/NEBC/external/en/ESA_website_ENG.csv', encoding='utf-8-sig')  # 21643, 49
+print(df_index.shape)
 
 # Delete IK tables
 for index, row in df_index[df_index['Table Download Path'].notna() & df_index['IK_Labels']].iterrows():
@@ -86,4 +87,5 @@ df_index.loc[df_index['IK_Labels'] == 0, df_index.columns != 'IK_Labels']\
 
 # QA
 df_index_external = pd.read_csv(new_folder+'/ESA_website_ENG.csv')  # 20630, 48
+print(df_index_external.shape)
 
