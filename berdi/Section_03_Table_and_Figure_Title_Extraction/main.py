@@ -42,9 +42,9 @@ do_tag_title_table = 0  # assign table titles to each table using text search me
 do_toc_title_table = 0  # assign table titles to each table using TOC method
 do_final_title_table = 0  # replace continued tables and create final table title
 
-do_tag_title_fig = 0  # assign figure titles to each figure using text search method
-do_toc_title_fig = 0  # assign figure titles to each figure using TOC method
-do_final_title_fig = 0  # replace continued figures and create final figure title
+do_tag_title_fig = 1  # assign figure titles to each figure using text search method
+do_toc_title_fig = 1  # assign figure titles to each figure using TOC method
+do_final_title_fig = 1  # replace continued figures and create final figure title
 
 create_tables_csv = 0
 create_figs_csv = 0
@@ -76,22 +76,24 @@ if __name__ == "__main__":
                 WHERE (pdfId = ?);'''
             text_df = pd.read_sql_query(stmt, conn, params=params, index_col="page_num")
 
-            # stmt_rotated = text("SELECT page_num, content FROM pages_rotated90_txt "
-            #                     "WHERE (pdfId = :pdf_id);")
-            # text_rotated_df = pd.read_sql_query(stmt_rotated, conn, params=params, index_col='page_num')
-
             for page_num, row in text_df.iterrows():
                 # extract TOC
+                # get rid of empty lines
                 clean_text = re.sub(
                     constants.empty_line, "", row["content"]
-                )  # get rid of empty lines
-                tocs = re.findall(constants.toc, clean_text)
+                )  
+                # find all the lines that might be a toc in the page, i.e.
+                # Table 2.1 Highway Hub Receptor Location ..................................................................................... 2.2 
+                # Table 2.2 Water Crossings HDD Receptor Location ....................................................................... 2.2 
+                # Table 3.1 Permissible Sound Level ................................................................................................. 3.3 
+                tocs = re.findall(constants.toc, clean_text)  
 
                 for i, toc in enumerate(tocs):
                     title = re.sub(constants.whitespace, " ", toc[0]).strip()
                     page_name = toc[1].strip()
                     type = title.split(" ", 1)[0].capitalize()
-                    if type in constants.accepted_toc:  # if accepted type
+                    if type in constants.accepted_toc:  
+                        # if accepted type, we insert the toc record into the database table
                         stmt = '''INSERT INTO [DS_TEST].[BERDI].toc (assigned_count, title_type, titleTOC, page_name,
                             toc_page_num, toc_pdfId, toc_title_order)
                             VALUES (null, ?,?,?,?,?,?);'''
@@ -100,6 +102,8 @@ if __name__ == "__main__":
                         if result.rowcount != 1:
                             print("Did not go to database:", doc_id, page_num, toc)
                         cursor.commit()
+                if page_num == 131:
+                    break
         #conn.close()
 
     # get page numbers for all the figures found in TOC
@@ -115,7 +119,7 @@ if __name__ == "__main__":
                 if result[1] != "":
                     f.write(str(result[1]))
 
-    # update tag method titles
+    # update tag method titles, assign table titles to each table using text search method
     if do_tag_title_table:
         # for list_id in list_ids:
         #     find_tag_title_table(list_id)
