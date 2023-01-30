@@ -271,7 +271,7 @@ def find_tag_title_table(data_id):
     conn = connect_to_db()
     with redirect_stdout(buf), redirect_stderr(buf):
         try:
-            # get tables for this document
+            # get csv tables for this document
             stmt = '''SELECT page, tableNumber FROM [DS_TEST].[BERDI].csvs
                         WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78)
                         and (pdfId = ?);'''
@@ -285,12 +285,10 @@ def find_tag_title_table(data_id):
 
             if len(table_pages) > 0:
                 params = [data_id]
-                stmt = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_normal_txt
-            WHERE (pdfId = ?) and page_num in {};'''.format('({})'.format(','.join([str(p) for p in table_pages])))
-                stmt_rotated = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_rotated90_txt
-            WHERE (pdfId = ?) and page_num in {};'''.format('({})'.format(','.join([str(p) for p in table_pages])))
-                # stmt_rotated = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_rotated90_txt
-                #                     WHERE (pdfId = ?) and (page_num in ?);'''
+                stmt = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_normal_txt 
+                WHERE (pdfId = ?) and page_num in {};'''.format('({})'.format(','.join([str(p) for p in table_pages])))
+                stmt_rotated = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_rotated90_txt 
+                WHERE (pdfId = ?) and page_num in {};'''.format('({})'.format(','.join([str(p) for p in table_pages])))
                 text_df = pd.read_sql_query(stmt, conn, params=params, index_col='page_num')
                 text_rotated_df = pd.read_sql_query(stmt_rotated, conn, params=params, index_col='page_num')
 
@@ -313,8 +311,8 @@ def find_tag_title_table(data_id):
                                 title_next = re.sub(constants.whitespace, ' ', lines[i + 1]).strip()
                             else:
                                 title_next = ''
-                            category = get_category(title)
-                            if category > 0:
+                            category = get_category(title) # if continued title --> 1, if regular title --> 2, if just text --> 0
+                            if category > 0: 
                                 if category == 2:
                                     final_table_title = title + ' ' + title_next
                                 else:
@@ -438,11 +436,10 @@ def table_checker(args):
     conn = connect_to_db()
     try:
         doc_id, toc_id, toc_page, toc_order, word1_rex, word2_rex, s2_rex, page_rex, title = args
-        # get tables for this document
+        # get csv tables for this document
         stmt = '''SELECT page, tableNumber FROM [DS_TEST].[BERDI].csvs
                     WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78)
                     and (pdfId = ?);'''
-        #params = {"pdf_id": doc_id}
         params = [doc_id]
         df = pd.read_sql_query(stmt, conn, params=params)
         if df.empty:
@@ -453,26 +450,21 @@ def table_checker(args):
 
         count = 0
         if len(table_pages) > 0:
-            #params = {"pdf_id": doc_id, "table_list": table_pages}
             params = [doc_id]
-            # stmt = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_normal_txt
-            #             WHERE (pdfId = ?) and (page_num in ?);'''
-
             stmt = stmt = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_normal_txt
             WHERE (pdfId = ?) and page_num in ({});'''.format(','.join([str(p) for p in table_pages]))
 
-            # stmt_rotated = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_rotated90_txt
-            #                     WHERE (pdfId = ?) and (page_num in ?);'''
-
             stmt_rotated = '''SELECT page_num, content FROM [DS_TEST].[BERDI].pages_rotated90_txt
             WHERE (pdfId = ?) and page_num in ({});'''.format(','.join([str(p) for p in table_pages]))
-
 
             text_df = pd.read_sql_query(stmt, conn, params=params, index_col='page_num')
             text_rotated_df = pd.read_sql_query(stmt_rotated, conn, params=params, index_col='page_num')
 
             p_list = []
             for page_num in table_pages:
+                # iterate all the pages of all the extracted csv tables
+                # identify if the toc title could be referring to a csv table on the page
+                # if yes, add to the page list for the toc title
                 if (doc_id != toc_id) or (page_num != toc_page):  # if not toc page
                     text_ws = text_df.loc[page_num, 'content']
                     text_clean = re.sub(constants.punctuation, ' ', text_ws)
@@ -495,7 +487,6 @@ def table_checker(args):
                 cursor = conn.cursor()
                 stmt = '''UPDATE [DS_TEST].[BERDI].toc SET assigned_count = ?, loc_pdfId = ?, loc_page_list = ?
                             WHERE (toc_pdfId = ?) and (toc_page_num = ?) and (toc_title_order = ?);'''
-                #params = {"count": count, "loc_id": doc_id, "loc_pages": json.dumps(p_list), "pdf_id": toc_id, "page_num": toc_page, "title_order": toc_order}
                 params = [count, doc_id, json.dumps(p_list), toc_id, toc_page, toc_order]
                 result = cursor.execute(stmt, params)
                 cursor.commit()
@@ -528,6 +519,7 @@ def project_table_titles(project):
             prev_id = 0
             project_ids = project_df['pdfId'].tolist()
             for index, row in df_tables.iterrows():
+                # for each toc table title we extracted, try to find the matching csv table from all the project pdf documents
                 title = row['titleTOC']
                 c = title.count(' ')
                 if c >= 2:
@@ -559,8 +551,8 @@ def project_table_titles(project):
                 after.sort()
                 before = [i for i in project_ids if i < toc_id]
                 before.sort(reverse=True)
-                docs_check.extend(after)
-                docs_check.extend(before)
+                docs_check.extend(after) # add the documents ordered after the document of the TOC
+                docs_check.extend(before) # add the documents ordered before the document of the TOC
                 count = 0
 
                 for doc_id in docs_check:
@@ -568,6 +560,7 @@ def project_table_titles(project):
                         arg = (doc_id, toc_id, toc_page, title_order, word1_rex, word2_rex, s2_rex, page_rex, title)
                         count = table_checker(arg)
                     if count > 0:
+                        # if we found any matching csv tables for the toc title, break the for loop
                         prev_id = doc_id
                         break
                 if count == 0:
