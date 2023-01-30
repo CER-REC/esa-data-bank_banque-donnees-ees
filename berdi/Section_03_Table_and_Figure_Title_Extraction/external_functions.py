@@ -601,10 +601,12 @@ def find_toc_title_table(data_id):
                 df_all_titles = pd.read_sql_query(stmt, conn, params=params)
 
                 for index, row in df.iterrows():
+                    # for each csv table extracted from the pdf document, get all the toc titles on the pdf page
+                    # based on the order of csv tables on the page, find the corresponding toc title
                     page_num = int(row['page'])
                     table_num = int(row['tableNumber'])
                     order = int(row['Real Order'])
-                    # get the title for that page and order
+                    # get the toc titles for that page and order
                     ts = [i for i, r in df_all_titles.iterrows() if page_num in json.loads(r['loc_page_list'])]
 
                     if len(ts) >= order:
@@ -613,7 +615,6 @@ def find_toc_title_table(data_id):
                         cursor = conn.cursor()
                         stmt = '''UPDATE [DS_TEST].[BERDI].csvs SET titleTOC = ? WHERE (pdfId = ?) and
                                     (page = ?) and (tableNumber = ?);'''
-                        #params = {"pdf_id": data_id, "page_num": page_num, "table_num": table_num, "title_toc": title}
                         params = [title, data_id, page_num, table_num]
                         result = cursor.execute(stmt, params)
                         cursor.commit()
@@ -690,7 +691,7 @@ def find_final_title_table(data_id):
     conn = connect_to_db()
     with redirect_stdout(buf), redirect_stderr(buf):
         try:
-            # get tables for this document
+            # get csv tables for this pdf document
             stmt = '''SELECT page, tableNumber, titleTag, titleTOC, topRowJson FROM [DS_TEST].[BERDI].csvs
                         WHERE (hasContent = 1) and (csvColumns > 1) and (whitespace < 78)
                         and (pdfId = ?);'''
@@ -723,7 +724,6 @@ def find_final_title_table(data_id):
                     cursor = conn.cursor()
                     stmt = '''UPDATE [DS_TEST].[BERDI].csvs SET titleFinal = ? WHERE (pdfId = ?) and
                                 (page = ?) and (tableNumber = ?);'''
-                    #params = {"pdf_id": data_id, "page_num": page_num, "table_num": table_num, "title": title}
                     params = [title, data_id, page_num, table_num]
                     result = cursor.execute(stmt, params)
                     cursor.commit()
