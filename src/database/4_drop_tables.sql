@@ -1,0 +1,22 @@
+DROP TABLE IF EXISTS Username_BERDI.Translation;
+DROP TABLE IF EXISTS Username_BERDI.AlignmentSheet;
+DROP TABLE IF EXISTS Username_BERDI.Figure;
+DROP TABLE IF EXISTS Username_BERDI.TableElement;
+DROP TABLE IF EXISTS Username_BERDI.TableElementGroup;
+DROP TABLE IF EXISTS Username_BERDI.ValueComponent;
+DROP TABLE IF EXISTS Username_BERDI.TOCReferredPdfPage;
+DROP TABLE IF EXISTS Username_BERDI.TOC;
+DROP TABLE IF EXISTS Username_BERDI.PageMetadata;
+DROP TABLE IF EXISTS Username_BERDI.Block;
+DROP TABLE IF EXISTS Username_BERDI.CamelotTable;
+DROP TABLE IF EXISTS Username_BERDI.PdfPage;
+DROP TABLE IF EXISTS Username_BERDI.Content;
+DROP TABLE IF EXISTS Username_BERDI.ContentValueComponentMapping;
+DROP TABLE IF EXISTS Username_BERDI.Pdf;
+DROP TABLE IF EXISTS Username_BERDI.Application;
+
+DROP PROC IF EXISTS Username_BERDI.PR_Load_AlignmentSheet;
+DROP PROC IF EXISTS Username_BERDI.PR_Load_Figure;
+DROP PROC IF EXISTS Username_BERDI.PR_Load_TableElement;
+
+DROP SCHEMA IF EXISTS Username_BERDI;

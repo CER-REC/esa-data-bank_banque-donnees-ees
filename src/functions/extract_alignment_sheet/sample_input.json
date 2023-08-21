@@ -1,0 +1,40 @@
+{
+    "value": [
+        {
+            "no_of_images": 1,
+            "area_of_images": 988.473753515631,
+            "words_in_page": 183,
+            "word_count_scale": 1,
+            "in_scale_group": 1,
+            "word_count_km": 0,
+            "word_count_m": 0,
+            "word_count_meter": 0,
+            "word_count_legend": 0,
+            "word_count_figure": 0,
+            "in_figure_group": 0,
+            "word_count_map": 0,
+            "word_count_alignment_sheet": 0,
+            "word_count_sheet": 0,
+            "word_count_north": 0,
+            "word_count_n": 0
+        },
+        {
+            "no_of_images": 1,
+            "area_of_images": 1341.422074623406,
+            "words_in_page": 398,
+            "word_count_scale": 1,
+            "in_scale_group": 1,
+            "word_count_km": 1,
+            "word_count_m": 0,
+            "word_count_meter": 0,
+            "word_count_legend": 0,
+            "word_count_figure": 1,
+            "in_figure_group": 1,
+            "word_count_map": 0,
+            "word_count_alignment_sheet": 0,
+            "word_count_sheet": 0,
+            "word_count_north": 1,
+            "word_count_n": 0
+        }
+    ]
+}

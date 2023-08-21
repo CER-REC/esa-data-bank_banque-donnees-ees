@@ -1,0 +1,15 @@
+DELETE FROM Username_BERDI.Translation;
+DELETE FROM Username_BERDI.ValueComponent;
+DELETE FROM Username_BERDI.AlignmentSheet;
+DELETE FROM Username_BERDI.Figure;
+DELETE FROM Username_BERDI.TableElementGroup;
+DELETE FROM Username_BERDI.TableElement;
+DELETE FROM Username_BERDI.Content;
+DELETE FROM Username_BERDI.ContentValueComponentMapping;
+DELETE FROM Username_BERDI.TOC;
+DELETE FROM Username_BERDI.PageMetadata;
+DELETE FROM Username_BERDI.Block;
+DELETE FROM Username_BERDI.CamelotTable;
+DELETE FROM Username_BERDI.PdfPage;
+DELETE FROM Username_BERDI.Pdf;
+DELETE FROM Username_BERDI.Application;

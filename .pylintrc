@@ -1,0 +1,11 @@
+[MASTER]
+init-hook='import sys; sys.path.append(".")'
+disable=
+    C0114, # missing-module-docstring
+    R0914, # too-many-local-variables
+    R0913, # too-many-arguments
+    C0303, # trailing-whitespace
+    W0718, # broad-exception-caught
+    W0719, # broad-exception-raised
+[FORMAT]
+max-line-length=120
